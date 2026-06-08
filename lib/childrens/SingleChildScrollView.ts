@@ -2,9 +2,9 @@ import { Direction, Empty, ScrollPhysics } from "../widgets";
 
 export interface SingleChildScrollViewProps {
     child: any,
-    physics: ScrollPhysics,
-    scrollDirection: Direction,
-    reverse: boolean
+    physics?: ScrollPhysics,
+    scrollDirection?: Direction,
+    reverse?: boolean
 }
 
 export function SingleChildScrollView(id: string, {
