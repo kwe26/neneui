@@ -1,6 +1,5 @@
 import express from "express"
-import { Center, Column, CrossAxis, EdgeInsets, Empty, MainAxis, Padding, Scaffold, SingleChildScrollView, Text, TextStyle } from "./lib/widgets";
-import { AppBar } from "./lib/base/appBar";
+import { Center, Column, CrossAxis, EdgeInsets, Empty, MainAxis, Padding, Scaffold, Text, TextStyle, AppBar } from "./lib/widgets";
 const app = express();
 
 app.get("/ui/main", (req, res) => {
@@ -23,7 +22,8 @@ app.get("/ui/main", (req, res) => {
                         Text("#textA", {
                             text: `Math.Random() -> ${Math.random()}`,
                             style: TextStyle({
-                                fontSize: 18
+                                fontSize: 18,
+                                color: '#fc0352'
                             })
                         })
                     )

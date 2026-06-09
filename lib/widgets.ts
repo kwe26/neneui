@@ -8,6 +8,7 @@ export * from "./base/container";
 export * from "./base/sizedbox";
 export * from "./base/padding";
 export * from "./base/center";
+export * from "./base/appBar";
 export * from "./base/expanded"
 
 // Childrens
