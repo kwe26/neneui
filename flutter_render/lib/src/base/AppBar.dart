@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'package:flutter_render/src/enum.dart';
-import 'package:flutter_render/src/parser/Color.dart';
+import 'package:neneui_render/src/enum.dart';
+import 'package:neneui_render/src/parser/Color.dart';
 import 'package:shadcn_flutter/shadcn_flutter_experimental.dart';
 
 // ignore: camel_case_types
@@ -20,7 +20,9 @@ class dAppBar {
         backgroundColor: ColorParse.parseColor(
           data['props']['backgroundColor'],
         ),
-        trailing: reRender(data['props']['actions']),
+        trailing: [
+          for (var ui in List.from(data['props']['actions'])) reRender(ui),
+        ],
       );
     } else {
       return SizedBox();

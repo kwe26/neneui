@@ -1,4 +1,4 @@
-import 'package:flutter_render/src/parser/Color.dart';
+import 'package:neneui_render/src/parser/Color.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 class dTextstyle {

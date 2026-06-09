@@ -1,15 +1,24 @@
 import 'dart:convert';
 
-import 'package:flutter_render/src/render.dart';
+import 'package:neneui_render/src/enum.dart';
+import 'package:neneui_render/src/render.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 import 'package:http/http.dart' as http;
 
 class InitUI {
   static Widget init({
     required String baseUrl,
+    required String title,
+    bool debugShowCheckedModeBanner = true,
+    ThemeData theme = const ThemeData(colorScheme: ColorSchemes.lightNeutral),
     String defaultPage = "/ui/main",
   }) {
-    return NeneUIMain(path: "$baseUrl$defaultPage");
+    return ShadcnApp(
+      title: title,
+      theme: theme,
+      debugShowCheckedModeBanner: debugShowCheckedModeBanner,
+      home: NeneUIMain(path: "$baseUrl$defaultPage"),
+    );
   }
 }
 
@@ -76,14 +85,21 @@ class _NeneUIState extends State<NeneUIMain> {
     return erroredOut
         ? Text(errorText)
         : isUIProcessing
-        ? Center(child: CircularProgressIndicator())
+        ? SingleChildScrollView(
+            child: Center(child: const CircularProgressIndicator()),
+          )
         : Daikon.Nene(
             context: context,
             idMap: idDatabase,
             ui: ui,
             event: (event, data) {
-              print(event);
-              print(data);
+              if (event == Events.REGISTER_ID) {
+                setState(() {
+                  idDatabase.addAll({
+                    '${data['id']}': {'visible': true},
+                  });
+                });
+              }
             },
           );
   }

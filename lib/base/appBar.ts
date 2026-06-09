@@ -12,7 +12,7 @@ export function AppBar(id: string, {
     leading = Empty(),
     title = Text("#idtext_df", { text: "AppBar", style: TextStyle({}) }),
     actions = [],
-    backgroundColor = ""
+    backgroundColor = "#FFFFFF"
 }: AppBarProps){
     return {
         id,
