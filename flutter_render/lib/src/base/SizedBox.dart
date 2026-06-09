@@ -1,23 +1,20 @@
 import 'package:neneui_render/src/enum.dart';
-import 'package:neneui_render/src/parser/Core.dart';
 import 'package:shadcn_flutter/shadcn_flutter_experimental.dart';
 
-class dRow {
+class dSizedBox {
   static Widget run({
     required BuildContext context,
     required Map<String, dynamic> data,
     required Function reRender,
     required Function event,
   }) {
-    if (data['name'] == "Row") {
+    if (data['name'] == "SizedBox") {
       event(Events.REGISTER_ID, {'id': data['id'], 'props': data['props']});
 
-      return Row(
-        mainAxisAlignment: CoreParser.parseW(data['props']['mainAxis']),
-        crossAxisAlignment: CoreParser.crossParse(data['props']['crossAxis']),
-        children: [
-          for (var ui in List.from(data['props']['children'])) reRender(ui),
-        ],
+      return SizedBox(
+        child: reRender(data['props']['child']),
+        width: double.parse(data['props']['width'].toString()),
+        height: double.parse(data['props']['height'].toString()),
       );
     } else {
       return SizedBox();

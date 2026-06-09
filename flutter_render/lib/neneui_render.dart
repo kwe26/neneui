@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:flutter/material.dart' show SnackBar, ScaffoldMessenger;
 import 'package:neneui_render/src/enum.dart';
 import 'package:neneui_render/src/render.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
@@ -17,15 +17,16 @@ class InitUI {
       title: title,
       theme: theme,
       debugShowCheckedModeBanner: debugShowCheckedModeBanner,
-      home: NeneUIMain(path: "$baseUrl$defaultPage"),
+      home: NeneUIMain(path: "$baseUrl$defaultPage", baseUrl: baseUrl),
     );
   }
 }
 
 class NeneUIMain extends StatefulWidget {
   final String path;
+  final String baseUrl;
 
-  const NeneUIMain({super.key, required this.path});
+  const NeneUIMain({super.key, required this.baseUrl, required this.path});
 
   @override
   State<NeneUIMain> createState() => _NeneUIState();
@@ -99,6 +100,67 @@ class _NeneUIState extends State<NeneUIMain> {
                     '${data['id']}': {'visible': true},
                   });
                 });
+              }
+
+              if (event == Events.INVOKE_NAVIGATE) {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (ctx) => NeneUIMain(
+                      path: "${widget.baseUrl}$data",
+                      baseUrl: widget.baseUrl,
+                    ),
+                  ),
+                );
+              }
+
+              if (event == Events.INVOKE_NAVIGATE_REPLACE) {
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                    builder: (ctx) => NeneUIMain(
+                      path: "${widget.baseUrl}$data",
+                      baseUrl: widget.baseUrl,
+                    ),
+                  ),
+                );
+              }
+
+              if (event == Events.INVOKE_TOAST) {
+                showToast(
+                  context: context,
+                  builder: (context, overlay) {
+                    return SurfaceCard(
+                      child: Basic(
+                        title: Text(data),
+                        trailing: PrimaryButton(
+                          size: ButtonSize.small,
+                          onPressed: () {
+                            // Close the toast programmatically when clicking Undo.
+                            overlay.close();
+                          },
+                          child: const Icon(Icons.close),
+                        ),
+                        trailingAlignment: Alignment.center,
+                      ),
+                    );
+                  },
+                  location: .bottomCenter,
+                );
+              }
+
+              if (event == Events.HIDE_IDB) {
+                if (idDatabase.containsKey(data)) {
+                  setState(() {
+                    idDatabase[data]['visible'] = false;
+                  });
+                }
+              }
+
+              if (event == Events.SHOW_IDB) {
+                if (idDatabase.containsKey(data)) {
+                  setState(() {
+                    idDatabase[data]['visible'] = true;
+                  });
+                }
               }
             },
           );

@@ -10,7 +10,7 @@ class dColumn {
     required Function event,
   }) {
     if (data['name'] == "Column") {
-      event(Events.REGISTER_ID, {'id': data['id']});
+      event(Events.REGISTER_ID, {'id': data['id'], 'props': data['props']});
 
       return Column(
         mainAxisAlignment: CoreParser.parseW(data['props']['mainAxis']),

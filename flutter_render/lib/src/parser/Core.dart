@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
 class CoreParser {
@@ -64,6 +66,49 @@ class CoreParser {
       double.parse(data['r'].toString()),
       double.parse(data['b'].toString()),
     );
+  }
+
+  static BoxFit parseBfit(data) {
+    if (data == "fill") return BoxFit.fill;
+    if (data == "contain") return BoxFit.contain;
+    if (data == "cover") return BoxFit.cover;
+    if (data == "fitHeight") return BoxFit.fitHeight;
+    if (data == "fitWidth") return BoxFit.fitWidth;
+    if (data == "none") return BoxFit.none;
+
+    return BoxFit.none;
+  }
+
+  static FilterQuality parseFtq(String data) {
+    if (data == "low") return FilterQuality.low;
+    if (data == "high") return FilterQuality.high;
+    if (data == "medium") return FilterQuality.medium;
+    if (data == "none") return FilterQuality.none;
+
+    return FilterQuality.none;
+  }
+
+  static Alignment parseAlignment(String data) {
+    switch (data) {
+      case 'bottomCenter':
+        return .bottomCenter;
+      case 'bottomLeft':
+        return .bottomLeft;
+      case 'bottomRight':
+        return .bottomRight;
+      case 'center':
+        return .center;
+      case 'centerLeft':
+        return .centerLeft;
+      case 'centerRight':
+        return .centerRight;
+      case 'topLeft':
+        return .topLeft;
+      case 'topRight':
+        return .topRight;
+      default:
+        return Alignment.center;
+    }
   }
 
   static TextOverflow parseOvf(String ovf) {

@@ -10,7 +10,7 @@ class dScaffold {
     required Function event,
   }) {
     if (data['name'] == "Scaffold") {
-      event(Events.REGISTER_ID, {'id': data['id']});
+      event(Events.REGISTER_ID, {'id': data['id'], 'props': data['props']});
 
       return Scaffold(
         headers: [reRender(data['props']['appBar'])],

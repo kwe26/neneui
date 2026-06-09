@@ -1,5 +1,5 @@
 import { Empty } from "../empty_shell";
-import { EdgeInsets } from "./EdgeInsets";
+import { EdgeInsets } from "../core/EdgeInsets";
 
 export interface PaddingProps {
     padding: EdgeInsets,

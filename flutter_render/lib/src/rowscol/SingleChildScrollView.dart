@@ -10,7 +10,7 @@ class dSingleChildScrollView {
     required Function event,
   }) {
     if (data['name'] == "SingleChildScrollView") {
-      event(Events.REGISTER_ID, {'id': data['id']});
+      event(Events.REGISTER_ID, {'id': data['id'], 'props': data['props']});
 
       return SingleChildScrollView(
         physics: data['props']['physics'] == "never_scroll"

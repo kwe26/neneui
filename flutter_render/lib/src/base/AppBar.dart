@@ -12,7 +12,7 @@ class dAppBar {
     required Function event,
   }) {
     if (data['name'] == "AppBar") {
-      event(Events.REGISTER_ID, {'id': data['id']});
+      event(Events.REGISTER_ID, {'id': data['id'], 'props': data['props']});
 
       return AppBar(
         leading: [reRender(data['props']['leading'])],

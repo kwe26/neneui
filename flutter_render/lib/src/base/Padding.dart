@@ -10,7 +10,7 @@ class dPadding {
     required Function event,
   }) {
     if (data['name'] == "Padding") {
-      event(Events.REGISTER_ID, {'id': data['id']});
+      event(Events.REGISTER_ID, {'id': data['id'], 'props': data['props']});
 
       return Padding(
         child: reRender(data['props']['child']),

@@ -1,5 +1,5 @@
 export * from "./empty_shell";
-export * from "./base/EdgeInsets";
+export * from "./core/EdgeInsets";
 export * from "./core/core"
 
 // Base Widgets
@@ -19,3 +19,9 @@ export * from "./childrens/SingleChildScrollView";
 
 // Content
 export * from "./content/Text"
+export * from "./content/Image"
+export * from "./content/Card"
+
+// Feedback
+export * from "./feedback/ProgressIndicator"
+export * from "./feedback/Button"

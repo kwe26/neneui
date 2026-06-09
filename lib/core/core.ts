@@ -14,12 +14,71 @@ export enum TextDirection {
 
 export enum Direction {
     Horizontal = "horizontal",
-    Vertical = "Vertical"
+    Vertical = "vertical"
 }
 
 export enum ScrollPhysics {
     Scroll = "scroll",
     NeverScroll = "never_scroll",
+}
+
+export enum ImageRepeat {
+    repeat = "repeat",
+    repeatX = "repeatX",
+    repeatY = "repeatY",
+    noRepeat = "noRepeat"   
+}
+
+export enum BoxFit {
+    fill = "fill",
+    contain = "contain",
+    cover = "cover",
+    fitWidth = "fitWidth",
+    fitHeight = "fitHeight",
+    none = "none"
+}
+
+export enum Alignment {
+    bottomCenter = "bottomCenter",
+    bottomLeft = "bottomLeft",
+    bottomRight = "bottomRight",
+    center = "center",
+    centerLeft = "centerLeft",
+    centerRight = "centerRight",
+    topCenter = "topCenter",
+    topLeft = "topLeft",
+    topRight = "topRight"
+}
+
+export enum FilterQuality {
+    none = "none",
+    low = "low",
+    medium = "medium",
+    high = "high"
+}
+
+export enum ButtonType {
+    Normal = "normal",
+    Primary = "primary",
+    Secondary = "secondary",
+    Success = "success",
+    Danger = "danger",
+    Info = "info",
+    Warning = "warning"
+}
+
+export enum ButtonDensity {
+    compact = "compact",
+    dense = "dense",
+
+    normal = "normal",
+    comfortable = "comfortable",
+    icon = "icon"
+}
+
+export enum ButtonShape {
+    circle = "circle",
+    rectangle = "rectangle"
 }
 
 export enum FontWeight {
@@ -79,4 +138,14 @@ export enum CrossAxis {
     stretch = "stretch"
 }
 
+export function AssetImage(img: string){
+    return "local+" + img;
+}
+
+export function NetworkImage(img: string){
+    return "web+" + img;
+}
+
 export * from "./TextStyle"
+export * from "./BoxDecoration"
+export * from "./Actions"
