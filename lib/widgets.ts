@@ -25,3 +25,4 @@ export * from "./content/Card"
 // Feedback
 export * from "./feedback/ProgressIndicator"
 export * from "./feedback/Button"
+export * from "./feedback/ButtonGroup"

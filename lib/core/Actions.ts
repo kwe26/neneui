@@ -3,7 +3,9 @@ export enum Action {
     NAVIGATE = "navigate",
     NAVIGATE_PUSH_REPLACE = "navigate_pushreplace",
     HIDE = "hide",
-    SHOW = "show"
+    SHOW = "show",
+    DEBUG = "daikon",
+    SET_VAR = "setvar"
 }
 
 export function DoAction(action: Action, data: any){

@@ -5,4 +5,6 @@ class Events {
   static const String INVOKE_NAVIGATE_REPLACE = 'navigate_pushreplace';
   static const String HIDE_IDB = "hide";
   static const String SHOW_IDB = "show";
+  static const String DAIKON_DEBUG = "daikon_debugger";
+  static const String SET_VAR = "setvar";
 }

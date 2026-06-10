@@ -9,6 +9,7 @@ import 'package:neneui_render/src/content/Card.dart';
 import 'package:neneui_render/src/content/Image.dart';
 import 'package:neneui_render/src/content/Text.dart';
 import 'package:neneui_render/src/feedback/Button.dart';
+import 'package:neneui_render/src/feedback/ButtonGroup.dart';
 import 'package:neneui_render/src/feedback/ProgressIndicator.dart';
 import 'package:neneui_render/src/rowscol/Column.dart';
 import 'package:neneui_render/src/rowscol/Row.dart';
@@ -21,6 +22,7 @@ class Daikon {
     required Map<String, dynamic> idMap,
     required var ui,
     required Function event,
+    required Function setState,
   }) {
     String wName = ui['name'];
 
@@ -30,6 +32,7 @@ class Daikon {
         idMap: idMap,
         ui: nene,
         event: event,
+        setState: setState,
       );
     }
 
@@ -38,12 +41,14 @@ class Daikon {
     }
 
     if (idMap.containsKey(ui['id']) && idMap[ui['id']]['override'] == true) {
-      try {
-        ui['props'] = idMap[ui['id']]['props'];
-        debugPrint('Daikon! ${ui['id']}: Props have been overwritten');
-      } catch (error) {
-        debugPrint('Daikon! ${ui['id']}: Props failed to be overwritten');
-      }
+      setState(() {
+        try {
+          ui['props'] = idMap[ui['id']]['props'];
+          debugPrint('Daikon! ${ui['id']}: Props have been overwritten');
+        } catch (error) {
+          debugPrint('Daikon! ${ui['id']}: Props failed to be overwritten');
+        }
+      });
     }
 
     switch (wName) {
@@ -116,6 +121,7 @@ class Daikon {
           context: context,
           data: ui,
           reRender: reRender,
+          idDatabase: idMap,
           event: event,
         );
 
@@ -156,6 +162,14 @@ class Daikon {
 
       case 'LinearProgressIndicator':
         return dLinearProgressIndicator.run(
+          context: context,
+          data: ui,
+          reRender: reRender,
+          event: event,
+        );
+
+      case 'ButtonGroup':
+        return dButtonGroup.run(
           context: context,
           data: ui,
           reRender: reRender,

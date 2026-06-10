@@ -3,6 +3,31 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 class CoreParser {
+  static String parseVariable(dynamic data, Map<String, dynamic> idDatabase) {
+    if (data is! Map) {
+      return data?.toString() ?? '';
+    }
+
+    final vars = idDatabase['variables'] as Map<String, dynamic>? ?? {};
+
+    String template = data['template']?.toString() ?? '';
+
+    final variables = data['variable']?.toString().split(',') ?? [];
+
+    for (int i = 0; i < variables.length; i++) {
+      final key = variables[i].trim();
+      var varK = vars[key];
+
+      if (varK is TextEditingController) {
+        varK = (vars[key] as TextEditingController).value.text;
+      }
+
+      template = template.replaceAll('%${i + 1}', varK?.toString() ?? '%E');
+    }
+
+    return template;
+  }
+
   static MainAxisAlignment parseW(String m) {
     switch (m) {
       case 'start':

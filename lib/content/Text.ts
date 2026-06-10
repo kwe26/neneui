@@ -2,7 +2,7 @@ import { TextStyle, type TextStyleProps } from "../core/TextStyle";
 import { TextAlign, TextOverflow } from "../widgets";
 
 export interface TextProps {
-    text: string,
+    text: any,
     align?: TextAlign,
     overflow?: TextOverflow
     style: TextStyleProps

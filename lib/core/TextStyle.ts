@@ -11,8 +11,8 @@ export interface TextStyleProps {
 
 export function TextStyle({
     height = 1.0,
-    fontSize = 12,
-    fontWeight = FontWeight.w300,
+    fontSize = 14,
+    fontWeight = FontWeight.w400,
     color = Colors.black,
     decoration = TextDecoration.none,
     fontStyle = FontStyle.normal

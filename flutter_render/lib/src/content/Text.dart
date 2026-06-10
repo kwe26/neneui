@@ -10,12 +10,13 @@ class dText {
     required Map<String, dynamic> data,
     required Function reRender,
     required Function event,
+    Map<String, dynamic> idDatabase = const {},
   }) {
     if (data['name'] == "Text") {
       event(Events.REGISTER_ID, {'id': data['id'], 'props': data['props']});
 
       return Text(
-        data['props']['text'].toString(),
+        CoreParser.parseVariable(data['props']['text'], idDatabase),
         textAlign: CoreParser.parseTx(data['props']['align']),
         overflow: CoreParser.parseOvf(data['props']['overflow']),
         style: dTextstyle.run(data['props']['style']),

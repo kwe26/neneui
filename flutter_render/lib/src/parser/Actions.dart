@@ -6,7 +6,7 @@ class ActionsPerf {
     BuildContext context,
     Function event,
     String action,
-    String mainData, {
+    dynamic mainData, {
     Map<String, dynamic> data = const {},
   }) {
     if (action == "show_toast") {
@@ -19,6 +19,10 @@ class ActionsPerf {
       event(Events.HIDE_IDB, mainData);
     } else if (action == "show") {
       event(Events.SHOW_IDB, mainData);
+    } else if (action == "daikon") {
+      event(Events.DAIKON_DEBUG, mainData);
+    } else if (action == "setvar") {
+      event(Events.SET_VAR, mainData);
     }
   }
 }
