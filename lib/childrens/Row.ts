@@ -1,8 +1,8 @@
 import { CrossAxis, Empty, MainAxis } from "../widgets";
 
 export interface RowProps {
-    mainAxisAlignment: MainAxis,
-    crossAxisAlignment: CrossAxis,
+    mainAxisAlignment?: MainAxis,
+    crossAxisAlignment?: CrossAxis,
     children: any[]
 }
 

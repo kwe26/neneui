@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:shadcn_flutter/shadcn_flutter_experimental.dart';
 
 class CoreParser {
   static String parseVariable(dynamic data, Map<String, dynamic> idDatabase) {
@@ -16,16 +17,114 @@ class CoreParser {
 
     for (int i = 0; i < variables.length; i++) {
       final key = variables[i].trim();
-      var varK = vars[key];
-
-      if (varK is TextEditingController) {
-        varK = (vars[key] as TextEditingController).value.text;
-      }
+      var varK = parseKVariable(vars[key]);
 
       template = template.replaceAll('%${i + 1}', varK?.toString() ?? '%E');
     }
 
     return template;
+  }
+
+  static dynamic parseKVariable(var varK) {
+    if (varK is TextEditingController) {
+      varK = varK.value.text;
+    }
+
+    if (varK is CheckboxState) {
+      if (varK == CheckboxState.checked) {
+        varK = true;
+      } else {
+        varK = false;
+      }
+    }
+
+    if (varK is DateTime) {
+      return '${varK.day.toString().padLeft(2, '0')}-${varK.month.toString().padLeft(2, '0')}-${varK.year}';
+    }
+
+    return varK;
+  }
+
+  static BoxConstraints parseBoxC(var data) {
+    return BoxConstraints(
+      minWidth: double.parse(data['minWidth'].toString()),
+      minHeight: double.parse(data['minHeight'].toString()),
+      maxHeight: double.parse(data['maxHeight'].toString()),
+      maxWidth: double.parse(data['maxWidth'].toString()),
+    );
+  }
+
+  static NavigationBarAlignment parseNavBarAlign(var data) {
+    switch (data) {
+      case 'start':
+        return .start;
+      case 'center':
+        return .center;
+      case 'end':
+        return .end;
+      case 'spaceEvenly':
+        return .spaceEvenly;
+      case 'spaceBetween':
+        return .spaceBetween;
+      case 'spaceAround':
+        return .spaceAround;
+      default:
+        return .center;
+    }
+  }
+
+  static NavigationRailAlignment parseNavRailAlign(var data) {
+    switch (data) {
+      case 'start':
+        return .start;
+      case 'center':
+        return .center;
+      case 'end':
+        return .end;
+      default:
+        return .center;
+    }
+  }
+
+  static NavigationLabelType parseLbType(var data) {
+    switch (data) {
+      case 'selected':
+        return .selected;
+      case 'tootlip':
+        return .tooltip;
+      case 'all':
+        return .all;
+      case 'expanded':
+        return .expanded;
+      case 'none':
+        return .none;
+      default:
+        return .none;
+    }
+  }
+
+  static NavigationLabelPosition parselabelPos(var data) {
+    switch (data) {
+      case 'start':
+        return .start;
+      case 'end':
+        return .end;
+      case 'top':
+        return .top;
+      case 'bottom':
+        return .bottom;
+      default:
+        return .start;
+    }
+  }
+
+  static TextInputType parseIpt(var data) {
+    if (data == "text") return .text;
+    if (data == "phone") return .phone;
+    if (data == "number") return .number;
+    if (data == "twitter") return .twitter;
+
+    return .text;
   }
 
   static MainAxisAlignment parseW(String m) {

@@ -6,6 +6,7 @@ export interface ScaffoldProps {
     drawer?: any,
     floatingActionButton?: any,
     backgroundColor?: string,
+    bottom?: any,
     floatingActionButtonLocation?: any,
 }
 
@@ -14,6 +15,7 @@ export function Scaffold(id: string,{
     body = Empty(),
     drawer = Empty(),
     floatingActionButton = Empty(),
+    bottom = Empty(),
     backgroundColor = "#00000",
     floatingActionButtonLocation = null,
 }: ScaffoldProps) {
@@ -26,6 +28,7 @@ export function Scaffold(id: string,{
             drawer,
             floatingActionButton,
             backgroundColor,
+            bottom,
             floatingActionButtonLocation
         }
     }

@@ -41,9 +41,7 @@ class _NeneUIState extends State<NeneUIMain> {
   String errorText = "";
 
   Map<String, dynamic> ui = {};
-  Map<String, dynamic> idDatabase = {
-    "variables": {'default': ", Nene has ", 'defaultb': "Radish Legs"},
-  };
+  Map<String, dynamic> idDatabase = {"variables": <String, dynamic>{}};
   List<String> eventsFired = [];
 
   @override
@@ -62,7 +60,11 @@ class _NeneUIState extends State<NeneUIMain> {
     try {
       var reqs = await http.get(
         Uri.parse(widget.path),
-        headers: {"User-Agent": "NeneUI/1.0"},
+        headers: {
+          "User-Agent": "NeneUI/1.0",
+          //   "DeviceWidthHeight":
+          //       "${MediaQuery.of(context).size.width.toString()}x${MediaQuery.of(context).size.height.toString()}",
+        },
       );
 
       if (reqs.statusCode == 200) {
@@ -113,6 +115,16 @@ class _NeneUIState extends State<NeneUIMain> {
                       },
                     ),
                   ],
+                ),
+                const Gap(8),
+                SizedBox(
+                  width: 1000,
+                  child: PrimaryButton(
+                    child: Text("Refresh User Interface"),
+                    onPressed: () {
+                      fetchUIRender();
+                    },
+                  ),
                 ),
                 const Gap(8),
                 Collapsible(
@@ -203,6 +215,43 @@ class _NeneUIState extends State<NeneUIMain> {
                   ],
                 ),
                 const Gap(10),
+                Collapsible(
+                  children: [
+                    const CollapsibleTrigger(child: Text("Variables")),
+                    OutlinedContainer(
+                      child: Text(
+                        "Id Database for Widgets Rendered by Daikon via NeneUI JSON",
+                      ).small().mono().withPadding(horizontal: 16, vertical: 8),
+                    ).withPadding(top: 8),
+                    CollapsibleContent(
+                      child: Column(
+                        children: [
+                          for (var variab in Map.from(
+                            idDatabase['variables'],
+                          ).keys)
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Card(
+                                child: Column(
+                                  mainAxisAlignment: .start,
+                                  crossAxisAlignment: .start,
+                                  children: [
+                                    Text(variab),
+                                    Text(
+                                      idDatabase['variables'][variab]
+                                          .toString(),
+                                      style: TextStyle(fontSize: 8),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                const Gap(10),
                 const Text(
                   "Events Fired Recently",
                 ).small().mono().withPadding(horizontal: 16, vertical: 8),
@@ -222,18 +271,19 @@ class _NeneUIState extends State<NeneUIMain> {
     return erroredOut
         ? Text(errorText)
         : isUIProcessing
-        ? SingleChildScrollView(
-            child: Center(child: const CircularProgressIndicator()),
-          )
+        ? Scaffold(child: Center(child: const CircularProgressIndicator()))
         : Daikon.Nene(
             context: context,
             idMap: idDatabase,
             ui: ui,
             setState: setState,
+            baseUrl: widget.baseUrl,
             event: (event, data) {
-              // setState(() {
-              //   eventsFired.add(event);
-              // });
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                setState(() {
+                  eventsFired.add(event);
+                });
+              });
               if (event == Events.REGISTER_ID) {
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   setState(() {
@@ -322,7 +372,7 @@ class _NeneUIState extends State<NeneUIMain> {
                   )) {
                     idDatabase['variables'][data['var']] = data['val'];
                   } else {
-                    idDatabase.addAll({data['var']: data['val']});
+                    idDatabase['variables'][data['var']] = data['val'];
                   }
                 });
               }

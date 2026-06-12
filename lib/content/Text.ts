@@ -5,7 +5,7 @@ export interface TextProps {
     text: any,
     align?: TextAlign,
     overflow?: TextOverflow
-    style: TextStyleProps
+    style?: TextStyleProps
 }
 
 export function Text(id: string, {

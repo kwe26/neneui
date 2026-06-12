@@ -122,6 +122,13 @@ export enum TextOverflow {
     visible = "visible"
 }
 
+export enum InputType {
+    text = "text",
+    number = "number",
+    phone = "phone",
+    twitter = "twitter"
+}
+
 export enum TextAlign {
     left = "left",
     right = "right",
@@ -146,6 +153,61 @@ export function NetworkImage(img: string){
     return "web+" + img;
 }
 
+export interface setVarProps{
+    variable: string,
+    value: string
+}
+
+export function setVar({
+    variable = "",
+    value = ""
+}: setVarProps){
+    return {
+        var: variable,
+        val: value
+    }
+}
+
+export enum PromptMode {
+    dialog = "dialog",
+    popup = "popup"
+}
+
+export enum DateFormat {
+    dmmyyyy = "dmmyyyy",
+    yyyyMMdd = "yyyyMMdd"
+}
+
+export enum NavigationBarAlignment{
+    start = "start",
+    center = "center",
+    end = "end",
+    spaceBetween = "spaceBetween",
+    spaceAround = "spaceAround",
+    spaceEvenly = "spaceEvenly"
+}
+
+export enum NavigationLabelPosition {
+    start = "start",
+    end = "end",
+    top = "top",
+    bottom = "bottom"
+}
+
+export enum NavigationLabelType{
+    none = "none",
+    selected = "selected",
+    all = "all",
+    tootlip = "tootlip",
+    expanded = "expanded"
+}
+
 export * from "./TextStyle"
 export * from "./BoxDecoration"
 export * from "./Actions"
+export * from "./BoxConstraints"
+export * from "./Variable"
+export * from "./Iconify";
+export * from "./TextEditingController"
+export * from "./Compare"
+export * from "./Frame"
