@@ -56,8 +56,6 @@ class Daikon {
         setState: setState,
       );
 
-      String widgetName = nene['name'];
-
       if (contextMenuWidgets.contains(nene['name'])) {
         return ContextMenu(
           child: widget,

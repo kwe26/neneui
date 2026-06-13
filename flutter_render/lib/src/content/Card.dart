@@ -2,7 +2,6 @@ import 'package:flutter/widgets.dart';
 import 'package:neneui_render/src/enum.dart';
 import 'package:neneui_render/src/parser/Color.dart';
 import 'package:neneui_render/src/parser/Core.dart';
-import 'package:neneui_render/src/parser/TextStyle.dart';
 import 'package:shadcn_flutter/shadcn_flutter_experimental.dart';
 
 class dCard {
