@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./assets/nene.jpg" width="128">
+  <img src="https://raw.githubusercontent.com/kwe26/neneui/main/assets/nene.jpg" width="128">
 </p>
 
 # Nene UI Runtime
