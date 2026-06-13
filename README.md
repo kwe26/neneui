@@ -1,2 +1,21 @@
-# NeneUI
-> Server-Side User Interface Rendering for Flutter <-> JavaScript Server.
+<p align="center">
+  <img src="./assets/nene.jpg?" width="128">
+</p>
+
+# Nene UI Runtime
+
+Build Flutter interfaces dynamically from a JavaScript server.
+
+## Features
+
+- Server-driven UI
+- JavaScript backend
+- Flutter rendering
+- Dynamic widgets
+
+## Installation
+
+```bash
+bun add neneui
+```
+

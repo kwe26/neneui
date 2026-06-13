@@ -7,4 +7,5 @@ class Events {
   static const String SHOW_IDB = "show";
   static const String DAIKON_DEBUG = "daikon_debugger";
   static const String SET_VAR = "setvar";
+  static const String DIALOG = "dialog";
 }

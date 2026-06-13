@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:flutter/material.dart' show SnackBar, ScaffoldMessenger;
 import 'package:neneui_render/src/enum.dart';
 import 'package:neneui_render/src/render.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
@@ -363,6 +362,20 @@ class _NeneUIState extends State<NeneUIMain> {
 
               if (event == Events.DAIKON_DEBUG) {
                 openDebugSlide();
+              }
+
+              if (event == Events.DIALOG) {
+                showDialog(
+                  context: context,
+                  builder: (context) => Daikon.Nene(
+                    context: context,
+                    idMap: idDatabase,
+                    ui: data,
+                    baseUrl: widget.baseUrl,
+                    event: event,
+                    setState: setState,
+                  ),
+                );
               }
 
               if (event == Events.SET_VAR) {

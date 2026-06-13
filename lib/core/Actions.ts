@@ -5,6 +5,7 @@ export enum Action {
     HIDE = "hide",
     SHOW = "show",
     DEBUG = "daikon",
+    DIALOG = "dialog",
     SET_VAR = "setvar"
 }
 

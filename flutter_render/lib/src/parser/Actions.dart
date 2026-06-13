@@ -23,6 +23,8 @@ class ActionsPerf {
       event(Events.DAIKON_DEBUG, mainData);
     } else if (action == "setvar") {
       event(Events.SET_VAR, mainData);
+    } else if (action == "dialog") {
+      event(Events.DIALOG, mainData);
     }
   }
 }

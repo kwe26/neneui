@@ -1,7 +1,7 @@
 name: neneui_render
-description: "A new Flutter package project."
+description: "Render NeneUI interface definitions as native Flutter widgets."
 version: 0.0.1
-homepage:
+homepage: https://github.com/kwe26/neneui
 
 environment:
   sdk: ^3.10.7
