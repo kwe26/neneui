@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:neneui_render/src/enum.dart';
 
@@ -25,6 +27,12 @@ class ActionsPerf {
       event(Events.SET_VAR, mainData);
     } else if (action == "dialog") {
       event(Events.DIALOG, mainData);
+    } else if (action == "submit") {
+      event(Events.SUBMIT, mainData);
+    } else if (action == "pop") {
+      event(Events.INVOKE_POP, "pop");
+    } else if (action == "props") {
+      event(Events.INVOKE_REPLACE_PROPS, mainData);
     }
   }
 }

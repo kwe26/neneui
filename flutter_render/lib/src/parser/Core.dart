@@ -4,7 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:shadcn_flutter/shadcn_flutter_experimental.dart';
 
 class CoreParser {
-  static String parseVariable(dynamic data, Map<String, dynamic> idDatabase) {
+  static String parseVariable(
+    dynamic data,
+    Map<String, dynamic> idDatabase, {
+    String varToForeach = "",
+    bool forForeach = false,
+    int forIndex = 0,
+  }) {
     if (data is! Map) {
       return data?.toString() ?? '';
     }
@@ -17,7 +23,16 @@ class CoreParser {
 
     for (int i = 0; i < variables.length; i++) {
       final key = variables[i].trim();
-      var varK = parseKVariable(vars[key]);
+      dynamic varK;
+      if (forForeach || key.contains("for.")) {
+        varK = key == "%%"
+            ? parseKVariable(vars[varToForeach][forIndex])
+            : parseKVariable(
+                vars[varToForeach][forIndex][key.replaceFirst("for.", "")],
+              );
+      } else {
+        varK = parseKVariable(vars[key]);
+      }
 
       template = template.replaceAll('%${i + 1}', varK?.toString() ?? '%E');
     }
@@ -121,6 +136,7 @@ class CoreParser {
   static TextInputType parseIpt(var data) {
     if (data == "text") return .text;
     if (data == "phone") return .phone;
+    if (data == "password") return .visiblePassword;
     if (data == "number") return .number;
     if (data == "twitter") return .twitter;
 

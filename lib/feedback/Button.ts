@@ -4,9 +4,9 @@ export interface ButtonProps {
     child: any,
     leading?: any,
     type: ButtonType,
-    density: ButtonDensity,
-    disabled: boolean,
-    shape: ButtonShape
+    density?: ButtonDensity,
+    disabled?: boolean,
+    shape?: ButtonShape
     onPressed: any
 }
 

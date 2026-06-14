@@ -126,6 +126,7 @@ export enum InputType {
     text = "text",
     number = "number",
     phone = "phone",
+    password = "password",
     twitter = "twitter"
 }
 
@@ -155,7 +156,7 @@ export function NetworkImage(img: string){
 
 export interface setVarProps{
     variable: string,
-    value: string
+    value: any
 }
 
 export function setVar({
@@ -211,3 +212,4 @@ export * from "./Iconify";
 export * from "./TextEditingController"
 export * from "./Compare"
 export * from "./Frame"
+export * from "./PropsReplace"

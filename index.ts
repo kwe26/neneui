@@ -231,16 +231,7 @@ app.get("/ui/nav_test", async (req, res)  => {
                     ]
                 }),
                 VerticalDivider(),
-                // Frame('#frame', {
-                //     framePath: "/ui/main"
-                // })
-                // Column('#columnA', {
-                //     mainAxisAlignment: MainAxis.start,
-                //     crossAxisAlignment: CrossAxis.start,
-                //     children: [
-                //         Text("#textBar", {text: "Other Side"})
-                //     ]
-                // })
+                
             ]
         })
     });

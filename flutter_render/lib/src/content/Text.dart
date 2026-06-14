@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:neneui_render/src/content/ForEachScope.dart';
 import 'package:neneui_render/src/enum.dart';
 import 'package:neneui_render/src/parser/Core.dart';
 import 'package:neneui_render/src/parser/TextStyle.dart';
@@ -15,8 +16,25 @@ class dText {
     if (data['name'] == "Text") {
       event(Events.REGISTER_ID, {'id': data['id'], 'props': data['props']});
 
+      var scope = ForeachScope.of(context);
+      bool forForeach = false;
+      String var2Foreach = "";
+      int index = 0;
+
+      if (scope != null) {
+        forForeach = true;
+        var2Foreach = scope.var2Foreach;
+        index = scope.index;
+      }
+
       return Text(
-        CoreParser.parseVariable(data['props']['text'], idDatabase),
+        CoreParser.parseVariable(
+          data['props']['text'],
+          idDatabase,
+          forForeach: forForeach,
+          varToForeach: var2Foreach,
+          forIndex: index,
+        ),
         textAlign: CoreParser.parseTx(data['props']['align']),
         overflow: CoreParser.parseOvf(data['props']['overflow']),
         style: dTextstyle.run(data['props']['style']),

@@ -1,9 +1,17 @@
 import { CrossAxis, Empty, MainAxis } from "../widgets";
 
 export interface ColumnProps {
-    mainAxisAlignment: MainAxis,
-    crossAxisAlignment: CrossAxis,
-    children: any[]
+    mainAxisAlignment?: MainAxis,
+    crossAxisAlignment?: CrossAxis,
+    children: any[] | {
+        id: string;
+        name: string;
+        props: {
+            varToForEach: string;
+            namespaceVar: string;
+            child: any;
+        };
+    }
 }
 
 export function Column(id: string, {

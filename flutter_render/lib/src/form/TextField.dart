@@ -28,6 +28,7 @@ class dTextField {
         controller: idDatabase['variables'][controllerKey],
         keyboardType: CoreParser.parseIpt(data['props']['inputType']),
         placeholder: reRender(data['props']['placeholder']),
+        obscureText: data['props']['inputType'] == "password" ? true : false,
         features: [
           for (var ui in List.from(data['props']['features'])) reRender(ui),
         ],

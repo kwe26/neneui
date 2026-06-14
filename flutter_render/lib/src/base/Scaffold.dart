@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:neneui_render/src/enum.dart';
+import 'package:neneui_render/src/parser/Actions.dart';
 import 'package:shadcn_flutter/shadcn_flutter_experimental.dart';
 
 class dScaffold {
@@ -11,6 +12,7 @@ class dScaffold {
   }) {
     if (data['name'] == "Scaffold") {
       event(Events.REGISTER_ID, {'id': data['id'], 'props': data['props']});
+      event(Events.INVOKE_ONE_TIME_EXECUTION, data['props']['preActions']);
 
       return Scaffold(
         headers: [reRender(data['props']['appBar'])],

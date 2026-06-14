@@ -13,8 +13,10 @@ import 'package:neneui_render/src/base/Padding.dart';
 import 'package:neneui_render/src/base/Scaffold.dart';
 import 'package:neneui_render/src/base/SizedBox.dart';
 import 'package:neneui_render/src/content/Card.dart';
+import 'package:neneui_render/src/content/ForEach.dart';
 import 'package:neneui_render/src/content/Image.dart';
 import 'package:neneui_render/src/content/Text.dart';
+import 'package:neneui_render/src/dispaly/AlertDialog.dart';
 import 'package:neneui_render/src/dispaly/Avatar.dart';
 import 'package:neneui_render/src/dispaly/CodeSnippet.dart';
 import 'package:neneui_render/src/enum.dart';
@@ -22,12 +24,14 @@ import 'package:neneui_render/src/feedback/Button.dart';
 import 'package:neneui_render/src/feedback/ButtonGroup.dart';
 import 'package:neneui_render/src/feedback/ProgressIndicator.dart';
 import 'package:neneui_render/src/form/CheckBox.dart';
+import 'package:neneui_render/src/form/DatePicker.dart';
 import 'package:neneui_render/src/form/TextField.dart';
 import 'package:neneui_render/src/navigation/NavigationBar.dart';
 import 'package:neneui_render/src/navigation/NavigationDivider.dart';
 import 'package:neneui_render/src/navigation/NavigationGroup.dart';
 import 'package:neneui_render/src/navigation/NavigationItem.dart';
 import 'package:neneui_render/src/navigation/NavigationRail.dart';
+import 'package:neneui_render/src/overlay/HoverCard.dart';
 import 'package:neneui_render/src/rowscol/Column.dart';
 import 'package:neneui_render/src/rowscol/Row.dart';
 import 'package:neneui_render/src/rowscol/SingleChildScrollView.dart';
@@ -46,7 +50,11 @@ class Daikon {
 
     const contextMenuWidgets = ['Text', 'Image', 'Scaffold'];
 
-    Widget reRender(var nene) {
+    Widget reRender(var nene, {Map<String, dynamic> infectForeach = const {}}) {
+      if (!(nene as Map).containsKey("infectForeach")) {
+        if (infectForeach != const {}) nene['infectForeach'] = infectForeach;
+      }
+
       final widget = Daikon.Nene(
         context: context,
         idMap: idMap,
@@ -266,6 +274,15 @@ class Daikon {
           event: event,
         );
 
+      case 'DatePicker':
+        return dDatePicker.run(
+          context: context,
+          data: ui,
+          idDatabase: idMap,
+          reRender: reRender,
+          event: event,
+        );
+
       // ***********************Navigation**********************************
       case 'NavigationItem':
         return dNavigationItem.run(
@@ -319,6 +336,14 @@ class Daikon {
           event: event,
         );
 
+      case 'ForEach':
+        return DForEach.run(
+          context: context,
+          data: ui,
+          reRender: reRender,
+          event: event,
+        );
+
       case 'Image':
         return dImage.run(
           context: context,
@@ -366,6 +391,16 @@ class Daikon {
         return reRender(ui['props']['child']).asSkeleton();
       // ***********************DISPALY************************************
 
+      // ***********************Overlay************************************
+      case 'HoverCard':
+        return DHoverCard.run(
+          context: context,
+          data: ui,
+          reRender: reRender,
+          event: event,
+        );
+      // ***********************Overlay************************************
+
       // ***********************Feedbacl************************************
       case 'Button':
         return dButton.run(
@@ -377,6 +412,14 @@ class Daikon {
 
       case 'CircularProgressIndicator':
         return dCircularProgressIndicator.run(
+          context: context,
+          data: ui,
+          reRender: reRender,
+          event: event,
+        );
+
+      case 'AlertDialog':
+        return dAlertDialog.run(
           context: context,
           data: ui,
           reRender: reRender,
