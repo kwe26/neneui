@@ -6,7 +6,7 @@ export interface AvatarProps {
     initials?: string,
     size?: number,
     badge?: any,
-    image: string
+    image?: string | any
 }
 
 export function Avatar(id: string, {

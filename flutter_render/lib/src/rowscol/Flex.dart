@@ -7,10 +7,25 @@ class dFlex {
     required BuildContext context,
     required Map<String, dynamic> data,
     required Function reRender,
+    required Function reRenderList,
     required Function event,
   }) {
     if (data['name'] == "Flex") {
       event(Events.REGISTER_ID, {'id': data['id'], 'props': data['props']});
+
+      final rawChildren = data['props']['children'];
+
+      final childrenList = rawChildren is List ? rawChildren : [rawChildren];
+
+      final children = <Widget>[];
+
+      for (var ui in childrenList) {
+        if (data['props']['foreach']) {
+          children.addAll(reRenderList(ui));
+        } else {
+          children.add(reRender(ui));
+        }
+      }
 
       return Flex(
         mainAxisAlignment: CoreParser.parseW(data['props']['mainAxis']),
@@ -22,9 +37,7 @@ class dFlex {
         textDirection: data['props']['textDirection'] == "ltr"
             ? TextDirection.ltr
             : .rtl,
-        children: [
-          for (var ui in List.from(data['props']['children'])) reRender(ui),
-        ],
+        children: children,
       );
     } else {
       return SizedBox();

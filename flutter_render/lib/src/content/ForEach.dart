@@ -1,11 +1,13 @@
 import 'package:flutter/widgets.dart';
 import 'package:neneui_render/src/content/ForEachScope.dart';
 import 'package:neneui_render/src/enum.dart';
+import 'package:neneui_render/src/render.dart';
 
 class DForEach {
-  static List<Widget> run({
+  static List<dynamic> run({
     required BuildContext context,
     required Map<String, dynamic> data,
+    required String baseUrl,
     required Function reRender,
     required Function event,
     Map<String, dynamic> idDatabase = const {},
@@ -18,22 +20,32 @@ class DForEach {
 
     final variable = idDatabase['variables']?[data['props']['varToForEach']];
 
-    print("FOREACH VAR: ${data['props']['varToForEach']}");
-    print("TYPE: ${variable.runtimeType}");
-    print("VALUE: $variable");
-
     if (variable is! List) {
-      print("ERROR: variable is not a List");
       return [];
     }
 
-    return [
+    var a = [
       for (var i = 0; i < variable.length; i++)
         ForeachScope(
           var2Foreach: data['props']['varToForEach'],
           index: i,
-          child: reRender(data['props']['child']),
+          child: Builder(
+            builder: (context) {
+              return Daikon.Nene(
+                context: context,
+                idMap: idDatabase,
+                ui: data['props']['child'],
+                baseUrl: baseUrl,
+                event: event,
+                setState: () {},
+              );
+            },
+          ),
         ),
     ];
+
+    // print();
+
+    return a;
   }
 }

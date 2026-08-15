@@ -1,10 +1,14 @@
 import 'dart:convert';
+import 'package:flutter_js/flutter_js.dart';
+import 'package:neneui_render/src/base/customMultipart.dart';
 import 'package:neneui_render/src/enum.dart';
 import 'package:neneui_render/src/parser/Actions.dart';
 import 'package:neneui_render/src/parser/Core.dart';
 import 'package:neneui_render/src/render.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 import 'package:http/http.dart' as http;
+import 'package:file_picker/file_picker.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class InitUI {
   static Widget init({
@@ -23,7 +27,11 @@ class InitUI {
       theme: theme,
       debugShowCheckedModeBanner: debugShowCheckedModeBanner,
       home: DrawerOverlay(
-        child: NeneUIMain(path: "$baseUrl$defaultPage", baseUrl: baseUrl),
+        child: NeneUIMain(
+          path: "$baseUrl$defaultPage",
+          baseUrl: baseUrl,
+          showScaffold: true,
+        ),
       ),
     );
   }
@@ -32,8 +40,14 @@ class InitUI {
 class NeneUIMain extends StatefulWidget {
   final String path;
   final String baseUrl;
+  final bool showScaffold;
 
-  const NeneUIMain({super.key, required this.baseUrl, required this.path});
+  const NeneUIMain({
+    super.key,
+    required this.baseUrl,
+    required this.path,
+    required this.showScaffold,
+  });
 
   @override
   State<NeneUIMain> createState() => _NeneUIState();
@@ -61,6 +75,8 @@ class _NeneUIState extends State<NeneUIMain> {
       erroredOut = false;
       isUIProcessing = true;
     });
+
+    initJs();
 
     try {
       var reqs = await http.get(
@@ -94,6 +110,7 @@ class _NeneUIState extends State<NeneUIMain> {
   }
 
   bool ioteDone = false;
+  final runtime = getJavascriptRuntime();
 
   void eventExec(dynamic event, dynamic data) async {
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -112,6 +129,28 @@ class _NeneUIState extends State<NeneUIMain> {
             },
           });
         });
+      });
+    }
+
+    if (event == Events.SELECT_FILE) {
+      print(data['types']);
+      FilePickerResult? result = await FilePicker.pickFiles(
+        allowMultiple: false,
+        dialogTitle: data['title'],
+        type: FileType.custom,
+        withData: true,
+        allowedExtensions: data['types'].toString().split(","),
+      );
+
+      if (result == null) return;
+
+      PlatformFile file = result!.files.first;
+
+      setState(() {
+        idDatabase['variables'][data['variable']] = ".file,.name,.size";
+        idDatabase['variables'][data['variable'] + ".file"] = file.bytes;
+        idDatabase['variables'][data['variable'] + ".name"] = file.name;
+        idDatabase['variables'][data['variable'] + ".size"] = file.size;
       });
     }
 
@@ -138,6 +177,7 @@ class _NeneUIState extends State<NeneUIMain> {
           builder: (ctx) => NeneUIMain(
             path: "${widget.baseUrl}$data",
             baseUrl: widget.baseUrl,
+            showScaffold: true,
           ),
         ),
       );
@@ -149,9 +189,28 @@ class _NeneUIState extends State<NeneUIMain> {
           builder: (ctx) => NeneUIMain(
             path: "${widget.baseUrl}$data",
             baseUrl: widget.baseUrl,
+            showScaffold: true,
           ),
         ),
       );
+    }
+
+    if (event == Events.LAUNCH_URL) {
+      String url = data['url'];
+
+      if ((await canLaunchUrl(Uri.parse(url)))) {
+        launchUrl(Uri.parse(url));
+      } else {
+        eventExec(data['noLaunch']['event'], data['noLaunch']['data']);
+      }
+    }
+
+    if (event == Events.INVOKE_JS) {
+      var jData = runtime.evaluate(data.toString());
+      // ignore: avoid_print
+      print("INVOKE_JS CALLED!");
+      // ignore: avoid_print
+      print(jData);
     }
 
     if (event == Events.INVOKE_POP) {
@@ -237,6 +296,86 @@ class _NeneUIState extends State<NeneUIMain> {
         List<String> variables = List.from(data['variables']);
         List<String> varNames = List.from(data['varNames']);
 
+        List<String> fileVariables = List.from(data['fileVariable']);
+        List<String> fileNames = List.from(data['fileNames']);
+
+        if (fileVariables.isNotEmpty) {
+          final progress = ValueNotifier<double>(0);
+
+          showDialog(
+            context: context,
+            builder: (context) {
+              return ValueListenableBuilder<double>(
+                valueListenable: progress,
+                builder: (_, value, _) {
+                  return AlertDialog(
+                    content: SizedBox(
+                      width: 50,
+                      height: 50,
+                      child: Column(
+                        children: [
+                          CircularProgressIndicator(value: value),
+                          Text("${(value * 100).toStringAsFixed(1)}%"),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
+          );
+
+          final request = ProgressMultipartRequest(
+            "POST",
+            Uri.parse(widget.baseUrl + data['callbackPath']),
+            onProgress: (sent, total) {
+              progress.value = sent / total;
+            },
+          );
+
+          for (var vb in variables) {
+            request.fields[varNames[variables.indexOf(
+              vb,
+            )]] = CoreParser.parseKVariable(
+              idDatabase['variables'][vb],
+            ).toString();
+          }
+
+          for (var vb in fileVariables) {
+            request.files.add(
+              http.MultipartFile.fromBytes(
+                fileNames[fileVariables.indexOf(vb)],
+                idDatabase['variables']["$vb.file"],
+                filename: idDatabase['variables']["$vb.name"],
+              ),
+            );
+          }
+
+          final response = await request.send();
+
+          final body = await response.stream.bytesToString();
+
+          if (response.statusCode == 200) {
+            Navigator.of(context).pop();
+
+            final json = jsonDecode(body);
+
+            for (final cbAction in List.from(json['callbacks'])) {
+              ActionsPerf.perform(
+                context,
+                eventExec,
+                cbAction['action'],
+                cbAction['data'],
+              );
+            }
+          } else {
+            Navigator.of(context).pop();
+            eventExec(Events.INVOKE_TOAST, response.reasonPhrase ?? body);
+          }
+
+          return;
+        }
+
         for (var vb in variables) {
           buildRequest[varNames[variables.indexOf(vb)]] =
               CoreParser.parseKVariable(idDatabase['variables'][vb]).toString();
@@ -290,6 +429,49 @@ class _NeneUIState extends State<NeneUIMain> {
         }
       });
     }
+  }
+
+  void initJs() {
+    runtime.evaluate("""
+      function action(name, mainData) {
+        sendMessage('Action', JSON.stringify({ name, mainData }))
+      }
+
+      function setIntervalPolyfill(fn, ms) {
+        let active = true;
+
+        function tick() {
+            if (!active) return;
+            fn();
+            setTimeout(tick, ms);
+        }
+
+        setTimeout(tick, ms);
+
+        return {
+            clear() {
+                active = false;
+            }
+        };
+    }
+
+      function getVariable(variable){
+        return sendMessage('getVariable', JSON.stringify({var: variable}))
+      }
+    """);
+
+    runtime.onMessage("Action", (dynamic args) {
+      print(args);
+      ActionsPerf.perform(context, eventExec, args['name'], args['mainData']);
+      return true;
+    });
+
+    runtime.onMessage("getVariable", (dynamic args) {
+      return CoreParser.parseVariable({
+        'template': "%1",
+        'variable': "${args['var']}",
+      }, idDatabase);
+    });
   }
 
   void openDebugSlide() {
@@ -475,7 +657,11 @@ class _NeneUIState extends State<NeneUIMain> {
     return erroredOut
         ? Text(errorText)
         : isUIProcessing
-        ? Scaffold(child: Center(child: const CircularProgressIndicator()))
+        ? widget.showScaffold
+              ? Scaffold(
+                  child: Center(child: const CircularProgressIndicator()),
+                )
+              : CircularProgressIndicator()
         : Daikon.Nene(
             context: context,
             idMap: idDatabase,

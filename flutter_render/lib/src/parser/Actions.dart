@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:neneui_render/src/enum.dart';
 
@@ -33,6 +31,12 @@ class ActionsPerf {
       event(Events.INVOKE_POP, "pop");
     } else if (action == "props") {
       event(Events.INVOKE_REPLACE_PROPS, mainData);
+    } else if (action == "js") {
+      event(Events.INVOKE_JS, mainData);
+    } else if (action == "select_file") {
+      event(Events.SELECT_FILE, mainData);
     }
+
+    debugPrint(action);
   }
 }

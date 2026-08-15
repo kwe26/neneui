@@ -28,12 +28,15 @@ export * from "./content/Card"
 export * from "./display/Avatar";
 export * from "./display/CodeSnippet"
 export * from "./display/Skeleton"
+export * from "./display/ChatBubble"
+export * from "./display/ChatGroup"
 
 // Form
 export * from "./form/TextField"
 export * from "./form/CheckBox"
 export * from "./form/DatePicker"
 export * from "./form/Submit"
+export * from "./form/InputOtp"
 
 // Navigation
 export * from "./navigation/NavigationBar";
@@ -41,6 +44,7 @@ export * from "./navigation/NavigationItem";
 export * from "./navigation/NavigationGroup";
 export * from "./navigation/NavigationDivider"
 export * from "./navigation/NavigationRail"
+export * from "./navigation/Breadcrumb";
 
 // Feedback
 export * from "./feedback/ProgressIndicator"

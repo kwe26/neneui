@@ -3,6 +3,7 @@ import { CrossAxis, Empty, MainAxis } from "../widgets";
 export interface ColumnProps {
     mainAxisAlignment?: MainAxis,
     crossAxisAlignment?: CrossAxis,
+    foreach?: boolean,
     children: any[] | {
         id: string;
         name: string;
@@ -16,6 +17,7 @@ export interface ColumnProps {
 
 export function Column(id: string, {
     mainAxisAlignment = MainAxis.start,
+    foreach = false,
     crossAxisAlignment = CrossAxis.start,
     children = [Empty()]
 }: ColumnProps) {
@@ -23,6 +25,7 @@ export function Column(id: string, {
         id,
         name: "Column",
         props: {
+            foreach,
             mainAxis: mainAxisAlignment,
             crossAxis: crossAxisAlignment,
             children: children

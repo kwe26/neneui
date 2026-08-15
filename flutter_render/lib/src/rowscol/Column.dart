@@ -7,17 +7,30 @@ class dColumn {
     required BuildContext context,
     required Map<String, dynamic> data,
     required Function reRender,
+    required Function reRenderList,
     required Function event,
   }) {
     if (data['name'] == "Column") {
       event(Events.REGISTER_ID, {'id': data['id'], 'props': data['props']});
 
+      final rawChildren = data['props']['children'];
+
+      final childrenList = rawChildren is List ? rawChildren : [rawChildren];
+
+      final children = <Widget>[];
+
+      for (var ui in childrenList) {
+        if (data['props']['foreach']) {
+          children.addAll(reRenderList(ui));
+        } else {
+          children.add(reRender(ui));
+        }
+      }
+
       return Column(
         mainAxisAlignment: CoreParser.parseW(data['props']['mainAxis']),
         crossAxisAlignment: CoreParser.crossParse(data['props']['crossAxis']),
-        children: [
-          for (var ui in List.from(data['props']['children'])) reRender(ui),
-        ],
+        children: children,
       );
     } else {
       return SizedBox();

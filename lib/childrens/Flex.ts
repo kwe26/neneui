@@ -5,6 +5,7 @@ export interface FlexProps {
     crossAxisAlignment: CrossAxis,
     mainAxisAlignment: MainAxis,
     spacing: number,
+    foreach?: boolean,
     textDirection: TextDirection,
     direction: Direction
 }
@@ -14,6 +15,7 @@ export function Flex(id: string, {
     crossAxisAlignment = CrossAxis.start,
     mainAxisAlignment = MainAxis.start,
     spacing = 0,
+    foreach = false,
     textDirection = TextDirection.ltr,
     direction = Direction.Vertical,
 }: FlexProps) {
@@ -25,6 +27,7 @@ export function Flex(id: string, {
             crossAxisAlignment,
             mainAxisAlignment,
             spacing,
+            foreach,
             textDirection,
             direction
         }

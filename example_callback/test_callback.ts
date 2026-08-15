@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import { Action, AlertDialog, Button, ButtonType, Callback, DoAction, Iconify, InputType, NewProps, Text, TextEditingController, TextField } from "../lib/widgets";
+import { Action, AlertDialog, Button, ButtonType, Callback, DoAction, Iconify, InputType, NewProps, setVar, Text, TextEditingController, TextField } from "../lib/widgets";
 
 export const path = "/ui/test_callback"
 
@@ -30,7 +30,16 @@ export function run(req: Request, res: Response, pass: any) {
                     inputType: InputType.password,
                     placeholder: Text('#placeText', { text: "Password ohlooll" })
                 })
-            }))
+            })),
+            DoAction(Action.SET_VAR, setVar(
+                {
+                    variable: 'testMap',
+                    value: [
+                        { title: "Nene Yashiro", gender: "Female", image: "https://i.pinimg.com/564x/e5/b5/0c/e5b50ca05ef01d460659cf88622d3190.jpg" },
+                        { title: "Hanako Amane", gender: "Male", image: "https://i1.sndcdn.com/artworks-yKHnrEHNk6dPazfk-cvc2yA-t500x500.jpg" }
+                    ]
+                }
+            ))
         ]
     });
 

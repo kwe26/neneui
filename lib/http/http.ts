@@ -2,6 +2,8 @@ import express from "express"
 import * as fs from "node:fs";
 import { join } from "path";
 import { Action, DoAction } from "../widgets";
+import path from "node:path";
+import multer from "multer";
 
 export interface NeneServerProps {
     port: number,
@@ -19,6 +21,33 @@ export async function NeneServer({
     callbackPath = "callbacks"
 } : NeneServerProps){
     const app = express();
+
+    const uploadDir = path.join(process.cwd(), "uploads");
+
+    if (!fs.existsSync(uploadDir)) {
+        fs.mkdirSync(uploadDir, { recursive: true });
+    }
+
+    const storage = multer.diskStorage({
+        destination(req, file, cb) {
+            cb(null, uploadDir);
+        },
+
+        filename(req, file, cb) {
+            const ext = path.extname(file.originalname);
+            const name =
+                Date.now() +
+                "-" +
+                Math.random().toString(36).slice(2) +
+                ext;
+
+            cb(null, name);
+        },
+    });
+
+    const upload = multer({
+        storage,
+    });
 
     // Register Interfaces from Path
     let uiPathDir = join(process.cwd(), uiPath);
@@ -55,7 +84,7 @@ export async function NeneServer({
                 // Register by Importing
                 let importFile = (await import(join(callbackPathDir, file)))
                 if(verbose) console.log(`[#NENE] : Callback : ${importFile.path}`)
-                app.post(importFile.path, (req, res) => importFile.run(req, res, pass));
+                app.post(importFile.path,upload.any() ,(req, res) => importFile.run(req, res, pass));
             }else{
                 let dir_fd = fs.statSync(join(callbackPathDir, file));
                 if(dir_fd.isDirectory()) readDir(join(callbackPathDir, file));

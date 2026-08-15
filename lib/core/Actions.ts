@@ -9,7 +9,10 @@ export enum Action {
     DIALOG = "dialog",
     SUBMIT = "submit",
     SET_VAR = "setvar",
-    PROPS = "props"
+    JAVASCRIPT = "js",
+    PROPS = "props",
+    LAUNCH_URL = "launch_url",
+    SELECT_FILE = "select_file"
 }
 
 export function DoAction(action: Action, data: any){

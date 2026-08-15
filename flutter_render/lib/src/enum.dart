@@ -14,4 +14,7 @@ class Events {
   static const String INVOKE_POP = "pop";
   static const String INVOKE_ONE_TIME_EXECUTION = "iote";
   static const String INVOKE_REPLACE_PROPS = "props";
+  static const String INVOKE_JS = "js";
+  static const String LAUNCH_URL = "launch_url";
+  static const String SELECT_FILE = "select_file";
 }

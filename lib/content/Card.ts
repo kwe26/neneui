@@ -1,15 +1,15 @@
-import type { EdgeInsets } from "../widgets";
+import { EdgeInsets } from "../widgets";
 
 export interface CardProps {
-    padding: EdgeInsets,
-    child?: any,
+    padding?: EdgeInsets,
+    child: any,
     color?: string,
-    type: "filled" | "outlined" | "normal"
+    type?: "filled" | "outlined" | "normal"
 }
 
 export function Card(id: string, {
     child,
-    padding,
+    padding = EdgeInsets.all(2),
     color,
     type = "normal"
 }: CardProps){

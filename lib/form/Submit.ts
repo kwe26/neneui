@@ -1,6 +1,8 @@
 export interface FormSubmitActionProps {
     variables: string[],
     varNames: string[],
+    fileVariable?: string[],
+    fileNames?: string[],
     headers?: {},
     callbackPath: string
 }
@@ -8,6 +10,8 @@ export interface FormSubmitActionProps {
 export function FormSubmitAction({
     variables = [],
     varNames = [],
+    fileVariable = [],
+    fileNames = [],
     headers = {},
     callbackPath = "/ui/callA"
 }: FormSubmitActionProps){
@@ -16,6 +20,8 @@ export function FormSubmitAction({
             variables,
             varNames,
             headers,
+            fileNames,
+            fileVariable,
             callbackPath
         }
     }else{

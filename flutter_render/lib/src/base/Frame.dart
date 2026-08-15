@@ -13,7 +13,11 @@ class dFrame {
     if (data['name'] == "Frame") {
       event(Events.REGISTER_ID, {'id': data['id'], 'props': data['props']});
 
-      return NeneUIMain(baseUrl: baseUrl, path: data['props']['framePath']);
+      return NeneUIMain(
+        baseUrl: baseUrl,
+        path: baseUrl + data['props']['framePath'],
+        showScaffold: false,
+      );
     } else {
       return SizedBox();
     }

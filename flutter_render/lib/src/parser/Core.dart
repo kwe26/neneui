@@ -40,7 +40,7 @@ class CoreParser {
     return template;
   }
 
-  static dynamic parseKVariable(var varK) {
+  static dynamic parseKVariable(dynamic varK) {
     if (varK is TextEditingController) {
       varK = varK.value.text;
     }
@@ -60,7 +60,14 @@ class CoreParser {
     return varK;
   }
 
-  static BoxConstraints parseBoxC(var data) {
+  static PromptMode parsePromptMode(dynamic data) {
+    if (data == "popover") return .popover;
+    if (data == "dialog") return .dialog;
+
+    return .popover;
+  }
+
+  static BoxConstraints parseBoxC(dynamic data) {
     return BoxConstraints(
       minWidth: double.parse(data['minWidth'].toString()),
       minHeight: double.parse(data['minHeight'].toString()),
@@ -69,7 +76,7 @@ class CoreParser {
     );
   }
 
-  static NavigationBarAlignment parseNavBarAlign(var data) {
+  static NavigationBarAlignment parseNavBarAlign(dynamic data) {
     switch (data) {
       case 'start':
         return .start;
@@ -88,7 +95,7 @@ class CoreParser {
     }
   }
 
-  static NavigationRailAlignment parseNavRailAlign(var data) {
+  static NavigationRailAlignment parseNavRailAlign(dynamic data) {
     switch (data) {
       case 'start':
         return .start;
@@ -101,7 +108,24 @@ class CoreParser {
     }
   }
 
-  static NavigationLabelType parseLbType(var data) {
+  static FlexFit parseFlexFit(dynamic data) {
+    if (data == "loose") return .loose;
+    if (data == "tight") return .tight;
+    return FlexFit.loose;
+  }
+
+  static FlexTableSize parseFlexTableSz(dynamic data) {
+    return FlexTableSize(
+      flex: double.parse(data['props']['flex'].toString()),
+      fit: parseFlexFit(data['props']['fit']),
+    );
+  }
+
+  static FixedTableSize parseFxTbSz(dynamic data) {
+    return FixedTableSize(data['props']['value']);
+  }
+
+  static NavigationLabelType parseLbType(dynamic data) {
     switch (data) {
       case 'selected':
         return .selected;
@@ -118,7 +142,7 @@ class CoreParser {
     }
   }
 
-  static NavigationLabelPosition parselabelPos(var data) {
+  static NavigationLabelPosition parselabelPos(dynamic data) {
     switch (data) {
       case 'start':
         return .start;
@@ -133,7 +157,7 @@ class CoreParser {
     }
   }
 
-  static TextInputType parseIpt(var data) {
+  static TextInputType parseIpt(dynamic data) {
     if (data == "text") return .text;
     if (data == "phone") return .phone;
     if (data == "password") return .visiblePassword;
@@ -141,6 +165,33 @@ class CoreParser {
     if (data == "twitter") return .twitter;
 
     return .text;
+  }
+
+  static Axis parseAxis(String ax) {
+    if (ax == "horizontal") return .horizontal;
+    return .vertical;
+  }
+
+  static Widget parseBcrumb(String crumb) {
+    if (crumb == "arrowSeparator") return Breadcrumb.arrowSeparator;
+
+    return Breadcrumb.slashSeparator;
+  }
+
+  static AxisAlignmentDirectional parseAxisAlignDirect(String axisAlign) {
+    if (axisAlign == "center") return .center;
+    if (axisAlign == "end") return .end;
+    if (axisAlign == "start") return .start;
+
+    return .start;
+  }
+
+  static ChatBubbleType parseChaBubbleType(String bubble) {
+    if (bubble == "plain") return .plain;
+    if (bubble == "sharpCorner") return .sharpCorner;
+    if (bubble == "tail") return .tail;
+
+    return .sharpCorner;
   }
 
   static MainAxisAlignment parseW(String m) {

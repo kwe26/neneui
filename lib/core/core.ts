@@ -17,6 +17,11 @@ export enum Direction {
     Vertical = "vertical"
 }
 
+export enum BreadcrumbSeparator {
+    arrowSeparator = "arrowSeparator",
+    slashSeparator = "slashSeparator"
+}
+
 export enum ScrollPhysics {
     Scroll = "scroll",
     NeverScroll = "never_scroll",
@@ -146,6 +151,11 @@ export enum CrossAxis {
     stretch = "stretch"
 }
 
+export enum Axis {
+    horizontal = "horizontal",
+    vertical = "vertical"
+}
+
 export function AssetImage(img: string){
     return "local+" + img;
 }
@@ -154,9 +164,33 @@ export function NetworkImage(img: string){
     return "web+" + img;
 }
 
+export function MemoryImage(variable: string){
+    return "memory+" + variable;
+}
+
+export interface LaunchURLProps{
+    url: string,
+    noLaunch: any,
+}
+
+export function LaunchURL({
+    url,
+    noLaunch
+}: LaunchURLProps) {
+    return {
+        url,
+        noLaunch
+    };
+}
+
 export interface setVarProps{
     variable: string,
     value: any
+}
+
+export enum FlexFit {
+    tight = "tight",
+    loose = "loose"
 }
 
 export function setVar({
@@ -169,14 +203,28 @@ export function setVar({
     }
 }
 
+export function SelectFile({
+    types = "jpg,png",
+    title = "Select Image",
+    variable = "fileImage"
+}){
+    return {
+        types,
+        title,
+        variable
+    }
+}
+
 export enum PromptMode {
     dialog = "dialog",
-    popup = "popup"
+    popup = "popover"
 }
 
 export enum DateFormat {
-    dmmyyyy = "dmmyyyy",
-    yyyyMMdd = "yyyyMMdd"
+    ddmmyyyy = "ddmmyyyy",
+    yyyyMMdd = "yyyyMMdd",
+    dd_mm_yyy = "dd-mm-yyyy",
+    millisecondsSinceEpoch = "millisecondsSinceEpoch"
 }
 
 export enum NavigationBarAlignment{
@@ -201,6 +249,18 @@ export enum NavigationLabelType{
     all = "all",
     tootlip = "tootlip",
     expanded = "expanded"
+}
+
+export enum AxisAlignmentDirectional {
+    center = "center",
+    end = "end",
+    start = "start"
+}
+
+export enum ChatBubbleType {
+    plain = "plain",
+    sharpCorner = "sharpCorner",
+    tail = "tail"
 }
 
 export * from "./TextStyle"
