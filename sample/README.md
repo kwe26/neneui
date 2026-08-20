@@ -1,4 +1,4 @@
-# sample
+# NeneUI Sample Project
 
 To install dependencies:
 
@@ -12,4 +12,23 @@ To run:
 bun run index.ts
 ```
 
-This project was created using `bun init` in bun v1.3.13. [Bun](https://bun.com) is a fast all-in-one JavaScript runtime.
+# Flutter Frontend
+
+```sh
+cd flutter_app
+```
+
+## Windows
+```bash
+flutter run -d windows
+```
+
+## Linux
+```bash
+flutter run -d linux
+```
+
+## Android
+```bash
+flutter run -d android
+```

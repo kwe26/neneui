@@ -2,6 +2,7 @@ export * from "./empty_shell";
 export * from "./core/EdgeInsets";
 export * from "./core/core"
 export * from "./http/http"
+export * from "./core/DateTime"
 
 // Base Widgets
 export * from "./base/scaffold";
@@ -51,3 +52,6 @@ export * from "./feedback/ProgressIndicator"
 export * from "./feedback/Button"
 export * from "./feedback/ButtonGroup"
 export * from "./feedback/AlertDialog"
+
+// Theme
+export * from "./http/theme"

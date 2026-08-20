@@ -8,7 +8,9 @@ Text('#id', {text: "Hello World"})
 
 Here are the List of Widgets
 
-## Base
+# [Core Docs](Widgets/Base.md)
+
+## Base - [Docs](Widgets/Base.md)
 - Scaffold
 - AppBar
 - Center
@@ -18,13 +20,13 @@ Here are the List of Widgets
 - Padding
 - SizedBox
 
-## Childrens
+## Childrens - [Docs](Widgets/Childrens.md)
 - Column
 - Flex
 - Row
 - SingleChildScrollView
 
-## Content
+## Content - [Docs](Widgets/Content.md)
 - Card
 - Image
 - Text
