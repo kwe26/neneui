@@ -16,9 +16,9 @@ class dAppBar {
       return AppBar(
         leading: [reRender(data['props']['leading'])],
         title: reRender(data['props']['title']),
-        backgroundColor: ColorParse.parseColor(
-          data['props']['backgroundColor'],
-        ),
+        backgroundColor: data['props']['backgroundColor'] == "#DEFAULT"
+            ? Theme.of(context).colorScheme.secondary
+            : ColorParse.parseColor(data['props']['backgroundColor']),
         trailing: [
           for (var ui in List.from(data['props']['actions'])) reRender(ui),
         ],

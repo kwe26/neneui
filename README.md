@@ -13,17 +13,19 @@ Build Flutter interfaces dynamically from a JavaScript server.
 - Flutter rendering
 - Dynamic widgets
 
-## Installation
+## Getting Started
+
+# Requirements
+- Flutter SDK (3.38.6 or above)
+- Bun.sh 1.3.x
+- JavaScript & Dart Knowledge obv
+
+## Setting Up Backend
 
 ```bash
-bun add neneui
+bun add @neneys/ui
 ```
 
-## Run Sample
-
-```bash
-bun run server_test.ts
-```
 
 ```bash
 cd ./flutter_render/example && flutter run -d

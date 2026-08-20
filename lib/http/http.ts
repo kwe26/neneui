@@ -4,12 +4,15 @@ import { join } from "path";
 import { Action, DoAction } from "../widgets";
 import path from "node:path";
 import multer from "multer";
+import { Theme, type ThemeProps } from "./theme";
 
 export interface NeneServerProps {
     port: number,
     uiPath: string,
     verbose?: boolean,
     pass?: any,
+    themeLight?: ThemeProps,
+    themeDark?: ThemeProps
     callbackPath: string
 }
 
@@ -18,6 +21,8 @@ export async function NeneServer({
     uiPath = "interfaces",
     verbose = true,
     pass = {},
+    themeLight = Theme({}),
+    themeDark = Theme({}),
     callbackPath = "callbacks"
 } : NeneServerProps){
     const app = express();
@@ -47,6 +52,17 @@ export async function NeneServer({
 
     const upload = multer({
         storage,
+    });
+
+    app.get("/__neneui__", async (req, res) => {
+        res.json({
+            "name": "__neneui__",
+            "version": ((await import("../../package.json")).version),
+            "appTheme": {
+                "light": themeLight,
+                "dark": themeDark
+            }
+        });
     });
 
     // Register Interfaces from Path

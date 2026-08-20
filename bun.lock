@@ -3,7 +3,7 @@
   "configVersion": 1,
   "workspaces": {
     "": {
-      "name": "neneui",
+      "name": "@neneys/ui",
       "dependencies": {
         "@types/express": "^5.0.6",
         "@types/multer": "^2.2.0",

@@ -4,6 +4,7 @@ import 'package:neneui_render/src/base/customMultipart.dart';
 import 'package:neneui_render/src/enum.dart';
 import 'package:neneui_render/src/parser/Actions.dart';
 import 'package:neneui_render/src/parser/Core.dart';
+import 'package:neneui_render/src/parser/theme_parser.dart';
 import 'package:neneui_render/src/render.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -22,17 +23,110 @@ class InitUI {
     ),
     String defaultPage = "/ui/main",
   }) {
-    return ShadcnApp(
+    return _NeneUIInitializer(
+      baseUrl: baseUrl,
       title: title,
-      theme: theme,
       debugShowCheckedModeBanner: debugShowCheckedModeBanner,
-      home: DrawerOverlay(
-        child: NeneUIMain(
-          path: "$baseUrl$defaultPage",
-          baseUrl: baseUrl,
-          showScaffold: true,
-        ),
+      fallbackTheme: const ThemeData(
+        colorScheme: ColorSchemes.darkNeutral,
+        scaling: 2,
+        surfaceOpacity: 0.8,
+        surfaceBlur: 4.0,
       ),
+      defaultPage: defaultPage,
+    );
+  }
+}
+
+class _NeneUIInitializer extends StatefulWidget {
+  final String baseUrl;
+  final String title;
+  final bool debugShowCheckedModeBanner;
+  final ThemeData fallbackTheme;
+  final String defaultPage;
+
+  const _NeneUIInitializer({
+    required this.baseUrl,
+    required this.title,
+    required this.debugShowCheckedModeBanner,
+    required this.fallbackTheme,
+    required this.defaultPage,
+  });
+
+  @override
+  State<_NeneUIInitializer> createState() => _NeneUIInitializerState();
+}
+
+class _NeneUIInitializerState extends State<_NeneUIInitializer> {
+  @override
+  void initState() {
+    super.initState();
+    _themeFuture = _loadThemes();
+  }
+
+  late Future<(ThemeData, ThemeData)> _themeFuture;
+
+  Future<(ThemeData, ThemeData)> _loadThemes() async {
+    final response = await http.get(Uri.parse("${widget.baseUrl}/__neneui__"));
+
+    final data = jsonDecode(response.body);
+    final appTheme = data["appTheme"];
+
+    final light = appTheme["light"];
+    final dark = appTheme["dark"];
+
+    return (ThemeParser.parseTheme(light), ThemeParser.parseThemeDark(dark));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<(ThemeData, ThemeData)>(
+      future: _themeFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return ShadcnApp(
+            title: widget.title,
+            theme: widget.fallbackTheme,
+            home: const Scaffold(
+              child: Center(child: CircularProgressIndicator()),
+            ),
+          );
+        }
+
+        if (snapshot.hasError) {
+          print("NeneUI initialization error: ${snapshot.error}");
+          print(snapshot.stackTrace);
+
+          return ShadcnApp(
+            title: widget.title,
+            theme: widget.fallbackTheme,
+            home: Scaffold(
+              child: Center(
+                child: Text(
+                  "Failed to initialize NeneUI:\n\n${snapshot.error}",
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+          );
+        }
+
+        final (lightTheme, darkTheme) = snapshot.data!;
+
+        return ShadcnApp(
+          title: widget.title,
+          theme: lightTheme,
+          darkTheme: darkTheme,
+          debugShowCheckedModeBanner: widget.debugShowCheckedModeBanner,
+          home: DrawerOverlay(
+            child: NeneUIMain(
+              path: "${widget.baseUrl}${widget.defaultPage}",
+              baseUrl: widget.baseUrl,
+              showScaffold: true,
+            ),
+          ),
+        );
+      },
     );
   }
 }
@@ -144,7 +238,7 @@ class _NeneUIState extends State<NeneUIMain> {
 
       if (result == null) return;
 
-      PlatformFile file = result!.files.first;
+      PlatformFile file = result.files.first;
 
       setState(() {
         idDatabase['variables'][data['variable']] = ".file,.name,.size";

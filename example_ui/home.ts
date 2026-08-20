@@ -1,14 +1,15 @@
 import type { Request, Response } from "express";
-import { Action, AppBar, Avatar, AvatarBadge, BoxFit, Breadcrumb, BreadcrumbSeparator, Button, ButtonType, Center, Column, CrossAxis, DatePicker, DoAction, Empty, FormSubmitAction, Frame, Iconify, Image, InputOTP, InputOTPChild, InputType, LaunchURL, MainAxis, MemoryImage, NetworkImage, PromptMode, Row, Scaffold, SelectFile, setVar, SingleChildScrollView, SizedBox, Text, TextEditingController, TextField, TextStyle, Var } from "../lib/widgets";
-import { ForEach } from "../lib/core/ForEach";
+import { Action, AppBar, Avatar, AvatarBadge, BoxFit, Breadcrumb, BreadcrumbSeparator, Button, ButtonType, Center, Colors, Column, CrossAxis, DatePicker, DoAction, Empty, FormSubmitAction, Frame, Iconify, Image, InputOTP, InputOTPChild, InputType, LaunchURL, MainAxis, MemoryImage, NetworkImage, PromptMode, Row, Scaffold, SelectFile, setVar, SingleChildScrollView, SizedBox, Text, TextEditingController, TextField, TextStyle, Var } from "../lib/widgets";
 import { DateTime } from "../lib/core/DateTime";
 
 export const path = "/ui/main"
 export function run(req: Request, res: Response, pass: any) {
     let scaffold = Scaffold('#mainScaffold', {
         appBar: AppBar('#appBar', {
-            leading: Iconify("home", {}),
-            title: Text('#appBarText', { text: "NeneUI Example" })
+            leading: Iconify("home", { color: Colors.white }),
+            title: Text('#appBarText', { text: "NeneUI Example", style: TextStyle({
+                color: Colors.white
+            }) })
         }),
         preActions: [
             DoAction(Action.SHOW_TOAST, "NYA-NYA"),

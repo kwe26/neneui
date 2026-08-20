@@ -2,6 +2,9 @@ import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 class ColorParse {
   static Color parseColor(String color) {
+    if (color == "transparent") {
+      return Colors.transparent;
+    }
     try {
       color = color.replaceAll("#", '');
 

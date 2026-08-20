@@ -27,6 +27,8 @@ class dText {
         index = scope.index;
       }
 
+      final appBar = context.findAncestorWidgetOfExactType<AppBar>();
+
       return Text(
         CoreParser.parseVariable(
           data['props']['text'],
@@ -37,7 +39,7 @@ class dText {
         ),
         textAlign: CoreParser.parseTx(data['props']['align']),
         overflow: CoreParser.parseOvf(data['props']['overflow']),
-        style: dTextstyle.run(data['props']['style']),
+        style: dTextstyle.run(data['props']['style'], context, appBar != null),
       );
     } else {
       return SizedBox();

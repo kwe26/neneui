@@ -1,5 +1,5 @@
 {
-  "name": "neneui",
+  "name": "@neneys/ui",
   "module": "index.ts",
   "version": "1.0.1",
   "repository": {

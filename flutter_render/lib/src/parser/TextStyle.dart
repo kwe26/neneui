@@ -37,12 +37,20 @@ class dTextstyle {
     return FontStyle.italic;
   }
 
-  static TextStyle run(Map<String, dynamic> data) {
+  static TextStyle run(
+    Map<String, dynamic> data,
+    BuildContext context,
+    bool isAppBar,
+  ) {
     return TextStyle(
       height: double.parse(data['height'].toString()),
       fontSize: double.parse(data['fontSize'].toString()),
       fontWeight: dTextstyle.fw(data['fontWeight']),
-      color: ColorParse.parseColor(data['color']),
+      color: isAppBar
+          ? data['color'] == '#DEFAULT'
+                ? Theme.of(context).colorScheme.primaryForeground
+                : ColorParse.parseColor(data['color'])
+          : ColorParse.parseColor(data['color']),
       decoration: dTextstyle.textDParse(data['decoration']),
       fontStyle: dTextstyle.fst(data['fontStyle']),
     );

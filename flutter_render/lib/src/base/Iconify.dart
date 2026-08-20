@@ -1,5 +1,6 @@
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:neneui_render/src/enum.dart';
+import 'package:neneui_render/src/parser/Color.dart';
 import 'package:shadcn_flutter/shadcn_flutter_experimental.dart';
 
 class Iconify {
@@ -19,6 +20,12 @@ class Iconify {
         errorBuilder: (context, obj, trace) => Icon(
           Icons.error,
           size: double.parse(data['props']['size'].toString()),
+        ),
+        colorFilter: ColorFilter.mode(
+          data['props']['color'] == null || data['props']['color'] == "#DEFAULT"
+              ? Theme.of(context).colorScheme.foreground
+              : ColorParse.parseColor(data['props']['color']),
+          BlendMode.srcIn,
         ),
       );
     } else {
