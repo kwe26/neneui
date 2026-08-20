@@ -89,33 +89,35 @@ class Daikon {
                 trailing: Icon(Icons.info),
                 enabled: true,
                 onPressed: (context) {
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        title: Text("Widget Information"),
-                        content: SizedBox(
-                          width: 400,
-                          child: Text(jsonEncode(nene)),
-                        ),
-                        actions: [
-                          TextButton(
-                            child: Text("Copy"),
-                            onPressed: () {
-                              Clipboard.setData(
-                                ClipboardData(text: jsonEncode(nene)),
-                              );
-                            },
+                  showOverlay(
+                    context,
+                    DialogConfiguration(
+                      builder: (context) {
+                        return AlertDialog(
+                          title: Text("Widget Information"),
+                          content: SizedBox(
+                            width: 400,
+                            child: Text(jsonEncode(nene)),
                           ),
-                          DestructiveButton(
-                            child: const Text("Close"),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                        ],
-                      );
-                    },
+                          actions: [
+                            TextButton(
+                              child: Text("Copy"),
+                              onPressed: () {
+                                Clipboard.setData(
+                                  ClipboardData(text: jsonEncode(nene)),
+                                );
+                              },
+                            ),
+                            DestructiveButton(
+                              child: const Text("Close"),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    ),
                   );
                 },
                 child: Text('Info - ${nene['name']}'),

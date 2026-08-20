@@ -305,10 +305,10 @@ packages:
     dependency: "direct main"
     description:
       name: neneui_render
-      sha256: d932e4664f9a0069eb9da631659efcebc5a049d05e9072db1fe235f12763bc10
+      sha256: "8a3999fa4db4dab627db5487dd4d862b7c29b1d29a978ff557363df2ce65d6e8"
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.3"
+    version: "0.0.4"
   path:
     dependency: transitive
     description:

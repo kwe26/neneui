@@ -13,3 +13,7 @@
 ## 0.0.4
 
 * Bug Fixes and Version Bump
+
+## 0.0.5
+
+* Fix `openDialog`, `openSheet` Not Defined Issues

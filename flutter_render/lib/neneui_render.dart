@@ -359,18 +359,20 @@ class _NeneUIState extends State<NeneUIMain> {
     }
 
     if (event == Events.DIALOG) {
-      showDialog(
-        context: context,
-        barrierDismissible: (data as Map).containsKey("props")
-            ? bool.parse(data['props']['barrierDismissible'].toString())
-            : true,
-        builder: (context) => Daikon.Nene(
-          context: context,
-          idMap: idDatabase,
-          ui: data,
-          baseUrl: widget.baseUrl,
-          event: eventExec,
-          setState: setState,
+      showOverlay(
+        context,
+        DialogConfiguration(
+          builder: (context) => Daikon.Nene(
+            context: context,
+            idMap: idDatabase,
+            ui: data,
+            baseUrl: widget.baseUrl,
+            event: eventExec,
+            setState: setState,
+          ),
+          barrierDismissible: (data as Map).containsKey("props")
+              ? bool.parse(data['props']['barrierDismissible'].toString())
+              : true,
         ),
       );
     }
@@ -396,27 +398,29 @@ class _NeneUIState extends State<NeneUIMain> {
         if (fileVariables.isNotEmpty) {
           final progress = ValueNotifier<double>(0);
 
-          showDialog(
-            context: context,
-            builder: (context) {
-              return ValueListenableBuilder<double>(
-                valueListenable: progress,
-                builder: (_, value, _) {
-                  return AlertDialog(
-                    content: SizedBox(
-                      width: 50,
-                      height: 50,
-                      child: Column(
-                        children: [
-                          CircularProgressIndicator(value: value),
-                          Text("${(value * 100).toStringAsFixed(1)}%"),
-                        ],
+          showOverlay(
+            context,
+            DialogConfiguration(
+              builder: (context) {
+                return ValueListenableBuilder<double>(
+                  valueListenable: progress,
+                  builder: (_, value, _) {
+                    return AlertDialog(
+                      content: SizedBox(
+                        width: 50,
+                        height: 50,
+                        child: Column(
+                          children: [
+                            CircularProgressIndicator(value: value),
+                            Text("${(value * 100).toStringAsFixed(1)}%"),
+                          ],
+                        ),
                       ),
-                    ),
-                  );
-                },
-              );
-            },
+                    );
+                  },
+                );
+              },
+            ),
           );
 
           final request = ProgressMultipartRequest(
@@ -475,13 +479,15 @@ class _NeneUIState extends State<NeneUIMain> {
               CoreParser.parseKVariable(idDatabase['variables'][vb]).toString();
         }
 
-        showDialog(
-          context: context,
-          builder: (ctx) => AlertDialog(
-            content: SizedBox(
-              width: 50,
-              height: 50,
-              child: Center(child: CircularProgressIndicator(size: 18)),
+        showOverlay(
+          context,
+          DialogConfiguration(
+            builder: (ctx) => AlertDialog(
+              content: SizedBox(
+                width: 50,
+                height: 50,
+                child: Center(child: CircularProgressIndicator(size: 18)),
+              ),
             ),
           ),
         );
@@ -569,180 +575,187 @@ class _NeneUIState extends State<NeneUIMain> {
   }
 
   void openDebugSlide() {
-    openSheet(
-      context: context,
-      builder: (context) {
-        return Container(
-          padding: const EdgeInsets.all(24),
-          constraints: const BoxConstraints(maxWidth: 400),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Expanded(
-                      child: const Text('Daikon Debugger').large().medium(),
-                    ),
-                    TextButton(
-                      density: ButtonDensity.icon,
-                      child: const Icon(Icons.close),
+    showOverlay(
+      context,
+      SheetConfiguration(
+        builder: (context) {
+          return Container(
+            padding: const EdgeInsets.all(24),
+            constraints: const BoxConstraints(maxWidth: 400),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Expanded(
+                        child: const Text('Daikon Debugger').large().medium(),
+                      ),
+                      TextButton(
+                        density: ButtonDensity.icon,
+                        child: const Icon(Icons.close),
+                        onPressed: () {
+                          // Close the sheet without saving.
+                          closeSheet(context);
+                        },
+                      ),
+                    ],
+                  ),
+                  const Gap(8),
+                  SizedBox(
+                    width: 1000,
+                    child: PrimaryButton(
+                      child: Text("Refresh User Interface"),
                       onPressed: () {
-                        // Close the sheet without saving.
-                        closeSheet(context);
+                        fetchUIRender();
                       },
                     ),
-                  ],
-                ),
-                const Gap(8),
-                SizedBox(
-                  width: 1000,
-                  child: PrimaryButton(
-                    child: Text("Refresh User Interface"),
-                    onPressed: () {
-                      fetchUIRender();
-                    },
                   ),
-                ),
-                const Gap(8),
-                Collapsible(
-                  children: [
-                    const CollapsibleTrigger(child: Text("Daikon ID Database")),
-                    OutlinedContainer(
-                      child: Text(
-                        "Id Database for Widgets Rendered by Daikon via NeneUI JSON",
-                      ).small().mono().withPadding(horizontal: 16, vertical: 8),
-                    ).withPadding(top: 8),
-                    CollapsibleContent(
-                      child: Column(
-                        children: [
-                          for (var id in idDatabase.keys)
-                            if (id.contains("#"))
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: SizedBox(
-                                  width: 1000,
-                                  child: Card(
-                                    child: Column(
-                                      mainAxisAlignment: .start,
-                                      crossAxisAlignment: .start,
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment: .spaceBetween,
-                                          children: [
-                                            SizedBox(
-                                              width: 190,
-                                              child: Text(
-                                                id.toString(),
-                                                overflow: .ellipsis,
+                  const Gap(8),
+                  Collapsible(
+                    children: [
+                      const CollapsibleTrigger(
+                        child: Text("Daikon ID Database"),
+                      ),
+                      OutlinedContainer(
+                        child: Text(
+                          "Id Database for Widgets Rendered by Daikon via NeneUI JSON",
+                        ).small().mono().withPadding(horizontal: 16, vertical: 8),
+                      ).withPadding(top: 8),
+                      CollapsibleContent(
+                        child: Column(
+                          children: [
+                            for (var id in idDatabase.keys)
+                              if (id.contains("#"))
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: SizedBox(
+                                    width: 1000,
+                                    child: Card(
+                                      child: Column(
+                                        mainAxisAlignment: .start,
+                                        crossAxisAlignment: .start,
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment: .spaceBetween,
+                                            children: [
+                                              SizedBox(
+                                                width: 190,
+                                                child: Text(
+                                                  id.toString(),
+                                                  overflow: .ellipsis,
+                                                ),
                                               ),
-                                            ),
-                                            IconButton(
-                                              icon: Icon(Icons.settings),
-                                              variance: ButtonStyle.textIcon(),
-                                              onPressed: () {
-                                                setState(() {
-                                                  idDatabase[id]['override'] =
-                                                      idDatabase[id]['override']
-                                                      ? false
-                                                      : true;
-                                                });
-                                              },
-                                            ),
-                                            IconButton(
-                                              icon: Icon(Icons.hide_image),
-                                              variance: ButtonStyle.textIcon(),
-                                              onPressed: () {
-                                                setState(() {
-                                                  idDatabase[id]['visible'] =
-                                                      idDatabase[id]['visible']
-                                                      ? false
-                                                      : true;
-                                                });
-                                              },
-                                            ),
-                                          ],
-                                        ),
-                                        const Divider(),
-                                        TextField(
-                                          controller: TextEditingController(
-                                            text: JsonEncoder.withIndent(
-                                              ' ',
-                                            ).convert(idDatabase[id]),
+                                              IconButton(
+                                                icon: Icon(Icons.settings),
+                                                variance:
+                                                    ButtonStyle.textIcon(),
+                                                onPressed: () {
+                                                  setState(() {
+                                                    idDatabase[id]['override'] =
+                                                        idDatabase[id]['override']
+                                                        ? false
+                                                        : true;
+                                                  });
+                                                },
+                                              ),
+                                              IconButton(
+                                                icon: Icon(Icons.hide_image),
+                                                variance:
+                                                    ButtonStyle.textIcon(),
+                                                onPressed: () {
+                                                  setState(() {
+                                                    idDatabase[id]['visible'] =
+                                                        idDatabase[id]['visible']
+                                                        ? false
+                                                        : true;
+                                                  });
+                                                },
+                                              ),
+                                            ],
                                           ),
-                                          initialValue: JsonEncoder.withIndent(
-                                            ' ',
-                                          ).convert(idDatabase[id]),
-                                          maxLines: 10,
-                                          onChanged: (value) {
-                                            setState(() {
-                                              idDatabase[id] = jsonDecode(
-                                                value,
-                                              );
-                                            });
-                                          },
-                                        ),
-                                      ],
+                                          const Divider(),
+                                          TextField(
+                                            controller: TextEditingController(
+                                              text: JsonEncoder.withIndent(
+                                                ' ',
+                                              ).convert(idDatabase[id]),
+                                            ),
+                                            initialValue:
+                                                JsonEncoder.withIndent(
+                                                  ' ',
+                                                ).convert(idDatabase[id]),
+                                            maxLines: 10,
+                                            onChanged: (value) {
+                                              setState(() {
+                                                idDatabase[id] = jsonDecode(
+                                                  value,
+                                                );
+                                              });
+                                            },
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                const Gap(10),
-                Collapsible(
-                  children: [
-                    const CollapsibleTrigger(child: Text("Variables")),
-                    OutlinedContainer(
-                      child: Text(
-                        "Id Database for Widgets Rendered by Daikon via NeneUI JSON",
-                      ).small().mono().withPadding(horizontal: 16, vertical: 8),
-                    ).withPadding(top: 8),
-                    CollapsibleContent(
-                      child: Column(
-                        children: [
-                          for (var variab in Map.from(
-                            idDatabase['variables'],
-                          ).keys)
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Card(
-                                child: Column(
-                                  mainAxisAlignment: .start,
-                                  crossAxisAlignment: .start,
-                                  children: [
-                                    Text(variab),
-                                    Text(
-                                      idDatabase['variables'][variab]
-                                          .toString(),
-                                      style: TextStyle(fontSize: 8),
-                                    ),
-                                  ],
+                    ],
+                  ),
+                  const Gap(10),
+                  Collapsible(
+                    children: [
+                      const CollapsibleTrigger(child: Text("Variables")),
+                      OutlinedContainer(
+                        child: Text(
+                          "Id Database for Widgets Rendered by Daikon via NeneUI JSON",
+                        ).small().mono().withPadding(horizontal: 16, vertical: 8),
+                      ).withPadding(top: 8),
+                      CollapsibleContent(
+                        child: Column(
+                          children: [
+                            for (var variab in Map.from(
+                              idDatabase['variables'],
+                            ).keys)
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Card(
+                                  child: Column(
+                                    mainAxisAlignment: .start,
+                                    crossAxisAlignment: .start,
+                                    children: [
+                                      Text(variab),
+                                      Text(
+                                        idDatabase['variables'][variab]
+                                            .toString(),
+                                        style: TextStyle(fontSize: 8),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                const Gap(10),
-                const Text(
-                  "Events Fired Recently",
-                ).small().mono().withPadding(horizontal: 16, vertical: 8),
-                for (var event in eventsFired)
-                  if (event != "register_id") Text(event.toString()),
-              ],
+                    ],
+                  ),
+                  const Gap(10),
+                  const Text(
+                    "Events Fired Recently",
+                  ).small().mono().withPadding(horizontal: 16, vertical: 8),
+                  for (var event in eventsFired)
+                    if (event != "register_id") Text(event.toString()),
+                ],
+              ),
             ),
-          ),
-        );
-      },
-      position: OverlayPosition.end,
+          );
+        },
+        position: OverlayPosition.end,
+      ),
     );
   }
 
