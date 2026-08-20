@@ -94,8 +94,8 @@ class _NeneUIInitializerState extends State<_NeneUIInitializer> {
         }
 
         if (snapshot.hasError) {
-          print("NeneUI initialization error: ${snapshot.error}");
-          print(snapshot.stackTrace);
+          // print("NeneUI initialization error: ${snapshot.error}");
+          // print(snapshot.stackTrace);
 
           return ShadcnApp(
             title: widget.title,

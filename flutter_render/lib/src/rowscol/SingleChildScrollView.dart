@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:neneui_render/src/enum.dart';
 import 'package:shadcn_flutter/shadcn_flutter_experimental.dart';
 
+// ignore: camel_case_types
 class dSingleChildScrollView {
   static Widget run({
     required BuildContext context,

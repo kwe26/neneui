@@ -22,9 +22,6 @@ Build Flutter interfaces dynamically from a JavaScript server.
 
 ## Setting Up Backend
 
-```bash
-bun add @neneys/ui
-```
 
 
 ```bash
