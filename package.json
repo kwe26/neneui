@@ -1,7 +1,7 @@
 {
   "name": "@neneys/ui",
   "module": "index.ts",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "repository": {
     "url": "https://github.com/kwe26/neneui"
   },
