@@ -8,7 +8,7 @@ Build Flutter interfaces dynamically from a JavaScript server.
 
 # Small Little Demo
 
-<iframe width="1135" height="574" src="https://www.youtube.com/embed/ts1DRFQp28c" title="@neneys/ui Small Demo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+[Watch the Vide on YouTube](https://www.youtube.com/watch?v=ts1DRFQp28c)
 
 ## Features
 
