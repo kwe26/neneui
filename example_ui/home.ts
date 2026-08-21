@@ -35,118 +35,118 @@ export function run(req: Request, res: Response, pass: any) {
                             separator: BreadcrumbSeparator.arrowSeparator,
                             children: [
                                 Text('#t', { text: "Home" }),
-                                Text('#t', { text: "Nene" })
+                                Text('#t', { text: "Yashiro" })
                             ]
                         }),
-                        Center(Text("#textAb", { text: `Welcome to NeneUI`, style: TextStyle({}) })),
+                        Center(Text("#textAb", { text: `Welcome to NeneUI@neneys@ui`, style: TextStyle({}) })),
                         SizedBox("#sz", { width: 10, height: 10 }),
                         Avatar('#avatarNene', {
                             backgroundColor: '#7711a0F',
                             badge: AvatarBadge({
                                 size: 12,
                                 child: Empty(),
-                                color: "#09ff00"
+                                color: "#441eef"
                             }),
                             size: 64,
                             image: NetworkImage("https://i1.sndcdn.com/artworks-yKHnrEHNk6dPazfk-cvc2yA-t500x500.jpg")
                         }),
                         SizedBox("#sz", { width: 10, height: 10 }),
-                        Image('#imageTest', {
-                            path: NetworkImage("https://pbs.twimg.com/profile_images/1371906433172844546/YD9zBd3G.jpg"),
-                            width: 200,
-                            fit: BoxFit.contain,
-                            height: 200
-                        }),
+                        // Image('#imageTest', {
+                        //     path: NetworkImage("https://pbs.twimg.com/profile_images/1371906433172844546/YD9zBd3G.jpg"),
+                        //     width: 200,
+                        //     fit: BoxFit.contain,
+                        //     height: 200
+                        // }),
                         SizedBox("#sz", { width: 10, height: 10 }),
-                        Column("#colLogin", {
-                                mainAxisAlignment: MainAxis.start,
-                                crossAxisAlignment: CrossAxis.start,
-                                children: [
-                                    TextField("#userName", {
-                                        controller: TextEditingController({}),
-                                        inputType: InputType.text,
-                                        placeholder: Text('#placeText', { text: "Username" })
-                                    }),
-                                    SizedBox("#sz", { width: 10, height: 10 }),
-                                    TextField("#userPassword", {
-                                        controller: TextEditingController({}),
-                                        inputType: InputType.password,
-                                        placeholder: Text('#placeText', { text: "Password" })
-                                    }),
-                                    SizedBox("#sz", { width: 10, height: 10 }),
-                                    DatePicker('#dtp', {
-                                        mode: PromptMode.dialog,
-                                        defaultDate: DateTime.now()
-                                    }),
-                                    SizedBox("#sz", { width: 10, height: 10 }),
-                                    InputOTP('#ipOpt', {
-                                        onSubmitted: DoAction(Action.SHOW_TOAST, "Hello World"),
-                                        children: [
-                                            InputOTPChild.character({allowDigit: true}),
-                                            InputOTPChild.character({allowDigit: true}),
-                                            InputOTPChild.character({allowDigit: true}),
-                                            InputOTPChild.character({allowDigit: true}),
-                                        ]
-                                    }),
-                                    SizedBox("#sz", { width: 10, height: 10 }),
-                                    Button('#debug', {
-                                        type: ButtonType.Warning,
-                                        child: Text("#debug", {text: "DEBUG"}),
-                                        onPressed: DoAction(Action.DEBUG, "")
-                                    }),
-                                    SizedBox("#sz", { width: 10, height: 10 }),
-                                    Button('#linkTest', {
-                                        type: ButtonType.Secondary,
-                                        child: Text("#debug", {text: "Open Link"}),
-                                        onPressed: DoAction(Action.LAUNCH_URL, LaunchURL({
-                                            url: "https://google.com",
-                                            noLaunch: DoAction(Action.SHOW_TOAST, "Hello, i cannot")
-                                        }))
-                                    }),
-                                    SizedBox("#sz", { width: 10, height: 10 }),
-                                    Image('#imageTest', {
-                                        path: MemoryImage('selFile'),
-                                        width: 50,
-                                        fit: BoxFit.contain,
-                                        height: 50
-                                    }),
-                                    SizedBox("#sz", { width: 10, height: 10 }),
-                                    Text("#slFileInfo", {
-                                        text: Var({
-                                            template: "%1",
-                                            variable: "selFile.name"
-                                        })
-                                    }),
-                                    SizedBox("#sz", { width: 10, height: 10 }),
-                                    Button('#selectFile', {
-                                        type: ButtonType.Warning,
-                                        child: Text("#selectFileText", {text: "Select File"}),
-                                        onPressed: DoAction(Action.SELECT_FILE, SelectFile({
-                                            types: "jpg,png,gif,iso,zip",
-                                            title: "WOWOWOW",
-                                            variable: "selFile"
-                                        }))
-                                    }),
-                                    SizedBox("#sz", { width: 10, height: 10 }),
-                                    Button('#submitButton', {
-                                        type: ButtonType.Success,
-                                        child: Text('#submitButtonText', { text: "Submit" }),
-                                        onPressed: DoAction(Action.SUBMIT, FormSubmitAction({
-                                            variables: ["#userPassword.controller", "#userName.controller", "#dtp.controller"],
-                                            varNames: ["password", "username", "date"],
-                                            fileVariable: ["selFile"],
-                                            fileNames: ["file"],
-                                            callbackPath: "/ui/test_callback"
-                                        }))
-                                    }),
-                                    SizedBox("#sz", { width: 10, height: 10 }),
-                                    Button('#submitButtonK', {
-                                        type: ButtonType.Info,
-                                        child: Text('#submitButtonTextK', { text: "JS Test" }),
-                                        onPressed: DoAction(Action.JAVASCRIPT, `console.log("Var: "+getVariable("#userName.controller")); action('${Action.SHOW_TOAST}', Date.now() + ' Hello World ' + getVariable("#userName.controller"));`)
-                                    })
-                                ]
-                            }),
+                        // Column("#colLogin", {
+                        //         mainAxisAlignment: MainAxis.start,
+                        //         crossAxisAlignment: CrossAxis.start,
+                        //         children: [
+                        //             TextField("#userName", {
+                        //                 controller: TextEditingController({}),
+                        //                 inputType: InputType.text,
+                        //                 placeholder: Text('#placeText', { text: "Username" })
+                        //             }),
+                        //             SizedBox("#sz", { width: 10, height: 10 }),
+                        //             TextField("#userPassword", {
+                        //                 controller: TextEditingController({}),
+                        //                 inputType: InputType.password,
+                        //                 placeholder: Text('#placeText', { text: "Password" })
+                        //             }),
+                        //             SizedBox("#sz", { width: 10, height: 10 }),
+                        //             DatePicker('#dtp', {
+                        //                 mode: PromptMode.dialog,
+                        //                 defaultDate: DateTime.now()
+                        //             }),
+                        //             SizedBox("#sz", { width: 10, height: 10 }),
+                        //             InputOTP('#ipOpt', {
+                        //                 onSubmitted: DoAction(Action.SHOW_TOAST, "Hello World"),
+                        //                 children: [
+                        //                     InputOTPChild.character({allowDigit: true}),
+                        //                     InputOTPChild.character({allowDigit: true}),
+                        //                     InputOTPChild.character({allowDigit: true}),
+                        //                     InputOTPChild.character({allowDigit: true}),
+                        //                 ]
+                        //             }),
+                        //             SizedBox("#sz", { width: 10, height: 10 }),
+                        //             Button('#debug', {
+                        //                 type: ButtonType.Warning,
+                        //                 child: Text("#debug", {text: "DEBUG"}),
+                        //                 onPressed: DoAction(Action.DEBUG, "")
+                        //             }),
+                        //             SizedBox("#sz", { width: 10, height: 10 }),
+                        //             Button('#linkTest', {
+                        //                 type: ButtonType.Secondary,
+                        //                 child: Text("#debug", {text: "Open Link"}),
+                        //                 onPressed: DoAction(Action.LAUNCH_URL, LaunchURL({
+                        //                     url: "https://google.com",
+                        //                     noLaunch: DoAction(Action.SHOW_TOAST, "Hello, i cannot")
+                        //                 }))
+                        //             }),
+                        //             SizedBox("#sz", { width: 10, height: 10 }),
+                        //             Image('#imageTest', {
+                        //                 path: MemoryImage('selFile'),
+                        //                 width: 50,
+                        //                 fit: BoxFit.contain,
+                        //                 height: 50
+                        //             }),
+                        //             SizedBox("#sz", { width: 10, height: 10 }),
+                        //             Text("#slFileInfo", {
+                        //                 text: Var({
+                        //                     template: "%1",
+                        //                     variable: "selFile.name"
+                        //                 })
+                        //             }),
+                        //             SizedBox("#sz", { width: 10, height: 10 }),
+                        //             Button('#selectFile', {
+                        //                 type: ButtonType.Warning,
+                        //                 child: Text("#selectFileText", {text: "Select File"}),
+                        //                 onPressed: DoAction(Action.SELECT_FILE, SelectFile({
+                        //                     types: "jpg,png,gif,iso,zip",
+                        //                     title: "WOWOWOW",
+                        //                     variable: "selFile"
+                        //                 }))
+                        //             }),
+                        //             SizedBox("#sz", { width: 10, height: 10 }),
+                        //             Button('#submitButton', {
+                        //                 type: ButtonType.Success,
+                        //                 child: Text('#submitButtonText', { text: "Submit" }),
+                        //                 onPressed: DoAction(Action.SUBMIT, FormSubmitAction({
+                        //                     variables: ["#userPassword.controller", "#userName.controller", "#dtp.controller"],
+                        //                     varNames: ["password", "username", "date"],
+                        //                     fileVariable: ["selFile"],
+                        //                     fileNames: ["file"],
+                        //                     callbackPath: "/ui/test_callback"
+                        //                 }))
+                        //             }),
+                        //             SizedBox("#sz", { width: 10, height: 10 }),
+                        //             Button('#submitButtonK', {
+                        //                 type: ButtonType.Info,
+                        //                 child: Text('#submitButtonTextK', { text: "JS Test" }),
+                        //                 onPressed: DoAction(Action.JAVASCRIPT, `console.log("Var: "+getVariable("#userName.controller")); action('${Action.SHOW_TOAST}', Date.now() + ' Hello World ' + getVariable("#userName.controller"));`)
+                        //             })
+                        //         ]
+                        //     }),
                         SizedBox("#sz", { width: 10, height: 10 }),
                         // Frame("#frame", {
                         //     framePath: "/ui/frameTest"
