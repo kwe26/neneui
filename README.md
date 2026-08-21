@@ -8,7 +8,7 @@ Build Flutter interfaces dynamically from a JavaScript server.
 
 # Small Little Demo
 
-[Watch the Vide on YouTube](https://www.youtube.com/watch?v=ts1DRFQp28c)
+[Watch the Video on YouTube](https://www.youtube.com/watch?v=ts1DRFQp28c)
 
 ## Features
 
