@@ -18,7 +18,7 @@
 
 # BoxConstraints
 ```js
-import { BoxConstraints } from "neneui";
+import { BoxConstraints } from "@neneys/ui";
 
 BoxConstraints({
     minHeight: 0.0, // Required All
@@ -31,7 +31,7 @@ BoxConstraints({
 # AssetImage, NetworkImage
 
 ```ts
-import { NetworkImage, AssetImage } from "neneui";
+import { NetworkImage, AssetImage } from "@neneys/ui";
 
 AssetImage("assets/image.png") // Only if inside flutter or renderer's path
 NetworkImage("<HTTP URL>")
@@ -40,7 +40,7 @@ NetworkImage("<HTTP URL>")
 # BoxDecoration
 
 ```js
-import { BoxDecoration } from "neneui";
+import { BoxDecoration } from "@neneys/ui";
 
 BoxDecoration({
     color :"#FFFFFF",
@@ -54,7 +54,7 @@ BoxDecoration({
 # Compare
 
 ```js
-import { Compare } from "neneui";
+import { Compare } from "@neneys/ui";
 
 Compare({
     fi: "var_name",

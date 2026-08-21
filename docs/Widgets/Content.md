@@ -1,7 +1,7 @@
 # Card
 
 ```js
-import { Card, EdgeInsets } from "neneui";
+import { Card, EdgeInsets } from "@neneys/ui";
 
 Card(id, {
     child: Widget,
@@ -14,7 +14,7 @@ Card(id, {
 # Image
 
 ```js
-import { Image, AssetImage, ImageRepeat, BoxFit, Alignment, FilterQuality, CircularProgressIndicator, SizedBox } from "neneui";
+import { Image, AssetImage, ImageRepeat, BoxFit, Alignment, FilterQuality, CircularProgressIndicator, SizedBox } from "@neneys/ui";
 
 Image(id, {
     path: AssetImage(""),
@@ -40,7 +40,7 @@ FontWeight = bold, w100, w200, w300, w400, w500, w600, w700, w800, w900
 # TextStyle
 
 ```js
-import { TextStyle } from "neneui";
+import { TextStyle } from "@neneys/ui";
 
 TextStyle({
     height: float, // Optional
@@ -61,7 +61,7 @@ TextOverflow = clip, fade, ellipsis, visible
 # Text
 
 ```ts
-import { Text, TextStyle, TextOverflow } from "neneui";
+import { Text, TextStyle, TextOverflow } from "@neneys/ui";
 
 Text(id, {
     text: "string",

@@ -1,6 +1,6 @@
 # Scaffold
 ```js
-import { Scaffold } from "neneui";
+import { Scaffold } from "@neneys/ui";
 
 return Scaffold(id, {
     appBar: Widget, // Optional
@@ -16,14 +16,14 @@ return Scaffold(id, {
 
 # Center
 ```js
-import { Center } from "neneui";
+import { Center } from "@neneys/ui";
 
 Center(Widget)
 ```
 
 # Divider
 ```js
-import { Divider, VerticalDivider } from "neneui";
+import { Divider, VerticalDivider } from "@neneys/ui";
 
 Divider()
 
@@ -33,7 +33,7 @@ VerticalDivider()
 # Expanded
 
 ```js
-import { Expanded } from "neneui";
+import { Expanded } from "@neneys/ui";
 
 Expanded(id, {
     child: Widget,
@@ -44,7 +44,7 @@ Expanded(id, {
 # SizedBox
 
 ```js
-import { SizedBox } from "neneui";
+import { SizedBox } from "@neneys/ui";
 
 SizedBox(id, {
     width: double, // Optional
@@ -56,7 +56,7 @@ SizedBox(id, {
 # Padding
 
 ```js
-import { Padding, EdgeInsets } from "neneui";
+import { Padding, EdgeInsets } from "@neneys/ui";
 
 Padding(id, {
     padding: EdgeInsets.all(1), // Optional
@@ -67,7 +67,7 @@ Padding(id, {
 # Container
 
 ```js
-import { Container } from "neneui";
+import { Container } from "@neneys/ui";
 
 Container(id, {
     child: Widget, // Optional
@@ -78,7 +78,7 @@ Container(id, {
 # AppBar
 
 ```js
-import { AppBar } from "neneui";
+import { AppBar } from "@neneys/ui";
 
 AppBar(id, {
     leading: Widget, // Optional

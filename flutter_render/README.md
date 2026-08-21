@@ -107,7 +107,7 @@ Flutter Widgets
 # How to Render UI on Server
 ```js
 import express from "express";
-import { Column, CrossAxis, MainAxis, Scaffold, Text } from "neneui";
+import { Column, CrossAxis, MainAxis, Scaffold, Text } from "@neneys/ui";
 
 const app = express();
 

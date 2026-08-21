@@ -1,7 +1,7 @@
 # Column
 
 ```js
-import { Column, MainAxis, CrossAxis } from "neneui";
+import { Column, MainAxis, CrossAxis } from "@neneys/ui";
 
 Column(id, {
     mainAxisAlignment: MainAxis.start, // Optional
@@ -14,7 +14,7 @@ Column(id, {
 # Row
 
 ```js
-import { Row, MainAxis, CrossAxis } from "neneui";
+import { Row, MainAxis, CrossAxis } from "@neneys/ui";
 
 Row(id, {
     mainAxisAlignment: MainAxis.start, // Optional
@@ -27,7 +27,7 @@ Row(id, {
 # Flex
 
 ```js
-import { Flex, MainAxis, CrossAxis, TextDirection, Direction } from "neneui";
+import { Flex, MainAxis, CrossAxis, TextDirection, Direction } from "@neneys/ui";
 
 Flex(id, {
     children: Widget[],
@@ -43,7 +43,7 @@ Flex(id, {
 # SingleChildScrollView
 
 ```js
-import { SingleChildScrollView } from "neneui";
+import { SingleChildScrollView } from "@neneys/ui";
 
 SingleChildScrollView(id, {
     child: Empty(),

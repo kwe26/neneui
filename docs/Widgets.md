@@ -1,7 +1,7 @@
 # The Widgets are defined in TypeScripts
 # Example (Text)
 ```js
-import { Text } from "neneui";
+import { Text } from "@neneys/ui";
 
 Text('#id', {text: "Hello World"})
 ```
@@ -31,7 +31,7 @@ Here are the List of Widgets
 - Image
 - Text
 
-## Display
+## Display - [Docs](Widgets/Display.md)
 - Accordion
 - Avatar
 - ChatGroup
