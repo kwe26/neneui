@@ -42,6 +42,13 @@ git clone https://github.com/kwe26/neneui-sample.git sample
 cd sample && bun install
 ```
 
+### Psst!`
+*In case you don't have Flutter SDK Installed or don't wannta compile things, you can try out the modications you made in example_ui in NeneUI Tester*
+
+[NeneUI Tester](https://github.com/kwe26/neneui/releases/tag/nene-tester-1.0.0)
+
+### Compile the Flutter App Linking to NeneUI 
+
 ```bash
 cd flutter_app && flutter pub get
 ```
