@@ -11,6 +11,7 @@ export interface NeneServerProps {
     uiPath: string,
     verbose?: boolean,
     pass?: any,
+    payments?: any,
     themeLight?: ThemeProps,
     themeDark?: ThemeProps,
     captureErrors?: boolean,
@@ -24,6 +25,7 @@ export async function NeneServer({
     pass = {},
     themeLight = Theme({}),
     themeDark = Theme({}),
+    payments = null,
     captureErrors = false,
     callbackPath = "callbacks"
 } : NeneServerProps){
@@ -76,8 +78,6 @@ export async function NeneServer({
         });
     });
 
-
-
     // Register Interfaces from Path
     let uiPathDir = join(process.cwd(), uiPath);
     let callbackPathDir = join(process.cwd(), callbackPath);
@@ -86,6 +86,46 @@ export async function NeneServer({
     app.use(express.json());
 
     readDir(uiPathDir);
+
+    app.post("/__neneui__/report", async (req, res) => {
+        const {
+            path,
+            report
+        } = req.body;
+
+      
+        const timestamp = new Date();
+
+        const log = `
+            # ================================================================
+        # NENE UI RUNTIME ERROR REPORT
+        # ================================================================
+
+        TIMESTAMP
+        ----------------------------------------------------------------
+        ${timestamp.toISOString()}
+
+        PATH
+        ----------------------------------------------------------------
+        ${path}
+
+        EXCEPTION
+        ----------------------------------------------------------------
+        ${report}
+
+        # ================================================================
+        # END OF REPORT
+        # ================================================================
+        `;
+
+        fs.writeFileSync(
+        join(logsDir, `${timestamp.toISOString().replace(/[:.]/g, '-')}.txt`),
+        log.trim()
+        );
+        res.json({
+            status: true,message: "Report Submitted!"
+        })
+    });
 
     async function readDir(dir: string){
         let files = fs.readdirSync(dir);
@@ -102,6 +142,8 @@ export async function NeneServer({
             }
         }
     }
+
+    if(payments !== null) app.use(payments);
 
     await readDirForCallbacks(callbackPathDir);
 

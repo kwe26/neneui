@@ -37,6 +37,7 @@ class DForEach {
                 idMap: idDatabase,
                 plugins: plugins,
                 captureErrors: true,
+                path: "",
                 ui: data['props']['child'],
                 baseUrl: baseUrl,
                 event: event,

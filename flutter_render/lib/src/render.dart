@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:neneui_render/src/base/AppBar.dart';
@@ -48,11 +49,15 @@ import 'package:neneui_render/src/rowscol/SingleChildScrollView.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 class Daikon {
+  static final Set<String> reportedErrors = {};
+
+  // ignore: non_constant_identifier_names
   static dynamic Nene({
     required BuildContext context,
     required Map<String, dynamic> idMap,
     required dynamic ui,
     required bool captureErrors,
+    required String path,
     required String baseUrl,
     required Map<String, dynamic> plugins,
     required Function event,
@@ -79,6 +84,7 @@ class Daikon {
           idMap: idMap,
           ui: nene,
           event: event,
+          path: path,
           plugins: plugins,
           captureErrors: captureErrors,
           baseUrl: baseUrl,
@@ -159,15 +165,42 @@ class Daikon {
 
         return widget;
       } catch (e, stackTrace) {
+        final errorKey = '${nene['id']}|${nene['name']}|${e.toString()}';
+
+        if (captureErrors && !reportedErrors.contains(errorKey)) {
+          reportedErrors.add(errorKey);
+
+          final url = Uri.parse("$baseUrl/__neneui__/report");
+
+          final headers = {'Content-Type': 'application/json; charset=UTF-8'};
+
+          final body = jsonEncode({
+            'path': path.replaceAll(baseUrl, ""),
+            'report': '${e.toString()}\n$stackTrace',
+          });
+
+          http.post(url, headers: headers, body: body).catchError((error) {
+            debugPrint("error: capture failed: $error");
+          });
+        }
+
         return SizedBox(
-          width: 300,
+          width: MediaQuery.of(context).size.width - 100,
           child: Container(
             decoration: BoxDecoration(border: Border.all(color: Colors.red)),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                "Something Went Wrong: ${e.toString()}\n${stackTrace.toString()}",
-              ),
+            padding: const EdgeInsets.all(8),
+            child: Accordion(
+              items: [
+                AccordionItem(
+                  trigger: AccordionTrigger(
+                    child: Text(
+                      "ERR: ${e.toString()}\n",
+                      style: TextStyle(color: Colors.red),
+                    ),
+                  ),
+                  content: Text("$stackTrace"),
+                ),
+              ],
             ),
           ),
         );
@@ -183,6 +216,7 @@ class Daikon {
               idMap: idMap,
               plugins: plugins,
               ui: item,
+              path: path,
               event: event,
               baseUrl: baseUrl,
               captureErrors: captureErrors,
@@ -197,6 +231,7 @@ class Daikon {
         ui: nene,
         plugins: plugins,
         event: event,
+        path: path,
         baseUrl: baseUrl,
         captureErrors: captureErrors,
         setState: setState,
@@ -225,6 +260,7 @@ class Daikon {
               plugins: plugins,
               ui: item,
               event: event,
+              path: path,
               baseUrl: baseUrl,
               captureErrors: captureErrors,
               setState: setState,
@@ -237,6 +273,7 @@ class Daikon {
         idMap: idMap,
         ui: nene,
         event: event,
+        path: path,
         plugins: plugins,
         baseUrl: baseUrl,
         captureErrors: captureErrors,

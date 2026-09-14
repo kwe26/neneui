@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/services.dart';
-import 'package:flutter_js/flutter_js.dart';
+import 'package:quickjs_engine/quickjs_engine.dart';
 import 'package:neneui_render/src/base/customMultipart.dart';
 import 'package:neneui_render/src/enum.dart';
 import 'package:neneui_render/src/parser/Actions.dart';
@@ -81,7 +81,7 @@ class _NeneUIInitializerState extends State<_NeneUIInitializer> {
     final light = appTheme["light"];
     final dark = appTheme["dark"];
 
-    final errorReporting = bool.tryParse(data['captureErrors']);
+    final errorReporting = bool.tryParse(data['captureErrors'].toString());
 
     return (
       ThemeParser.parseTheme(light),
@@ -293,7 +293,7 @@ class _NeneUIState extends State<NeneUIMain> {
   }
 
   bool ioteDone = false;
-  final runtime = getJavascriptRuntime();
+  final runtime = getJavascriptRuntime(xhr: true);
 
   void eventExec(dynamic event, dynamic data) async {
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -316,39 +316,41 @@ class _NeneUIState extends State<NeneUIMain> {
     }
 
     if (event == Events.SELECT_FILE) {
-      FilePickerResult? result = await FilePicker.pickFiles(
-        allowMultiple: false,
+      final PlatformFile? file = await FilePicker.pickFile(
         dialogTitle: data['title'],
         type: FileType.custom,
-        withData: false,
         allowedExtensions: data['types'].toString().split(","),
       );
 
-      if (result == null) return;
+      if (file == null) return;
 
-      PlatformFile file = result.files.first;
+      const maxMemoryFileSize = 10 * 1024 * 1024;
+
+      final fileSize = file.lengthSync() ?? await file.length();
+
+      Uint8List? bytes;
+
+      if (fileSize! <= maxMemoryFileSize &&
+          [
+            "png",
+            "jpeg",
+            "jpg",
+            "gif",
+            "webp",
+            "svg",
+          ].contains(file.extension?.toLowerCase())) {
+        bytes = await file.readAsBytes();
+      }
 
       setState(() {
         idDatabase['variables'][data['variable']] = ".file,.name,.size";
-        const maxMemoryFileSize = 10 * 1024 * 1024;
 
-        if (file.bytes != null &&
-            file.size <= maxMemoryFileSize &&
-            [
-              "png",
-              "jpeg",
-              "jpg",
-              "gif",
-              "webp",
-              "svg",
-            ].contains(file.extension?.toLowerCase())) {
-          idDatabase['variables'][data['variable'] + ".file"] = file.bytes;
-        } else {
-          idDatabase['variables'][data['variable'] + ".file"] =
-              "file:${file.path}";
-        }
+        idDatabase['variables'][data['variable'] + ".file"] =
+            bytes ?? "file:${file.path}";
+
         idDatabase['variables'][data['variable'] + ".name"] = file.name;
-        idDatabase['variables'][data['variable'] + ".size"] = file.size;
+
+        idDatabase['variables'][data['variable'] + ".size"] = fileSize;
       });
     }
 
@@ -479,6 +481,7 @@ class _NeneUIState extends State<NeneUIMain> {
           idMap: idDatabase,
           ui: data,
           plugins: widget.plugins,
+          path: widget.path,
           baseUrl: widget.baseUrl,
           captureErrors: widget.captureErrors,
           event: eventExec,
@@ -886,6 +889,7 @@ class _NeneUIState extends State<NeneUIMain> {
             idMap: idDatabase,
             ui: ui,
             setState: setState,
+            path: widget.path,
             captureErrors: widget.captureErrors,
             plugins: widget.plugins,
             baseUrl: widget.baseUrl,

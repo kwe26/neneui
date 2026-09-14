@@ -37,7 +37,7 @@ dependencies:
   neneui_render: 
     path: ../flutter_render
   neneui_video_plugin:
-    path: ../neneui_video_plugin
+    path: ../@neneys/neneui_video_plugin
   shadcn_flutter: ^0.0.54
   url_launcher: ^6.3.2
 

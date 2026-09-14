@@ -3,8 +3,8 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
-  flutter_js
   media_kit_video
+  quickjs_engine
   url_launcher_linux
 )
 

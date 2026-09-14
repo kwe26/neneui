@@ -17,13 +17,14 @@ platforms:
   windows:
 
 dependencies:
-  file_picker: ^11.0.2
+  file_picker: ^13.0.0
   flutter:
     sdk: flutter
-  flutter_js: ^0.8.7
+  # flutter_js: ^0.8.7
   flutter_svg: ^2.3.0
   http: ^1.6.0
   shadcn_flutter: ^0.0.54
+  quickjs_engine: ^0.1.5
   url_launcher: ^6.3.2
 
 dev_dependencies:
