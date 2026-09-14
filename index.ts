@@ -52,6 +52,7 @@ NeneServer({
     uiPath: "./example_ui",
     verbose: true,
     themeDark: theme,
+    captureErrors: true,
     themeLight: theme,
     callbackPath: "./example_callback"
 })

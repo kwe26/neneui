@@ -13,6 +13,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return InitUI.init(
       baseUrl: "http://localhost:3500",
+      plugins: {},
       title: "Nene",
       debugShowCheckedModeBanner: false,
     );

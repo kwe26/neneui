@@ -12,7 +12,8 @@ export interface NeneServerProps {
     verbose?: boolean,
     pass?: any,
     themeLight?: ThemeProps,
-    themeDark?: ThemeProps
+    themeDark?: ThemeProps,
+    captureErrors?: boolean,
     callbackPath: string
 }
 
@@ -23,14 +24,23 @@ export async function NeneServer({
     pass = {},
     themeLight = Theme({}),
     themeDark = Theme({}),
+    captureErrors = false,
     callbackPath = "callbacks"
 } : NeneServerProps){
     const app = express();
 
     const uploadDir = path.join(process.cwd(), "uploads");
 
+    const logsDir = path.join(process.cwd(), "logs");
+
     if (!fs.existsSync(uploadDir)) {
         fs.mkdirSync(uploadDir, { recursive: true });
+    }
+
+    if(captureErrors){
+        if (!fs.existsSync(logsDir)) {
+            fs.mkdirSync(logsDir, { recursive: true });
+        }
     }
 
     const storage = multer.diskStorage({
@@ -58,12 +68,15 @@ export async function NeneServer({
         res.json({
             "name": "__neneui__",
             "version": ((await import("../../package.json")).version),
+            "captureErrors": captureErrors,
             "appTheme": {
                 "light": themeLight,
                 "dark": themeDark
             }
         });
     });
+
+
 
     // Register Interfaces from Path
     let uiPathDir = join(process.cwd(), uiPath);

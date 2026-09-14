@@ -17,3 +17,9 @@
 ## 0.0.5
 
 * Fix `openDialog`, `openSheet` Not Defined Issues
+
+## 0.0.6
+
+* Migrate to Recent Flutter SDK Release
+* Upgrade shadcn_flutter
+* Use shadcn_flutter Widgets eliminating Material Widgets and compatitable to Material/Cupertino Seperation.

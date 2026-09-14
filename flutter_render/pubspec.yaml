@@ -1,12 +1,12 @@
 name: neneui_render
 description: "Render NeneUI interface definitions as native Flutter widgets."
-version: 0.0.5
+version: 0.0.6
 homepage: https://github.com/kwe26/neneui
 repository: https://github.com/kwe26/neneui
 
 environment:
-  sdk: ^3.10.7
-  flutter: ">=1.17.0"
+  sdk: ^3.13.3
+  flutter: '>=3.3.0'
 
 platforms:
   android:
@@ -23,7 +23,7 @@ dependencies:
   flutter_js: ^0.8.7
   flutter_svg: ^2.3.0
   http: ^1.6.0
-  shadcn_flutter: ^0.0.53
+  shadcn_flutter: ^0.0.54
   url_launcher: ^6.3.2
 
 dev_dependencies:

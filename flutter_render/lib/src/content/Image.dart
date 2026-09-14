@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'dart:io';
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -61,15 +62,17 @@ class dImage {
       return Image(
         image:
             imagePath.toString().startsWith("memory+") &&
-                idDatabase['variables']["${imagePath.replaceFirst("memory+", "")}.file"] !=
+                idDatabase['variables']["${imagePath.toString().replaceFirst("memory+", "")}.file"] !=
                     null
             ? MemoryImage(
-                idDatabase['variables']["${imagePath.replaceFirst("memory+", "")}.file"]
+                idDatabase['variables']["${imagePath.toString().replaceFirst("memory+", "")}.file"]
                     as Uint8List,
               )
+            : imagePath.toString().startsWith("file:")
+            ? FileImage(File(imagePath.toString().replaceFirst("file:", "")))
             : imagePath.toString().startsWith("local+")
-            ? AssetImage(imagePath.toString().replaceAll("local+", ""))
-            : NetworkImage(imagePath.toString().replaceAll("web+", "")),
+            ? AssetImage(imagePath.toString().replaceFirst("local+", ""))
+            : NetworkImage(imagePath.toString().replaceFirst("web+", "")),
         width: double.parse(data['props']['width'].toString()),
         height: double.parse(data['props']['height'].toString()),
         fit: CoreParser.parseBfit(data['props']['fit']),

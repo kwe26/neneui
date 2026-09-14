@@ -51,8 +51,10 @@ class Daikon {
   static dynamic Nene({
     required BuildContext context,
     required Map<String, dynamic> idMap,
-    required var ui,
+    required dynamic ui,
+    required bool captureErrors,
     required String baseUrl,
+    required Map<String, dynamic> plugins,
     required Function event,
     required Function setState,
   }) {
@@ -67,31 +69,34 @@ class Daikon {
     const contextMenuWidgets = ['Text', 'Image', 'Scaffold'];
 
     Widget reRender(
-      var nene, {
+      dynamic nene, {
       Map<String, dynamic> infectForeach = const {},
       useList = false,
     }) {
-      final widget = Daikon.Nene(
-        context: context,
-        idMap: idMap,
-        ui: nene,
-        event: event,
-        baseUrl: baseUrl,
-        setState: setState,
-      );
+      try {
+        final widget = Daikon.Nene(
+          context: context,
+          idMap: idMap,
+          ui: nene,
+          event: event,
+          plugins: plugins,
+          captureErrors: captureErrors,
+          baseUrl: baseUrl,
+          setState: setState,
+        );
 
-      if (contextMenuWidgets.contains(nene['name'])) {
-        return ContextMenu(
-          child: widget,
-          items: [
-            if (kDebugMode)
-              MenuButton(
-                trailing: Icon(Icons.info),
-                enabled: true,
-                onPressed: (context) {
-                  showOverlay(
-                    context,
-                    DialogConfiguration(
+        if (contextMenuWidgets.contains(nene['name'])) {
+          return ContextMenu(
+            child: widget,
+            items: [
+              if (kDebugMode)
+                MenuButton(
+                  trailing: Icon(LucideIcons.info),
+                  enabled: true,
+                  onPressed: (context) {
+                    showOverlay(
+                      context,
+                      DialogConfiguration(),
                       builder: (context) {
                         return AlertDialog(
                           title: Text("Widget Information"),
@@ -117,43 +122,56 @@ class Daikon {
                           ],
                         );
                       },
-                    ),
-                  );
-                },
-                child: Text('Info - ${nene['name']}'),
-              ),
+                    );
+                  },
+                  child: Text('Info - ${nene['name']}'),
+                ),
 
-            if (nene['name'] == "Image")
-              MenuButton(
-                trailing: Icon(Icons.copy),
-                onPressed: (context) {
-                  Clipboard.setData(
-                    ClipboardData(
-                      text: nene['props']['path']
-                          .toString()
-                          .replaceFirst("local+", "")
-                          .replaceFirst("web+", ""),
-                    ),
-                  );
-                },
-                child: Text("Copy Image Address"),
-              ),
+              if (nene['name'] == "Image")
+                MenuButton(
+                  trailing: Icon(LucideIcons.copy),
+                  onPressed: (context) {
+                    Clipboard.setData(
+                      ClipboardData(
+                        text: nene['props']['path']
+                            .toString()
+                            .replaceFirst("local+", "")
+                            .replaceFirst("web+", ""),
+                      ),
+                    );
+                  },
+                  child: Text("Copy Image Address"),
+                ),
 
-            if (nene['name'] == "Text")
-              MenuButton(
-                trailing: Icon(Icons.copy),
-                onPressed: (context) {
-                  Clipboard.setData(
-                    ClipboardData(text: nene['props']['text'].toString()),
-                  );
-                },
-                child: Text("Copy Text"),
+              if (nene['name'] == "Text")
+                MenuButton(
+                  trailing: Icon(LucideIcons.copy),
+                  onPressed: (context) {
+                    Clipboard.setData(
+                      ClipboardData(text: nene['props']['text'].toString()),
+                    );
+                  },
+                  child: Text("Copy Text"),
+                ),
+            ],
+          );
+        }
+
+        return widget;
+      } catch (e, stackTrace) {
+        return SizedBox(
+          width: 300,
+          child: Container(
+            decoration: BoxDecoration(border: Border.all(color: Colors.red)),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                "Something Went Wrong: ${e.toString()}\n${stackTrace.toString()}",
               ),
-          ],
+            ),
+          ),
         );
       }
-
-      return widget;
     }
 
     List reRenderList(dynamic nene) {
@@ -161,14 +179,15 @@ class Daikon {
         return [
           for (final item in nene)
             ...(Daikon.Nene(
-                  context: context,
-                  idMap: idMap,
-                  ui: item,
-                  event: event,
-                  baseUrl: baseUrl,
-                  setState: setState,
-                )
-                as List<Widget>),
+              context: context,
+              idMap: idMap,
+              plugins: plugins,
+              ui: item,
+              event: event,
+              baseUrl: baseUrl,
+              captureErrors: captureErrors,
+              setState: setState,
+            ) as List<Widget>),
         ];
       }
 
@@ -176,8 +195,10 @@ class Daikon {
         context: context,
         idMap: idMap,
         ui: nene,
+        plugins: plugins,
         event: event,
         baseUrl: baseUrl,
+        captureErrors: captureErrors,
         setState: setState,
       );
 
@@ -199,14 +220,15 @@ class Daikon {
         return [
           for (final item in nene)
             ...(Daikon.Nene(
-                  context: context,
-                  idMap: idMap,
-                  ui: item,
-                  event: event,
-                  baseUrl: baseUrl,
-                  setState: setState,
-                )
-                as List<TableRow>),
+              context: context,
+              idMap: idMap,
+              plugins: plugins,
+              ui: item,
+              event: event,
+              baseUrl: baseUrl,
+              captureErrors: captureErrors,
+              setState: setState,
+            ) as List<TableRow>),
         ];
       }
 
@@ -215,7 +237,9 @@ class Daikon {
         idMap: idMap,
         ui: nene,
         event: event,
+        plugins: plugins,
         baseUrl: baseUrl,
+        captureErrors: captureErrors,
         setState: setState,
       );
 
@@ -463,6 +487,7 @@ class Daikon {
           data: ui,
           reRender: reRender,
           event: event,
+          plugins: plugins,
           baseUrl: baseUrl,
           idDatabase: idMap,
         );
@@ -682,6 +707,20 @@ class Daikon {
           reRenderList: reRenderList,
           event: event,
         );
+
+      // ***********************PLUGINS************************************
+      case "VideoFrame":
+        if (plugins.containsKey("video")) {
+          final plugin = plugins["video"];
+
+          if (plugin["plugin"] == "nene_video") {
+            return plugin["widgetResolver"](context, ui, reRender, event);
+          }
+        } else {
+          return const Text("no video :(");
+        }
+
+        return const SizedBox();
 
       default:
         print("[Nene is a daikon: Error Widget not registered]");

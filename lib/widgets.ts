@@ -55,3 +55,6 @@ export * from "./feedback/AlertDialog"
 
 // Theme
 export * from "./http/theme"
+
+// Plugins
+export * from "./plugins/VideoPlugin"

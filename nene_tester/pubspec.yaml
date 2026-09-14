@@ -19,7 +19,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ^3.10.7
+  sdk: ^3.13.3
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -34,8 +34,12 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
-  neneui_render: ^0.0.5
-  shadcn_flutter: ^0.0.53
+  neneui_render: 
+    path: ../flutter_render
+  neneui_video_plugin:
+    path: ../neneui_video_plugin
+  shadcn_flutter: ^0.0.54
+  url_launcher: ^6.3.2
 
 dev_dependencies:
   flutter_test:
@@ -60,7 +64,8 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
+  assets:
+    - assets/
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

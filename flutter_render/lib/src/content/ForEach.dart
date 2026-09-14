@@ -9,6 +9,7 @@ class DForEach {
     required Map<String, dynamic> data,
     required String baseUrl,
     required Function reRender,
+    required Map<String, dynamic> plugins,
     required Function event,
     Map<String, dynamic> idDatabase = const {},
   }) {
@@ -34,6 +35,8 @@ class DForEach {
               return Daikon.Nene(
                 context: context,
                 idMap: idDatabase,
+                plugins: plugins,
+                captureErrors: true,
                 ui: data['props']['child'],
                 baseUrl: baseUrl,
                 event: event,

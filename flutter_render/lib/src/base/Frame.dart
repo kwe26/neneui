@@ -15,6 +15,8 @@ class dFrame {
 
       return NeneUIMain(
         baseUrl: baseUrl,
+        plugins: {},
+        captureErrors: false,
         path: baseUrl + data['props']['framePath'],
         showScaffold: false,
       );

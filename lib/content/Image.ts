@@ -1,7 +1,7 @@
 import { Alignment, AssetImage, BoxFit, CircularProgressIndicator, FilterQuality, ImageRepeat, SizedBox } from "../widgets";
 
 export interface ImageProps {
-    path: string,
+    path: string | { template: string; variable: string; },
     width?: number,
     height?: number,
     scale?: number,

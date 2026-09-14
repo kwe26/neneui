@@ -21,7 +21,7 @@ class dCodeSnippet {
         code: Text(data['props']['code'].toString()),
         actions: [
           GhostButton(
-            child: Icon(Icons.copy),
+            child: Icon(LucideIcons.copy),
             onPressed: () {
               Clipboard.setData(
                 ClipboardData(text: data['props']['code'].toString()),

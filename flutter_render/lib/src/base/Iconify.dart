@@ -18,7 +18,7 @@ class Iconify {
         height: double.parse(data['props']['size'].toString()),
         width: double.parse(data['props']['size'].toString()),
         errorBuilder: (context, obj, trace) => Icon(
-          Icons.error,
+          LucideIcons.imageOff,
           size: double.parse(data['props']['size'].toString()),
         ),
         colorFilter: ColorFilter.mode(

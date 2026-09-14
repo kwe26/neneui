@@ -1,4 +1,6 @@
 import 'dart:convert';
+
+import 'package:flutter/services.dart';
 import 'package:flutter_js/flutter_js.dart';
 import 'package:neneui_render/src/base/customMultipart.dart';
 import 'package:neneui_render/src/enum.dart';
@@ -15,6 +17,7 @@ class InitUI {
   static Widget init({
     required String baseUrl,
     required String title,
+    Map<String, dynamic> plugins = const {},
     bool debugShowCheckedModeBanner = true,
     ThemeData theme = const ThemeData(
       colorScheme: ColorSchemes.lightNeutral,
@@ -26,6 +29,7 @@ class InitUI {
     return _NeneUIInitializer(
       baseUrl: baseUrl,
       title: title,
+      plugins: plugins,
       debugShowCheckedModeBanner: debugShowCheckedModeBanner,
       fallbackTheme: const ThemeData(
         colorScheme: ColorSchemes.darkNeutral,
@@ -41,6 +45,7 @@ class InitUI {
 class _NeneUIInitializer extends StatefulWidget {
   final String baseUrl;
   final String title;
+  final Map<String, dynamic> plugins;
   final bool debugShowCheckedModeBanner;
   final ThemeData fallbackTheme;
   final String defaultPage;
@@ -48,6 +53,7 @@ class _NeneUIInitializer extends StatefulWidget {
   const _NeneUIInitializer({
     required this.baseUrl,
     required this.title,
+    required this.plugins,
     required this.debugShowCheckedModeBanner,
     required this.fallbackTheme,
     required this.defaultPage,
@@ -64,9 +70,9 @@ class _NeneUIInitializerState extends State<_NeneUIInitializer> {
     _themeFuture = _loadThemes();
   }
 
-  late Future<(ThemeData, ThemeData)> _themeFuture;
+  late Future<(ThemeData, ThemeData, bool)> _themeFuture;
 
-  Future<(ThemeData, ThemeData)> _loadThemes() async {
+  Future<(ThemeData, ThemeData, bool)> _loadThemes() async {
     final response = await http.get(Uri.parse("${widget.baseUrl}/__neneui__"));
 
     final data = jsonDecode(response.body);
@@ -75,20 +81,27 @@ class _NeneUIInitializerState extends State<_NeneUIInitializer> {
     final light = appTheme["light"];
     final dark = appTheme["dark"];
 
-    return (ThemeParser.parseTheme(light), ThemeParser.parseThemeDark(dark));
+    final errorReporting = bool.tryParse(data['captureErrors']);
+
+    return (
+      ThemeParser.parseTheme(light),
+      ThemeParser.parseThemeDark(dark),
+      errorReporting!,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<(ThemeData, ThemeData)>(
+    return FutureBuilder<(ThemeData, ThemeData, bool)>(
       future: _themeFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return ShadcnApp(
             title: widget.title,
             theme: widget.fallbackTheme,
+            debugShowCheckedModeBanner: widget.debugShowCheckedModeBanner,
             home: const Scaffold(
-              child: Center(child: CircularProgressIndicator()),
+              child: Center(child: CircularProgressIndicator(strokeWidth: 38)),
             ),
           );
         }
@@ -100,18 +113,88 @@ class _NeneUIInitializerState extends State<_NeneUIInitializer> {
           return ShadcnApp(
             title: widget.title,
             theme: widget.fallbackTheme,
+            debugShowCheckedModeBanner: widget.debugShowCheckedModeBanner,
             home: Scaffold(
+              footers: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: SizedBox(
+                    width: 200,
+                    height: 100,
+                    child: Center(
+                      child: SecondaryButton(
+                        leading: Icon(RadixIcons.reset),
+                        child: Text("Try Again"),
+                        onPressed: () {
+                          // Navigator.of(context).pushReplacement(
+                          //   ShadcnPageRoute(
+                          //     builder: (context) => _NeneUIInitializer(
+                          //       title: widget.title,
+                          //       baseUrl: widget.baseUrl,
+                          //       fallbackTheme: widget.fallbackTheme,
+                          //       plugins: widget.plugins,
+                          //       defaultPage: widget.defaultPage,
+                          //       debugShowCheckedModeBanner:
+                          //           widget.debugShowCheckedModeBanner,
+                          //     ),
+                          //   ),
+                          // );
+                          setState(() {
+                            _themeFuture = _loadThemes();
+                          });
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+              ],
               child: Center(
-                child: Text(
-                  "Failed to initialize NeneUI:\n\n${snapshot.error}",
-                  textAlign: TextAlign.center,
+                child: SizedBox(
+                  width: 400,
+                  height: MediaQuery.of(context).size.height - 410,
+                  child: Card(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: .spaceEvenly,
+                            children: [
+                              Icon(RadixIcons.crossCircled, size: 28),
+                              Text(
+                                "Something Went Wrong",
+                                style: TextStyle(fontSize: 28),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 10),
+                          const Divider(),
+                          const SizedBox(height: 10),
+                          Text(
+                            "Failed to initialize NeneUI:\n\n${snapshot.error}",
+                            textAlign: TextAlign.center,
+                          ),
+                          Text("Plugin Data: ${widget.plugins.toString()}"),
+                          TextButton(
+                            child: Text("Copy Stacktrace"),
+                            onPressed: () {
+                              Clipboard.setData(
+                                ClipboardData(
+                                  text: snapshot.stackTrace.toString(),
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ),
           );
         }
 
-        final (lightTheme, darkTheme) = snapshot.data!;
+        final (lightTheme, darkTheme, captureErrors) = snapshot.data!;
 
         return ShadcnApp(
           title: widget.title,
@@ -120,8 +203,10 @@ class _NeneUIInitializerState extends State<_NeneUIInitializer> {
           debugShowCheckedModeBanner: widget.debugShowCheckedModeBanner,
           home: DrawerOverlay(
             child: NeneUIMain(
+              plugins: widget.plugins,
               path: "${widget.baseUrl}${widget.defaultPage}",
               baseUrl: widget.baseUrl,
+              captureErrors: captureErrors,
               showScaffold: true,
             ),
           ),
@@ -134,13 +219,17 @@ class _NeneUIInitializerState extends State<_NeneUIInitializer> {
 class NeneUIMain extends StatefulWidget {
   final String path;
   final String baseUrl;
+  final bool captureErrors;
+  final Map<String, dynamic> plugins;
   final bool showScaffold;
 
   const NeneUIMain({
     super.key,
     required this.baseUrl,
+    required this.plugins,
     required this.path,
     required this.showScaffold,
+    required this.captureErrors,
   });
 
   @override
@@ -227,12 +316,11 @@ class _NeneUIState extends State<NeneUIMain> {
     }
 
     if (event == Events.SELECT_FILE) {
-      print(data['types']);
       FilePickerResult? result = await FilePicker.pickFiles(
         allowMultiple: false,
         dialogTitle: data['title'],
         type: FileType.custom,
-        withData: true,
+        withData: false,
         allowedExtensions: data['types'].toString().split(","),
       );
 
@@ -242,7 +330,23 @@ class _NeneUIState extends State<NeneUIMain> {
 
       setState(() {
         idDatabase['variables'][data['variable']] = ".file,.name,.size";
-        idDatabase['variables'][data['variable'] + ".file"] = file.bytes;
+        const maxMemoryFileSize = 10 * 1024 * 1024;
+
+        if (file.bytes != null &&
+            file.size <= maxMemoryFileSize &&
+            [
+              "png",
+              "jpeg",
+              "jpg",
+              "gif",
+              "webp",
+              "svg",
+            ].contains(file.extension?.toLowerCase())) {
+          idDatabase['variables'][data['variable'] + ".file"] = file.bytes;
+        } else {
+          idDatabase['variables'][data['variable'] + ".file"] =
+              "file:${file.path}";
+        }
         idDatabase['variables'][data['variable'] + ".name"] = file.name;
         idDatabase['variables'][data['variable'] + ".size"] = file.size;
       });
@@ -267,11 +371,13 @@ class _NeneUIState extends State<NeneUIMain> {
 
     if (event == Events.INVOKE_NAVIGATE) {
       Navigator.of(context).push(
-        MaterialPageRoute(
+        ShadcnPageRoute(
           builder: (ctx) => NeneUIMain(
             path: "${widget.baseUrl}$data",
             baseUrl: widget.baseUrl,
+            captureErrors: widget.captureErrors,
             showScaffold: true,
+            plugins: widget.plugins,
           ),
         ),
       );
@@ -279,10 +385,12 @@ class _NeneUIState extends State<NeneUIMain> {
 
     if (event == Events.INVOKE_NAVIGATE_REPLACE) {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
+        ShadcnPageRoute(
           builder: (ctx) => NeneUIMain(
             path: "${widget.baseUrl}$data",
             baseUrl: widget.baseUrl,
+            captureErrors: widget.captureErrors,
+            plugins: widget.plugins,
             showScaffold: true,
           ),
         ),
@@ -326,7 +434,7 @@ class _NeneUIState extends State<NeneUIMain> {
                   // Close the toast programmatically when clicking Undo.
                   overlay.close();
                 },
-                child: const Icon(Icons.close),
+                child: const Icon(RadixIcons.cross1),
               ),
               trailingAlignment: Alignment.center,
             ),
@@ -362,17 +470,19 @@ class _NeneUIState extends State<NeneUIMain> {
       showOverlay(
         context,
         DialogConfiguration(
-          builder: (context) => Daikon.Nene(
-            context: context,
-            idMap: idDatabase,
-            ui: data,
-            baseUrl: widget.baseUrl,
-            event: eventExec,
-            setState: setState,
-          ),
           barrierDismissible: (data as Map).containsKey("props")
               ? bool.parse(data['props']['barrierDismissible'].toString())
               : true,
+        ),
+        builder: (context) => Daikon.Nene(
+          context: context,
+          idMap: idDatabase,
+          ui: data,
+          plugins: widget.plugins,
+          baseUrl: widget.baseUrl,
+          captureErrors: widget.captureErrors,
+          event: eventExec,
+          setState: setState,
         ),
       );
     }
@@ -400,27 +510,26 @@ class _NeneUIState extends State<NeneUIMain> {
 
           showOverlay(
             context,
-            DialogConfiguration(
-              builder: (context) {
-                return ValueListenableBuilder<double>(
-                  valueListenable: progress,
-                  builder: (_, value, _) {
-                    return AlertDialog(
-                      content: SizedBox(
-                        width: 50,
-                        height: 50,
-                        child: Column(
-                          children: [
-                            CircularProgressIndicator(value: value),
-                            Text("${(value * 100).toStringAsFixed(1)}%"),
-                          ],
-                        ),
+            DialogConfiguration(),
+            builder: (context) {
+              return ValueListenableBuilder<double>(
+                valueListenable: progress,
+                builder: (_, value, _) {
+                  return AlertDialog(
+                    content: SizedBox(
+                      width: 50,
+                      height: 50,
+                      child: Column(
+                        children: [
+                          CircularProgressIndicator(value: value),
+                          Text("${(value * 100).toStringAsFixed(1)}%"),
+                        ],
                       ),
-                    );
-                  },
-                );
-              },
-            ),
+                    ),
+                  );
+                },
+              );
+            },
           );
 
           final request = ProgressMultipartRequest(
@@ -432,21 +541,32 @@ class _NeneUIState extends State<NeneUIMain> {
           );
 
           for (var vb in variables) {
-            request.fields[varNames[variables.indexOf(
-              vb,
-            )]] = CoreParser.parseKVariable(
-              idDatabase['variables'][vb],
-            ).toString();
+            request.fields[varNames[variables.indexOf(vb)]] =
+                CoreParser.parseKVariable(idDatabase['variables'][vb])
+                    .toString();
           }
 
-          for (var vb in fileVariables) {
-            request.files.add(
-              http.MultipartFile.fromBytes(
-                fileNames[fileVariables.indexOf(vb)],
-                idDatabase['variables']["$vb.file"],
-                filename: idDatabase['variables']["$vb.name"],
-              ),
-            );
+          for (var i = 0; i < fileVariables.length; i++) {
+            final vb = fileVariables[i];
+            final file = idDatabase['variables']["$vb.file"];
+
+            if (file is Uint8List) {
+              request.files.add(
+                http.MultipartFile.fromBytes(
+                  fileNames[i],
+                  file,
+                  filename: idDatabase['variables']["$vb.name"],
+                ),
+              );
+            } else if (file is String && file.startsWith("file:")) {
+              request.files.add(
+                await http.MultipartFile.fromPath(
+                  fileNames[i],
+                  file.replaceFirst("file:", ""),
+                  filename: idDatabase['variables']["$vb.name"],
+                ),
+              );
+            }
           }
 
           final response = await request.send();
@@ -481,13 +601,12 @@ class _NeneUIState extends State<NeneUIMain> {
 
         showOverlay(
           context,
-          DialogConfiguration(
-            builder: (ctx) => AlertDialog(
-              content: SizedBox(
-                width: 50,
-                height: 50,
-                child: Center(child: CircularProgressIndicator(size: 18)),
-              ),
+          DialogConfiguration(),
+          builder: (ctx) => AlertDialog(
+            content: SizedBox(
+              width: 50,
+              height: 50,
+              child: Center(child: CircularProgressIndicator(size: 18)),
             ),
           ),
         );
@@ -577,185 +696,178 @@ class _NeneUIState extends State<NeneUIMain> {
   void openDebugSlide() {
     showOverlay(
       context,
-      SheetConfiguration(
-        builder: (context) {
-          return Container(
-            padding: const EdgeInsets.all(24),
-            constraints: const BoxConstraints(maxWidth: 400),
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Expanded(
-                        child: const Text('Daikon Debugger').large().medium(),
-                      ),
-                      TextButton(
-                        density: ButtonDensity.icon,
-                        child: const Icon(Icons.close),
-                        onPressed: () {
-                          // Close the sheet without saving.
-                          closeSheet(context);
-                        },
-                      ),
-                    ],
-                  ),
-                  const Gap(8),
-                  SizedBox(
-                    width: 1000,
-                    child: PrimaryButton(
-                      child: Text("Refresh User Interface"),
+      SheetConfiguration(position: OverlayPosition.end),
+      builder: (context) {
+        return Container(
+          padding: const EdgeInsets.all(24),
+          constraints: const BoxConstraints(maxWidth: 400),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Expanded(
+                      child: const Text('Daikon Debugger').large().medium(),
+                    ),
+                    TextButton(
+                      density: ButtonDensity.icon,
+                      child: const Icon(RadixIcons.cross1),
                       onPressed: () {
-                        fetchUIRender();
+                        // Close the sheet without saving.
+                        closeSheet(context);
                       },
                     ),
+                  ],
+                ),
+                const Gap(8),
+                SizedBox(
+                  width: 1000,
+                  child: PrimaryButton(
+                    child: Text("Refresh User Interface"),
+                    onPressed: () {
+                      fetchUIRender();
+                    },
                   ),
-                  const Gap(8),
-                  Collapsible(
-                    children: [
-                      const CollapsibleTrigger(
-                        child: Text("Daikon ID Database"),
-                      ),
-                      OutlinedContainer(
-                        child: Text(
-                          "Id Database for Widgets Rendered by Daikon via NeneUI JSON",
-                        ).small().mono().withPadding(horizontal: 16, vertical: 8),
-                      ).withPadding(top: 8),
-                      CollapsibleContent(
-                        child: Column(
-                          children: [
-                            for (var id in idDatabase.keys)
-                              if (id.contains("#"))
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: SizedBox(
-                                    width: 1000,
-                                    child: Card(
-                                      child: Column(
-                                        mainAxisAlignment: .start,
-                                        crossAxisAlignment: .start,
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment: .spaceBetween,
-                                            children: [
-                                              SizedBox(
-                                                width: 190,
-                                                child: Text(
-                                                  id.toString(),
-                                                  overflow: .ellipsis,
-                                                ),
+                ),
+                const Gap(8),
+                Collapsible(
+                  children: [
+                    const CollapsibleTrigger(child: Text("Daikon ID Database")),
+                    OutlinedContainer(
+                      child: Text(
+                        "Id Database for Widgets Rendered by Daikon via NeneUI JSON",
+                      ).small().mono().withPadding(horizontal: 16, vertical: 8),
+                    ).withPadding(top: 8),
+                    CollapsibleContent(
+                      child: Column(
+                        children: [
+                          for (var id in idDatabase.keys)
+                            if (id.contains("#"))
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: SizedBox(
+                                  width: 1000,
+                                  child: Card(
+                                    child: Column(
+                                      mainAxisAlignment: .start,
+                                      crossAxisAlignment: .start,
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment: .spaceBetween,
+                                          children: [
+                                            SizedBox(
+                                              width: 190,
+                                              child: Text(
+                                                id.toString(),
+                                                overflow: .ellipsis,
                                               ),
-                                              IconButton(
-                                                icon: Icon(Icons.settings),
-                                                variance:
-                                                    ButtonStyle.textIcon(),
-                                                onPressed: () {
-                                                  setState(() {
-                                                    idDatabase[id]['override'] =
-                                                        idDatabase[id]['override']
-                                                        ? false
-                                                        : true;
-                                                  });
-                                                },
-                                              ),
-                                              IconButton(
-                                                icon: Icon(Icons.hide_image),
-                                                variance:
-                                                    ButtonStyle.textIcon(),
-                                                onPressed: () {
-                                                  setState(() {
-                                                    idDatabase[id]['visible'] =
-                                                        idDatabase[id]['visible']
-                                                        ? false
-                                                        : true;
-                                                  });
-                                                },
-                                              ),
-                                            ],
-                                          ),
-                                          const Divider(),
-                                          TextField(
-                                            controller: TextEditingController(
-                                              text: JsonEncoder.withIndent(
-                                                ' ',
-                                              ).convert(idDatabase[id]),
                                             ),
-                                            initialValue:
-                                                JsonEncoder.withIndent(
-                                                  ' ',
-                                                ).convert(idDatabase[id]),
-                                            maxLines: 10,
-                                            onChanged: (value) {
-                                              setState(() {
-                                                idDatabase[id] = jsonDecode(
-                                                  value,
-                                                );
-                                              });
-                                            },
+                                            IconButton(
+                                              icon: Icon(LucideIcons.settings),
+                                              variance: ButtonStyle.textIcon(),
+                                              onPressed: () {
+                                                setState(() {
+                                                  idDatabase[id]['override'] =
+                                                      idDatabase[id]['override']
+                                                      ? false
+                                                      : true;
+                                                });
+                                              },
+                                            ),
+                                            IconButton(
+                                              icon: Icon(LucideIcons.eyeClosed),
+                                              variance: ButtonStyle.textIcon(),
+                                              onPressed: () {
+                                                setState(() {
+                                                  idDatabase[id]['visible'] =
+                                                      idDatabase[id]['visible']
+                                                      ? false
+                                                      : true;
+                                                });
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                        const Divider(),
+                                        TextField(
+                                          controller: TextEditingController(
+                                            text: JsonEncoder.withIndent(' ')
+                                                .convert(idDatabase[id]),
                                           ),
-                                        ],
-                                      ),
+                                          initialValue: JsonEncoder.withIndent(
+                                            ' ',
+                                          ).convert(idDatabase[id]),
+                                          maxLines: 10,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              idDatabase[id] = jsonDecode(
+                                                value,
+                                              );
+                                            });
+                                          },
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ),
-                          ],
-                        ),
+                              ),
+                        ],
                       ),
-                    ],
-                  ),
-                  const Gap(10),
-                  Collapsible(
-                    children: [
-                      const CollapsibleTrigger(child: Text("Variables")),
-                      OutlinedContainer(
-                        child: Text(
-                          "Id Database for Widgets Rendered by Daikon via NeneUI JSON",
-                        ).small().mono().withPadding(horizontal: 16, vertical: 8),
-                      ).withPadding(top: 8),
-                      CollapsibleContent(
-                        child: Column(
-                          children: [
-                            for (var variab in Map.from(
-                              idDatabase['variables'],
-                            ).keys)
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Card(
-                                  child: Column(
-                                    mainAxisAlignment: .start,
-                                    crossAxisAlignment: .start,
-                                    children: [
-                                      Text(variab),
-                                      Text(
-                                        idDatabase['variables'][variab]
-                                            .toString(),
-                                        style: TextStyle(fontSize: 8),
-                                      ),
-                                    ],
-                                  ),
+                    ),
+                  ],
+                ),
+                const Gap(10),
+                Collapsible(
+                  children: [
+                    const CollapsibleTrigger(child: Text("Variables")),
+                    OutlinedContainer(
+                      child: Text(
+                        "Id Database for Widgets Rendered by Daikon via NeneUI JSON",
+                      ).small().mono().withPadding(horizontal: 16, vertical: 8),
+                    ).withPadding(top: 8),
+                    CollapsibleContent(
+                      child: Column(
+                        children: [
+                          for (var variab in Map.from(
+                            idDatabase['variables'],
+                          ).keys)
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Card(
+                                child: Column(
+                                  mainAxisAlignment: .start,
+                                  crossAxisAlignment: .start,
+                                  children: [
+                                    Text(variab),
+                                    Text(
+                                      idDatabase['variables'][variab]
+                                          .toString(),
+                                      style: TextStyle(fontSize: 8),
+                                    ),
+                                  ],
                                 ),
                               ),
-                          ],
-                        ),
+                            ),
+                        ],
                       ),
-                    ],
-                  ),
-                  const Gap(10),
-                  const Text(
-                    "Events Fired Recently",
-                  ).small().mono().withPadding(horizontal: 16, vertical: 8),
-                  for (var event in eventsFired)
-                    if (event != "register_id") Text(event.toString()),
-                ],
-              ),
+                    ),
+                  ],
+                ),
+                const Gap(10),
+                const Text("Events Fired Recently")
+                    .small()
+                    .mono()
+                    .withPadding(horizontal: 16, vertical: 8),
+                for (var event in eventsFired)
+                  if (event != "register_id") Text(event.toString()),
+              ],
             ),
-          );
-        },
-        position: OverlayPosition.end,
-      ),
+          ),
+        );
+      },
     );
   }
 
@@ -774,6 +886,8 @@ class _NeneUIState extends State<NeneUIMain> {
             idMap: idDatabase,
             ui: ui,
             setState: setState,
+            captureErrors: widget.captureErrors,
+            plugins: widget.plugins,
             baseUrl: widget.baseUrl,
             event: eventExec,
           );
