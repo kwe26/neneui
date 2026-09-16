@@ -2,6 +2,7 @@ import 'package:neneui_render/src/enum.dart';
 import 'package:neneui_render/src/parser/Core.dart';
 import 'package:shadcn_flutter/shadcn_flutter_experimental.dart';
 
+// ignore: camel_case_types
 class dRow {
   static Widget run({
     required BuildContext context,

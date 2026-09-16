@@ -181,6 +181,8 @@ class Daikon {
 
           http.post(url, headers: headers, body: body).catchError((error) {
             debugPrint("error: capture failed: $error");
+            // ignore: invalid_return_type_for_catch_error
+            return {'status': false};
           });
         }
 
