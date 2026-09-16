@@ -1,30 +1,54 @@
 /**
- * Any CSS included here will be global. The classic template
- * bundles Infima by default. Infima is a CSS framework designed to
- * work well for content-centric websites.
+ * Nene-inspired color scheme
+ * Warm reds/oranges + cream + deep wine + blue accents.
  */
 
-/* You can override the default Infima variables here. */
 :root {
-  --ifm-color-primary: #2e8555;
-  --ifm-color-primary-dark: #29784c;
-  --ifm-color-primary-darker: #277148;
-  --ifm-color-primary-darkest: #205d3b;
-  --ifm-color-primary-light: #33925d;
-  --ifm-color-primary-lighter: #359962;
-  --ifm-color-primary-lightest: #3cad6e;
+  --ifm-color-primary: #b84d31;
+  --ifm-color-primary-dark: #a8432a;
+  --ifm-color-primary-darker: #963b25;
+  --ifm-color-primary-darkest: #7a2f1e;
+  --ifm-color-primary-light: #c56347;
+  --ifm-color-primary-lighter: #d27a5d;
+  --ifm-color-primary-lightest: #e39a7d;
+
   --ifm-code-font-size: 95%;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+  --docusaurus-highlighted-code-line-bg: rgba(89, 18, 16, 0.08);
+
+  /* Nene palette */
+  --nene-red: #b84d31;
+  --nene-red-dark: #8f2f25;
+  --nene-orange: #e7835c;
+  --nene-peach: #fbd2b5;
+  --nene-cream: #d8cbae;
+  --nene-wine: #591210;
+  --nene-brown: #743f44;
+  --nene-blue: #254ca0;
+
+  --ifm-background-color: #fffaf5;
+  --ifm-background-surface-color: #fff4ec;
 }
 
-/* For readability concerns, you should choose a lighter palette in dark mode. */
 [data-theme='dark'] {
-  --ifm-color-primary: #25c2a0;
-  --ifm-color-primary-dark: #21af90;
-  --ifm-color-primary-darker: #1fa588;
-  --ifm-color-primary-darkest: #1a8870;
-  --ifm-color-primary-light: #29d5b0;
-  --ifm-color-primary-lighter: #32d8b4;
-  --ifm-color-primary-lightest: #4fddbf;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+  --ifm-color-primary: #e7835c;
+  --ifm-color-primary-dark: #d96f4e;
+  --ifm-color-primary-darker: #c85d3e;
+  --ifm-color-primary-darkest: #ad492f;
+  --ifm-color-primary-light: #ef9a78;
+  --ifm-color-primary-lighter: #f3ad8e;
+  --ifm-color-primary-lightest: #f8c5aa;
+
+  --docusaurus-highlighted-code-line-bg: rgba(231, 131, 92, 0.15);
+
+  --ifm-background-color: #1f0e0f;
+  --ifm-background-surface-color: #2b1515;
+
+  --nene-red: #e7835c;
+  --nene-red-dark: #b84d31;
+  --nene-orange: #e7835c;
+  --nene-peach: #fbd2b5;
+  --nene-cream: #d8cbae;
+  --nene-wine: #591210;
+  --nene-brown: #743f44;
+  --nene-blue: #2f5fbd;
 }

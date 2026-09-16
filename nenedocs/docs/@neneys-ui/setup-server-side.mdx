@@ -1,0 +1,45 @@
+---
+sidebar_position: 1
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# Setup Server-Side Backend
+
+### Install Package
+> Install the Latest @neneys/ui Package from the Package Repository
+<Tabs>
+  <TabItem value="npm" label="NPM" default>
+    ```bash
+    npm install @neneys/ui
+    ```
+  </TabItem> 
+  <TabItem value="bun" label="Bun">
+    ```bash
+    bun install @neneys/ui
+    ```
+  </TabItem> 
+</Tabs>
+
+### Setup Project Strucutre
+```txt
+Project Root/
+├── interfaces/
+├── callbacks/
+└── index.ts
+```
+
+### Create Files
+
+`index.ts`
+```ts
+import { NeneServer } from "@neneys/ui"
+
+NeneServer({
+  port: 3500,
+  uiPath: "./interfaces",
+  verbose: true,
+  callbackPath: "./callbacks"
+})
+```
