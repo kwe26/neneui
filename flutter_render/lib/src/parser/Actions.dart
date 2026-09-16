@@ -35,6 +35,8 @@ class ActionsPerf {
       event(Events.INVOKE_JS, mainData);
     } else if (action == "select_file") {
       event(Events.SELECT_FILE, mainData);
+    } else if (action == "pay") {
+      event(Events.PAY, mainData);
     }
 
     debugPrint(action);

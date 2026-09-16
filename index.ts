@@ -56,6 +56,8 @@ NeneServer({
     payments: NenePayments({
         NeneUI: true,
         SecretKey: "1234",
+        DatabasePath: "uploads/db.db",
+        DomainUrl: "http://192.168.29.21:3500",
         PaymentGateways: [
             RazorpayGateway(process.env['RZP_KEY']!, process.env['SECRET']!)
         ]

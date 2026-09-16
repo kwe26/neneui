@@ -10,6 +10,7 @@
 #include <media_kit_video/media_kit_video_plugin_c_api.h>
 #include <quickjs_engine/quickjs_engine_plugin_c_api.h>
 #include <url_launcher_windows/url_launcher_windows.h>
+#include <webview_all_windows/webview_all_windows_plugin.h>
 
 void RegisterPlugins(flutter::PluginRegistry* registry) {
   MediaKitLibsWindowsVideoPluginCApiRegisterWithRegistrar(
@@ -20,4 +21,6 @@ void RegisterPlugins(flutter::PluginRegistry* registry) {
       registry->GetRegistrarForPlugin("QuickjsEnginePluginCApi"));
   UrlLauncherWindowsRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("UrlLauncherWindows"));
+  WebviewAllWindowsPluginRegisterWithRegistrar(
+      registry->GetRegistrarForPlugin("WebviewAllWindowsPlugin"));
 }

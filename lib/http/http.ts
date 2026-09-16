@@ -45,6 +45,11 @@ export async function NeneServer({
         }
     }
 
+    pass = {
+        ...pass,
+        port: port,
+    }
+
     const storage = multer.diskStorage({
         destination(req, file, cb) {
             cb(null, uploadDir);

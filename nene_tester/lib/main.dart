@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:neneui_payments_plugin/neneui_video_plugin.dart';
 import 'package:neneui_video_plugin/neneui_video_plugin.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 import 'package:neneui_render/neneui_render.dart';
@@ -72,51 +75,57 @@ class _UrlScreenState extends State<UrlScreen> {
         Scaffold(
           backgroundColor: Colors.transparent,
           footers: [
-            SizedBox(
-              width: 1000,
-              child: Row(
-                mainAxisAlignment: .center,
-                crossAxisAlignment: .center,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(3.0),
-                    child: SizedBox(
-                      width: 180,
-                      height: 100,
-                      child: Center(
-                        child: SecondaryButton(
-                          leading: Icon(RadixIcons.githubLogo),
-                          child: Text("Source"),
-                          onPressed: () {
-                            launchUrl(
-                              Uri.parse("https://github.com/kwe26/neneui"),
-                            );
-                          },
+            Platform.isAndroid
+                ? SizedBox()
+                : SizedBox(
+                    width: 1000,
+                    child: Row(
+                      mainAxisAlignment: .center,
+                      crossAxisAlignment: .center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(3.0),
+                          child: SizedBox(
+                            width: 180,
+                            height: 100,
+                            child: Center(
+                              child: SecondaryButton(
+                                leading: Icon(RadixIcons.githubLogo),
+                                child: Text("Source"),
+                                onPressed: () {
+                                  launchUrl(
+                                    Uri.parse(
+                                      "https://github.com/kwe26/neneui",
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
+                        Padding(
+                          padding: const EdgeInsets.all(3.0),
+                          child: SizedBox(
+                            width: 180,
+                            height: 100,
+                            child: Center(
+                              child: SecondaryButton(
+                                leading: Icon(RadixIcons.box),
+                                child: Text("NPM Pkg"),
+                                onPressed: () {
+                                  launchUrl(
+                                    Uri.parse(
+                                      "https://www.npmjs.com/@neneys/ui",
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(3.0),
-                    child: SizedBox(
-                      width: 180,
-                      height: 100,
-                      child: Center(
-                        child: SecondaryButton(
-                          leading: Icon(RadixIcons.box),
-                          child: Text("NPM Pkg"),
-                          onPressed: () {
-                            launchUrl(
-                              Uri.parse("https://www.npmjs.com/@neneys/ui"),
-                            );
-                          },
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: SizedBox(
@@ -125,29 +134,34 @@ class _UrlScreenState extends State<UrlScreen> {
                 child: Center(
                   child: HoverCard(
                     hoverBuilder: (context) {
-                      return SurfaceCard(
-                        child: Basic(
-                          title: Text('Are You Sure?'),
-                          content: Column(
-                            children: [
-                              Text(
-                                'Once you Launch the App, To Launch Other URL you have to restart the entire app.!',
+                      return Platform.isAndroid
+                          ? SizedBox()
+                          : SurfaceCard(
+                              child: Basic(
+                                title: Text('Are You Sure?'),
+                                content: Column(
+                                  children: [
+                                    Text(
+                                      'Once you Launch the App, To Launch Other URL you have to restart the entire app.!',
+                                    ),
+                                    const SizedBox(height: 10),
+                                    PrimaryButton(
+                                      child: Text("Yes, Continue"),
+                                      onPressed: () => launchDemo(),
+                                    ),
+                                  ],
+                                ),
                               ),
-                              const SizedBox(height: 10),
-                              PrimaryButton(
-                                child: Text("Yes, Continue"),
-                                onPressed: () => launchDemo(),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ).sized(width: 300);
+                            ).sized(width: 300);
                     },
                     child: SecondaryButton(
                       leading: Icon(RadixIcons.play),
                       child: Text("Launch App"),
                       onPressed: () {
                         //launchDemo();
+                        if (Platform.isAndroid) {
+                          launchDemo();
+                        }
                       },
                     ),
                   ),
@@ -209,6 +223,35 @@ class _UrlScreenState extends State<UrlScreen> {
                             child: Center(
                               child: Text(
                                 "Video Plugin [${plugins.containsKey("video") ? "ENABLED" : "DISABLED"}]",
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      SizedBox(
+                        width: 1000,
+                        height: 40,
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              if (plugins.containsKey("pay")) {
+                                plugins.remove("pay");
+                              } else {
+                                plugins.addAll({
+                                  "pay": NeneuiPaymentsPlugin.manifest(),
+                                });
+                              }
+                            });
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.white),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Center(
+                              child: Text(
+                                "Payments Plugin [${plugins.containsKey("pay") ? "ENABLED" : "DISABLED"}]",
                               ),
                             ),
                           ),

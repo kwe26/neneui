@@ -423,6 +423,43 @@ class _NeneUIState extends State<NeneUIMain> {
       }
     }
 
+    if (event == Events.PAY) {
+      if (widget.plugins.containsKey("pay")) {
+        final plugin = widget.plugins["pay"];
+
+        if (plugin != null) {
+          if (plugin['plugin'] == "nene_payments") {
+            if (plugin['actionResolver'] is! Function) {
+              print("ACTION RESOLVER IS NOT A FUNCTION!");
+              print(plugin['actionResolver'].runtimeType);
+              return;
+            }
+            print("NENE UI CALLED");
+            print(data);
+            print(plugin);
+            plugin['actionResolver'](context, data, (callback) {
+              if (callback == null) {
+                eventExec(event, "Something Went Wrong with Payments System");
+                return;
+              } else {
+                ActionsPerf.perform(
+                  context,
+                  eventExec,
+                  callback['action'],
+                  callback['data'],
+                );
+              }
+            });
+          }
+        }
+      } else {
+        eventExec(
+          Events.INVOKE_TOAST,
+          "You do not have @neneys/payments initialized",
+        );
+      }
+    }
+
     if (event == Events.INVOKE_TOAST) {
       showToast(
         context: context,
@@ -577,7 +614,7 @@ class _NeneUIState extends State<NeneUIMain> {
           final body = await response.stream.bytesToString();
 
           if (response.statusCode == 200) {
-            Navigator.of(context).pop();
+            closeOverlay(context);
 
             final json = jsonDecode(body);
 
@@ -590,7 +627,7 @@ class _NeneUIState extends State<NeneUIMain> {
               );
             }
           } else {
-            Navigator.of(context).pop();
+            closeOverlay(context);
             eventExec(Events.INVOKE_TOAST, response.reasonPhrase ?? body);
           }
 
@@ -622,8 +659,10 @@ class _NeneUIState extends State<NeneUIMain> {
               : {'User-agent': 'NeneUI/1.0'},
         );
 
+        closeOverlay(context);
+
         if (response.statusCode == 200) {
-          Navigator.of(context).pop();
+          //closeOverlay(context);
           var json = jsonDecode(response.body);
           for (var cbAction in List.from(json['callbacks'])) {
             ActionsPerf.perform(
@@ -634,7 +673,8 @@ class _NeneUIState extends State<NeneUIMain> {
             );
           }
         } else {
-          Navigator.of(context).pop();
+          // Navigator.of(context).pop();
+          closeOverlay(context);
           eventExec(Events.INVOKE_TOAST, response.reasonPhrase);
         }
       } catch (error) {

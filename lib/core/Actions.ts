@@ -11,6 +11,7 @@ export enum Action {
     SET_VAR = "setvar",
     JAVASCRIPT = "js",
     PROPS = "props",
+    PAY ="pay",
     LAUNCH_URL = "launch_url",
     SELECT_FILE = "select_file"
 }

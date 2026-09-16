@@ -140,8 +140,6 @@ export function run(req: Request, res: Response, pass: any) {
                                         onPressed: DoAction(Action.SUBMIT, FormSubmitAction({
                                             variables: ["#userPassword.controller", "#userName.controller", "#dtp.controller"],
                                             varNames: ["password", "username", "date"],
-                                            fileVariable: ["selFile"],
-                                            fileNames: ["file"],
                                             callbackPath: "/ui/test_callback"
                                         }))
                                     }),

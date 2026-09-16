@@ -7,6 +7,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
   media_kit_video
   quickjs_engine
   url_launcher_windows
+  webview_all_windows
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST

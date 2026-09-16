@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{_title}}</title>
+
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+            background: #f4f7fb;
+            color: #10213d;
+        }
+
+        .appbar {
+            height: 60px;
+            padding: 0 22px;
+            display: flex;
+            align-items: center;
+            background: #071a3d;
+            color: white;
+        }
+
+        .brand {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .page {
+            min-height: calc(100vh - 60px);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 45px 18px;
+        }
+
+        .card {
+            width: 100%;
+            max-width: 440px;
+            padding: 30px;
+            background: white;
+            border: 1px solid #e1e7ef;
+            border-radius: 8px;
+        }
+
+        h1 {
+            margin: 0;
+            color: #071a3d;
+            font-size: 24px;
+        }
+
+        .subtitle {
+            margin: 8px 0 25px;
+            color: #667085;
+            font-size: 14px;
+        }
+
+        .customer {
+            padding: 16px;
+            margin-bottom: 22px;
+            background: #f5f8fc;
+            border-left: 4px solid #123b82;
+        }
+
+        .customer small {
+            display: block;
+            margin-bottom: 5px;
+            color: #667085;
+        }
+
+        .customer strong {
+            color: #071a3d;
+            font-size: 16px;
+        }
+
+        .pay-button {
+            width: 100%;
+            height: 48px;
+            border: 0;
+            border-radius: 6px;
+            background: #0d2b63;
+            color: white;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .pay-button:hover {
+            background: #123b82;
+        }
+
+        .pay-button:disabled {
+            opacity: .6;
+            cursor: not-allowed;
+        }
+
+        .footer {
+            margin: 16px 0 0;
+            text-align: center;
+            color: #8a94a6;
+            font-size: 12px;
+        }
+
+        .overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: rgba(7, 26, 61, .92);
+        }
+
+        .overlay.hidden {
+            display: none;
+        }
+
+        .modal {
+            width: min(380px, 100%);
+            padding: 32px 28px;
+            background: white;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .spinner {
+            width: 42px;
+            height: 42px;
+            margin: 0 auto 18px;
+            border: 4px solid #dce5f2;
+            border-top-color: #0d2b63;
+            border-radius: 50%;
+            animation: spin .8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .modal h2 {
+            margin: 0;
+            color: #071a3d;
+            font-size: 19px;
+        }
+
+        .modal p {
+            margin: 8px 0 22px;
+            color: #667085;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .success-mark {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: #e9f7ef;
+            color: #16803c;
+            font-size: 38px;
+            font-weight: 700;
+        }
+
+        .error-mark {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: #fdecec;
+            color: #c62828;
+            font-size: 34px;
+            font-weight: 700;
+        }
+
+        .close-button {
+            width: 100%;
+            height: 45px;
+            border: 0;
+            border-radius: 6px;
+            background: #0d2b63;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="appbar">
+    <div class="brand">Payments</div>
+</header>
+
+<main class="page">
+    <section class="card">
+        <h1>Complete Payment</h1>
+
+        <p class="subtitle">
+            You are securely paying through Razorpay.
+        </p>
+
+        <div class="customer">
+            <small>Paying for</small>
+            <strong>{{_name}}</strong>
+        </div>
+
+        <button id="pay-button" class="pay-button" disabled>
+            Loading Checkout...
+        </button>
+
+        <p class="footer">
+            Secure payment powered by @neneys/payments
+        </p>
+    </section>
+</main>
+
+<div id="loading" class="overlay">
+    <div class="modal">
+        <div class="spinner"></div>
+
+        <h2 id="loading-title">Preparing Payment</h2>
+
+        <p id="loading-text">
+            Connecting to secure checkout...
+        </p>
+    </div>
+</div>
+
+<div id="result" class="overlay hidden">
+    <div class="modal">
+
+        <div id="result-icon" class="success-mark">✓</div>
+
+        <h2 id="result-title">Payment Successful</h2>
+
+        <p id="result-text">
+            Your payment has been successfully verified.
+        </p>
+
+        <button id="close-button" class="close-button">
+            Close
+        </button>
+
+    </div>
+</div>
+
+<script>
+    const UUID = "{{_uuid}}";
+    const REDIRECT = "{{REDIRECT}}";
+
+    let razorpay = null;
+
+    const loading = document.getElementById("loading");
+    const result = document.getElementById("result");
+    const payButton = document.getElementById("pay-button");
+
+    function paymentResult(type, data = {}) {
+    const message = {
+        type,
+        ...data
+    };
+
+    if (
+        window.NeneConsole &&
+        typeof window.NeneConsole.postMessage === "function"
+    ) {
+        try {
+            window.NeneConsole.postMessage(JSON.stringify(message));
+        } catch (_) {
+            // Continue normally if the channel isn't usable.
+        }
+    }
+
+    console.log("[Payment]", message);
+}
+
+    function showLoading(title, text) {
+        document.getElementById("loading-title").textContent = title;
+        document.getElementById("loading-text").textContent = text;
+        loading.classList.remove("hidden");
+    }
+
+    function hideLoading() {
+        loading.classList.add("hidden");
+    }
+
+    function showResult(success, title, message) {
+        const icon = document.getElementById("result-icon");
+
+        icon.className = success
+            ? "success-mark"
+            : "error-mark";
+
+        icon.textContent = success ? "✓" : "!";
+
+        document.getElementById("result-title").textContent = title;
+        document.getElementById("result-text").textContent = message;
+
+        result.classList.remove("hidden");
+    }
+
+    async function reportFailure(data) {
+        try {
+            await fetch(
+                "/npay-failed/" + encodeURIComponent(UUID),
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        orderId: "{{_orderId}}",
+                        error: data
+                    })
+                }
+            );
+        } catch (error) {
+            console.error("Could not report payment failure:", error);
+        }
+    }
+
+    async function verifyPayment(response) {
+        showLoading(
+            "Verifying Payment",
+            "Please wait while we verify your transaction..."
+        );
+
+        try {
+            const request = await fetch(
+                "/npay-verify/" + encodeURIComponent(UUID),
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        signature: response.razorpay_signature,
+                        paymentId: response.razorpay_payment_id
+                    })
+                }
+            );
+
+            let data;
+
+            try {
+                data = await request.json();
+            } catch {
+                data = {
+                    status: false,
+                    message: "Invalid server response."
+                };
+            }
+
+            hideLoading();
+
+            if (request.ok && data.status === true) {
+                 paymentResult("success", {
+        uuid: UUID,
+        orderId: "{{_orderId}}",
+        paymentId: response.razorpay_payment_id
+    });
+
+                showResult(
+                    true,
+                    "Payment Successful",
+                    "Your payment has been successfully verified."
+                );
+                return;
+            }
+
+            paymentResult("failed", {
+                uuid: UUID,
+                orderId: "{{_orderId}}",
+                reason: "verification_failed",
+                message: data.message || "Payment verification failed."
+            });
+
+            await reportFailure({
+                type: "verification_failed",
+                message: data.message || "Payment verification failed."
+            });
+
+            showResult(
+                false,
+                "Verification Failed",
+                data.message ||
+                "We could not verify your payment."
+            );
+
+        } catch (error) {
+            hideLoading();
+
+            await reportFailure({
+                type: "verification_error",
+                message: error?.message || String(error)
+            });
+
+            showResult(
+                false,
+                "Verification Error",
+                "We could not contact the payment server. Please try again."
+            );
+        }
+    }
+
+    function openCheckout() {
+        try {
+            if (typeof Razorpay === "undefined") {
+                throw new Error("Razorpay Checkout could not be loaded.");
+            }
+
+            razorpay = new Razorpay({
+                key: "{{public_key}}",
+                order_id: "{{_orderId}}",
+                name: "{{_title}}",
+                description: "Payment",
+
+                theme: {
+                    color: "#0d2b63"
+                },
+
+                handler: verifyPayment,
+
+                modal: {
+                    ondismiss: function () {
+                        hideLoading();
+
+                        payButton.disabled = false;
+                        payButton.textContent = "Pay Now";
+                    }
+                }
+            });
+
+            razorpay.on("payment.failed", async function (response) {
+                hideLoading();
+
+                const error = response?.error || {};
+
+                await reportFailure({
+                    type: "payment_failed",
+                    code: error.code || null,
+                    description: error.description || null,
+                    source: error.source || null,
+                    step: error.step || null,
+                    reason: error.reason || null,
+                    metadata: error.metadata || null
+                });
+
+                showResult(
+                    false,
+                    "Payment Failed",
+                    error.description ||
+                    "Your payment could not be completed."
+                );
+            });
+
+            hideLoading();
+
+            payButton.disabled = false;
+            payButton.textContent = "Pay Now";
+
+            setTimeout(() => {
+                try {
+                    razorpay.open();
+                } catch (error) {
+                    showResult(
+                        false,
+                        "Unable to Open Checkout",
+                        "Please try opening the payment window again."
+                    );
+                }
+            }, 250);
+
+        } catch (error) {
+            hideLoading();
+
+            payButton.disabled = false;
+            payButton.textContent = "Pay Now";
+
+            showResult(
+                false,
+                "Checkout Unavailable",
+                error?.message ||
+                "Unable to initialize Razorpay Checkout."
+            );
+        }
+    }
+
+    payButton.addEventListener("click", () => {
+        if (!razorpay) {
+            openCheckout();
+            return;
+        }
+
+        try {
+            razorpay.open();
+        } catch {
+            showResult(
+                false,
+                "Unable to Open Checkout",
+                "Please refresh the page and try again."
+            );
+        }
+    });
+
+    document.getElementById("close-button").addEventListener("click", () => {
+        if (REDIRECT && REDIRECT !== "{{REDIRECT}}") {
+            window.location.href = REDIRECT;
+            return;
+        }
+
+        window.close();
+
+        setTimeout(() => {
+            result.classList.add("hidden");
+        }, 100);
+    });
+
+    window.addEventListener("load", () => {
+        setTimeout(openCheckout, 600);
+    });
+</script>
+
+</body>
+</html>
