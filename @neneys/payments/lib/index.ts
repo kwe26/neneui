@@ -5,6 +5,8 @@ import { Database } from "bun:sqlite";
 import { randomUUIDv5, randomUUIDv7 } from "bun";
 import { RazorpayCreate } from "./pg/Razorpay";
 
+let DomainUrl = "http://localhost:3500";
+
 export interface PaymentKeys {
     key: string,
     secret: string
@@ -41,13 +43,14 @@ export function NenePayments({
     PaymentGateways,
     SecretKey= "none",
     Redirect="{{REDIRECT}}",
-    DomainUrl = "http://localhost:3500",
+    DomainUrl: domainUrl = "http://localhost:3500",
     DatabasePath = "./default.db",
     ServerPort = 9090
 }: NenePayments) {
     if(DatabasePath == ":memory:") console.log("[@neneys/payments] While :memory: as Database is supported, It is not recommended to use memory db for @neneys/payments.")
     if(DomainUrl.endsWith("/")){
         console.log("[@neneys/payments] / at the end of Domain Path is not allowed!")
+        DomainUrl = domainUrl;
         process.exit(-1);
     }
 
@@ -540,6 +543,7 @@ export async function CreateNenePayments({
                     uuid: result.uuid,
                     url: result.url,
                     pg: result.pg,
+                    domainUrl: DomainUrl,
                     publicKey: result.publicKey,
                     order_id: result.order_id,
                 }

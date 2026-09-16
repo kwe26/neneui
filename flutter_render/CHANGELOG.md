@@ -23,3 +23,7 @@
 * Migrate to Recent Flutter SDK Release
 * Upgrade shadcn_flutter
 * Use shadcn_flutter Widgets eliminating Material Widgets and compatitable to Material/Cupertino Seperation.
+* Support Video , @neneys/payments Plugins
+* Fix Issues with Render
+* Fix FormSubmit Blackout Issue.
+* Migrate to flutter_quickjs from flutter_js
