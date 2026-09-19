@@ -1,0 +1,33 @@
+---
+sidebar_position: 6
+---
+
+# AppBar
+> The Header Bar on top of Application Head
+
+```ts
+import { AppBar } from "@neneys/ui"
+
+AppBar('#id', {...})
+```
+
+## Parameters
+
+| Param | Value |
+|:---------|:------:|
+| leading | Widget |
+| title | [Text](Text.mdx) Widget |
+| actions | Widgets[] |
+| backgroundColor | Hex Color Code |
+
+## Example
+
+```ts
+import { AppBar, Text, Iconify } from "@neneys/ui"
+
+AppBar('#appBar', {
+    leading: Iconify("home"),
+    title: Text("#appBarText", { text: "NeneUI" }),
+    actions: []
+})
+```

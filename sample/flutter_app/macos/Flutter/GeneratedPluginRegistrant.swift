@@ -5,12 +5,12 @@
 import FlutterMacOS
 import Foundation
 
-import file_picker
-import flutter_js
+import file_picker_darwin
+import quickjs_engine
 import url_launcher_macos
 
 func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {
   FilePickerPlugin.register(with: registry.registrar(forPlugin: "FilePickerPlugin"))
-  FlutterJsPlugin.register(with: registry.registrar(forPlugin: "FlutterJsPlugin"))
+  QuickjsEnginePlugin.register(with: registry.registrar(forPlugin: "QuickjsEnginePlugin"))
   UrlLauncherPlugin.register(with: registry.registrar(forPlugin: "UrlLauncherPlugin"))
 }

@@ -3,7 +3,7 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
-  flutter_js
+  quickjs_engine
   url_launcher_linux
 )
 

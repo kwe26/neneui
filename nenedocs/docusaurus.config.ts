@@ -15,14 +15,16 @@ const config: Config = {
   },
 
   // Set the production url of your site here
-  url: 'https://your-docusaurus-site.example.com',
+  url: 'https://kwe26.github.io',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
-  baseUrl: '/',
+  baseUrl: '/neneui/',
+
+  trailingSlash: false,
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'https://github.com/kwe26/neneui', // Usually your GitHub org/user name.
+  organizationName: 'kwe26', // Usually your GitHub org/user name.
   projectName: 'neneui', // Usually your repo name.
 
   onBrokenLinks: 'throw',
@@ -89,6 +91,10 @@ const config: Config = {
         },
         {to: '/blog', label: 'Blog', position: 'left'},
         {
+          type: 'docsVersionDropdown',
+          position: 'right'
+        },
+        {
           href: 'https://github.com/kwe26/neneui',
           label: 'GitHub',
           position: 'right',
@@ -143,6 +149,7 @@ const config: Config = {
     prism: {
       theme: prismThemes.github,
       darkTheme: prismThemes.dracula,
+      additionalLanguages: ['dart'],
     },
   } satisfies Preset.ThemeConfig,
 };

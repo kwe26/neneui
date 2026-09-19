@@ -1,0 +1,36 @@
+---
+sidebar_position: 1
+---
+
+# Scaffold
+
+> Scaffold Widget consists of the entire body, It is similar to Flutter Scaffold, No need to explain...
+
+```ts
+import { Scaffold } from "@neneys/ui"
+
+Scaffold('#mainScaffold', {})
+```
+
+## Parameters
+
+| Param | Value |
+|:---------|:------:|
+| body | Other Component |
+| appBar | [AppBar](./AppBar.mdx) Component |
+| drawer | N/A - Any Component |
+| preActions | [Actions](./Actions.mdx) In A List [] |
+| floatingActionButton | Button |
+| bottom | [NavigationBar](./NavigationBar.mdx) Component |
+| backgroundColor | HEX Code |
+| floatingActionButtonLocation | Unimplemented |
+
+## Example
+
+```ts
+import { Scaffold, Empty } from "@neneys/ui"
+
+Scaffold('#mainScaffold', {
+    body: Empty()
+})
+```

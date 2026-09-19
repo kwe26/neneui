@@ -1,0 +1,134 @@
+---
+sidebar_position: 4454
+---
+
+# Types and Miscallnious
+> Enums and Types and Others
+
+## TextAlign
+- `TextAlign.left`
+- `TextAlign.right`
+- `TextAlign.center`
+- `TextAlign.start`
+- `TextAlign.end`
+- `TextAlign.justify`
+
+```ts
+import { TextAlign } from "@neneys/ui"
+
+TextAlign.left
+```
+
+## TextOverflow
+- TextOverflow.clip
+- TextOverflow.fade
+- TextOverflow.ellipsis
+- TextOverflow.visible
+
+```ts
+import { TextOverflow } from "@neneys/ui"
+
+TextOverflow.clip
+```
+
+## FontWeight
+> FontWeight similar to FontWeight
+
+- FontWeight.bold
+- FontWeight.w100
+- FontWeight.w200
+- FontWeight.w300
+- FontWeight.w400
+- FontWeight.w500
+- FontWeight.w600
+- FontWeight.w700
+- FontWeight.w800
+- FontWeight.w900
+
+## Colors
+> Only some Basic Colors There's no Parser or such yet.
+- Colors.red
+- Colors.blue
+- Colors.green
+- Colors.violet
+- Colors.black
+- Colors.black
+
+## TextDecoration
+> Decoration stlye for Text
+
+- TextDecoration.none
+- TextDecoration.lineThrough
+- TextDecoration.overline
+- TextDecoration.underline
+
+## FontStyle
+- FontStyle.normal
+- FontStyle.Italic
+
+## TextStyle
+
+```ts
+import { TextStyle } from "@neneys/ui"
+
+TextStyle({
+    height: 1.0
+})
+```
+
+| Param | Value | Default |
+|:---------|:------:|:------:|
+| height | float | 1.0 |
+| fontSize | float | 14 |
+| fontWeight | [FontWeight](#fontweight) | .w400 |
+| color | string | [Colors.black](#colors) |
+| decoration | [TextDecoration](#textdecoration) | TextDecoration.none |
+| fontStyle | [FontStyle](#fontstyle) | FontStyle.normal |
+
+## AssetImage
+> Loads Image from the Assets Folder (during compilation)
+
+```ts
+import { AssetImage } from "@neneys/ui"
+
+AssetImage("assets/nene.png")
+```
+
+## NetworkImage
+> Loads Image from the Network / URL
+
+```ts
+import { NetworkImage } from "@neneys/ui"
+
+NetworkImage("https://example.com/network.png")
+```
+
+## BoxDecoration
+
+```ts
+import { BoxDecoration } from "@neneys/ui"
+
+BoxDecoration({..})
+```
+
+| Param | Value | Default |
+|:---------|:------:|:------:|
+| color | Hex Code | #FFFFFF |
+| image | [AssetImage](#assetimage), [NetworkImage](#networkimage) | none
+| radius | int | 1
+| borderColor | Hex Code | #FFFFFF |
+| borderWidth | int | 1
+
+## EdgeInsets
+
+```ts
+import { EdgeInsets } from "@neneys/ui"
+
+EdgeInsets.all(10)
+```
+
+### .all
+.all(integer) from all LTRB Sides
+
+### .fromLTRB(left, top, right, bottom)
+All must be in Integer

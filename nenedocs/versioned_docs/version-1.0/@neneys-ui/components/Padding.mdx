@@ -1,0 +1,30 @@
+---
+sidebar_position: 9
+---
+
+# Padding
+> Gives Padding from all positions specified for a widget.
+
+```ts
+import { Padding } from "@neneys/ui"
+
+Padding('#id', {...})
+```
+
+## Parameters
+
+| Param | Value |
+|:---------|:------:|
+| child | Widget |
+| padding | [EdgeInsets](MiscTypes.mdx#edgeinsets)
+
+## Example
+
+```ts
+import { Padding, EdgeInsets, Text } from "@neneys/ui"
+
+Padding('#padding', {
+    child: Text("#pText", {text: "Hello World"}),
+    padding: EdgeInsets.all(10)
+})
+```

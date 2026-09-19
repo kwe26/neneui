@@ -1,0 +1,32 @@
+---
+sidebar_position: 8
+---
+
+# Container
+> Contains, really it just contains things
+
+```ts
+import { Container } from "@neneys/ui"
+
+Container('#id', {...})
+```
+
+## Parameters
+
+| Param | Value |
+|:---------|:------:|
+| child | Widget |
+| decoration | [BoxDecoration](MiscTypes.mdx#boxdecoration) |
+
+## Example
+
+```ts
+import { Container, BoxDecoration, Text } from "@neneys/ui"
+
+Container('#howdy', {
+    child: Text("#howdyText", {text: "Howdy"}),
+    decoration: BoxDecoration({
+        radius: 10
+    })
+})
+```

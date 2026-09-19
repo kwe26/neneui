@@ -10,6 +10,7 @@
     "typescript": "^5"
   },
   "dependencies": {
-    "@neneys/ui": "^1.0.1"
+    "@neneys/ui": "^1.0.4",
+    "neneui": "^1.0.1"
   }
 }
