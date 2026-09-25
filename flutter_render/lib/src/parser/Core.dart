@@ -213,6 +213,7 @@ class CoreParser {
     }
   }
 
+  // Bug Fix: return was fixed.
   static CrossAxisAlignment crossParse(String c) {
     switch (c) {
       case 'start':
@@ -228,7 +229,6 @@ class CoreParser {
       default:
         return CrossAxisAlignment.start;
     }
-    return CrossAxisAlignment.center;
   }
 
   static TextAlign parseTx(String tx) {
