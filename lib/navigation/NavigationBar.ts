@@ -4,7 +4,7 @@ export interface NavigationBarProps{
     alignment: NavigationBarAlignment,
     labelType: NavigationLabelType,
     expanded: boolean,
-    selectedKey: string,
+    selectedKey?: string,
     children: any[]
 }
 

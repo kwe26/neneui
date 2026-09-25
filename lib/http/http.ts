@@ -5,6 +5,7 @@ import { Action, DoAction } from "../widgets";
 import path from "node:path";
 import multer from "multer";
 import { Theme, type ThemeProps } from "./theme";
+import { JavaScriptEngine, type JavascriptEngine } from "./javascript";
 
 export interface NeneServerProps {
     port: number,
@@ -12,6 +13,7 @@ export interface NeneServerProps {
     verbose?: boolean,
     pass?: any,
     payments?: any,
+    jsEngine?: JavascriptEngine,
     themeLight?: ThemeProps,
     themeDark?: ThemeProps,
     captureErrors?: boolean,
@@ -27,6 +29,7 @@ export async function NeneServer({
     themeDark = Theme({}),
     payments = null,
     captureErrors = false,
+    jsEngine = JavaScriptEngine({ enabled: true }),
     callbackPath = "callbacks"
 } : NeneServerProps){
     const app = express();
@@ -76,6 +79,7 @@ export async function NeneServer({
             "name": "__neneui__",
             "version": ((await import("../../package.json")).version),
             "captureErrors": captureErrors,
+            "jsEngine": jsEngine,
             "appTheme": {
                 "light": themeLight,
                 "dark": themeDark

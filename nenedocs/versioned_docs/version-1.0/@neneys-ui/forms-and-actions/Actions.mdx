@@ -1,0 +1,158 @@
+---
+sidebar_position: 6
+---
+
+# Actions
+> Performs Actions on the Client-Side of NeneUI!
+
+# DoAction
+> Executing Agent for the Actions Specified.
+
+```ts
+import { DoAction } from "@neneys/ui"
+
+DoAction(ACTION, Parameters)
+```
+
+## Action.SHOW_TOAST
+> Shows a Toast Message
+```ts
+import { DoAction, Action } from "@neneys/ui"
+
+DoAction(Action.SHOW_TOAST, "Hello World")
+```
+
+## Action.NAVIGATE
+> Navigates to the Page available at `[URL]`
+```ts
+import { DoAction, Action } from "@neneys/ui"
+
+DoAction(Action.NAVIGATE, "/ui/page-2")
+```
+
+## Action.NAVIGATE_POP
+> POP!
+```ts
+import { DoAction, Action } from "@neneys/ui"
+
+DoAction(Action.NAVIGATE_POP, "")
+```
+
+## Action.HIDE
+> Hide Hide Hide!
+```ts
+import { DoAction, Action } from "@neneys/ui"
+
+DoAction(Action.HIDE, "#id")
+```
+
+## Action.SHOW
+> SHOW THE WIDGET!
+```ts
+import { DoAction, Action } from "@neneys/ui"
+
+DoAction(Action.SHOW, "#id")
+```
+
+## Action.DEBUG
+> Opens the Debgger
+```ts
+import { DoAction, Action } from "@neneys/ui"
+
+DoAction(Action.DEBUG, "daikon")
+```
+## Action.SET_VAR
+> Sets/Replaces the Variable
+
+```ts
+import { DoAction, Action, setVar } from "@neneys/ui"
+
+DoAction(Action.SET_VAR, setVar(
+    variable: 'anythi',
+    value: "no"
+))
+```
+
+## Action.JAVASCRIPT
+> JavaScript Execution
+```ts
+import { Action, DoAction } from "@neneys/ui"
+
+DoAction(Action.JAVASCRIPT, `console.log("Hello World")`)
+```
+- action() Inside JS
+
+## Action.LAUNCH_URL
+> Launches an URL in the Sky ( i m ean we b b row se r )
+
+```ts
+import { Action, DoAction, LaunchURL } from "@neneys/ui"
+
+DoAction(Action.LAUNCH_URL, LaunchURL({
+    url: "https://google.com",
+    noLaunch: DoAction(Action.SHOW_TOAST, "Hello, i cannot")
+}))
+```
+
+## Action.SELECT_FILE
+> Selects a File and loads the Path into Memory
+
+```ts
+import { Action, DoAction, SelectFile } from "@neneys/ui"
+
+DoAction(Action.SELECT_FILE, SelectFile({
+    types: "jpg,png,gif,iso,zip",
+    title: "WOWOWOW",
+    variable: "selFile"
+}))
+```
+
+## Action.SUBMIT
+> Submit the Variable and Forms to the Server Callback
+
+
+### FormSubmitAction
+> FormSubmitAction Parameter to be Specified in DoAction below
+```ts
+import { FormSubmitAction } from "@neneys/ui"
+
+FormSubmitAction({
+    variables: ['#varA'],
+    varNames: ['var_a'],
+    callbackPath: "/cb/hello"
+})
+```
+
+In Variables #varA -> var_a recieved on req.body.
+
+You can also pass down the files such like
+
+```ts
+import { FormSubmitAction } from "@neneys/ui"
+
+FormSubmitAction({
+    variables: ['#varA'],
+    varNames: ['var_a'],
+    fileVariable: ['#selFile'],
+    fileNames: ['file'],
+    callbackPath: "/cb/hello"
+})
+```
+
+:::info
+
+On Backend Files are uploaded you can access it by how u you can by multer. it's stored in uploads/* btwww
+
+:::
+
+```ts
+import { Action, DoAction, FormSubmitAction } from "@neneys/ui"
+
+DoAction(Action.SUBMIT, FormSubmitAction({
+    variables: ['#varA'],
+    varNames: ['var_a'],
+    fileVariable: ['#selFile'],
+    fileNames: ['file'],
+    callbackPath: "/cb/hello"
+}))
+```

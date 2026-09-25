@@ -216,17 +216,17 @@ class CoreParser {
   static CrossAxisAlignment crossParse(String c) {
     switch (c) {
       case 'start':
-        CrossAxisAlignment.start;
+        return CrossAxisAlignment.start;
       case 'stretch':
-        CrossAxisAlignment.stretch;
+        return CrossAxisAlignment.stretch;
       case 'end':
-        CrossAxisAlignment.end;
+        return CrossAxisAlignment.end;
       case 'center':
-        CrossAxisAlignment.center;
+        return CrossAxisAlignment.center;
       case 'baseline':
-        CrossAxisAlignment.baseline;
+        return CrossAxisAlignment.baseline;
       default:
-        CrossAxisAlignment.start;
+        return CrossAxisAlignment.start;
     }
     return CrossAxisAlignment.center;
   }
@@ -251,12 +251,16 @@ class CoreParser {
   }
 
   static EdgeInsets parseEdge(data) {
-    return EdgeInsets.fromLTRB(
-      double.parse(data['l'].toString()),
-      double.parse(data['t'].toString()),
-      double.parse(data['r'].toString()),
-      double.parse(data['b'].toString()),
-    );
+    try {
+      return EdgeInsets.fromLTRB(
+        double.parse(data['l'].toString()),
+        double.parse(data['t'].toString()),
+        double.parse(data['r'].toString()),
+        double.parse(data['b'].toString()),
+      );
+    } catch (error) {
+      return EdgeInsets.fromLTRB(0, 0, 0, 0);
+    }
   }
 
   static BoxFit parseBfit(data) {

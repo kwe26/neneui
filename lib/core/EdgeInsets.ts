@@ -1,19 +1,19 @@
 export class EdgeInsets {
-    left: number;
-    right: number;
-    top: number;
-    bottom: number;
+    l: number;
+    r: number;
+    t: number;
+    b: number;
 
     private constructor(
-        left: number,
-        top: number,
-        right: number,
-        bottom: number
+        l: number,
+        t: number,
+        r: number,
+        b: number
     ) {
-        this.left = left;
-        this.top = top;
-        this.right = right;
-        this.bottom = bottom;
+        this.l = l;
+        this.t = t;
+        this.r = r;
+        this.b = b;
     }
 
     static all(value: number): EdgeInsets {
@@ -26,16 +26,16 @@ export class EdgeInsets {
     }
 
     static fromLTRB(
-        left: number,
-        top: number,
-        right: number,
-        bottom: number
+        l: number,
+        t: number,
+        r: number,
+        b: number
     ): EdgeInsets {
         return new EdgeInsets(
-            left,
-            right,
-            top,
-            bottom
+            l,
+            r,
+            t,
+            b
         );
     }
 }

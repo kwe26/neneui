@@ -1,0 +1,112 @@
+---
+sidebar_position: 3
+---
+
+# Theme NeneUI (Server-Side)
+> Wow, Did you knew? You can also dynamically theme your NeneUI From the Server? Here's how
+
+## Declaration
+
+```ts
+import { Brightness, ColorScheme, Density, Theme } from "@neneys/ui";
+
+const theme = Theme({
+    colorScheme: ColorScheme({
+        brightness: Brightness.light,
+
+        background: "#F5F7F2",
+        foreground: "#17221C",
+
+        card: "#FFFFFF",
+        cardForeground: "#17221C",
+
+        popover: "#FFFFFF",
+        popoverForeground: "#17221C",
+
+        primary: "#087F5B",
+        primaryForeground: "#F4FFF9",
+
+        secondary: "#DDEFE7",
+        secondaryForeground: "#14523F",
+
+        muted: "#E8EEE9",
+        mutedForeground: "#64736A",
+
+        accent: "#F4B942",
+        accentForeground: "#3A2905",
+
+        destructive: "#D94F4F",
+        destructiveForeground: "#FFF7F7",
+
+        border: "#CBD8D0",
+        input: "#CBD8D0",
+        ring: "#F4B942",
+
+        chart1: "#087F5B",
+        chart2: "#F4B942",
+        chart3: "#E76F51",
+        chart4: "#6C63FF",
+        chart5: "#36A9A0",
+    }),
+
+    radius: 0,
+    scaling: 1,
+    surfaceOpacity: 0.92,
+    surfaceBlur: 6,
+    density: Density.defaultDensity,
+});
+```
+
+## Usage
+
+```ts
+NeneServer({
+    port: 3500,
+    uiPath: "./example_ui",
+    verbose: true,
+    themeDark: theme, // Dark
+    captureErrors: true,
+    themeLight: theme, // Light
+    callbackPath: "./example_callback"
+})
+```
+
+*For Now, We are using the same theme for light and dark, You can customize and modify it further.*
+
+## Theme Properties
+| Param | Value |
+|:---------|:------:|
+| colorScheme | [ColorScheme](#colorScheme) |
+| radius | int |
+| scaling | int |
+| surfaceOpacity | int |
+| density | [Density](./components/MiscTypes.mdx#density) |
+
+## ColorScheme
+| Param | Value |
+|:---------|:------:|
+| brightness | [Brightness](./components/MiscTypes.mdx#brightness) |
+| background | HEX Code |
+| foreground | HEX Code |
+| card | HEX Code |
+| cardForeground | HEX Code |
+| popover | HEX Code |
+| popoverForeground | HEX Code |
+| primary | HEX Code |
+| primaryForeground | HEX Code |
+| secondary | HEX Code |
+| secondaryForeground | HEX Code |
+| muted | HEX Code |
+| mutedForeground | HEX Code |
+| accent | HEX Code |
+| accentForeground | HEX Code |
+| destructive | HEX Code |
+| destructiveForeground | HEX Code |
+| border | HEX Code |
+| input | HEX Code |
+| ring | HEX Code |
+| chart1 | HEX Code |
+| chart2 | HEX Code |
+| chart3 | HEX Code |
+| chart4 | HEX Code |
+| chart5 | HEX Code |

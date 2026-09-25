@@ -16,10 +16,10 @@ export function Padding(id: string, {
         props: {
             child,
             padding: {
-                l: padding.left,
-                r: padding.right,
-                t: padding.top,
-                b: padding.bottom
+                l: padding.l,
+                r: padding.r,
+                t: padding.t,
+                b: padding.b
             }
         }
     }

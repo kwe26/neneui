@@ -1,0 +1,35 @@
+---
+sidebar_position: 4
+---
+
+# DatePicker
+> Used to Pick Date (Date not that Date)! 
+
+```ts
+import { DatePicker } from "@neneys/ui"
+
+DatePicker('#id', {
+    ....
+})
+```
+
+## Parameters
+
+| Param | Value |
+|:---------|:------:|
+| mode | [PromptMode](../components/MiscTypes.mdx#promptmode) |
+| dialogTitle | Text Widget |
+| dateFormat | [DateFormat](../components/MiscTypes.mdx#dateFormat) |
+| defaultDate | [DateTime](../components/MiscTypes.mdx#datetime) |
+
+## Example
+```ts
+import { DatePicker, DateFormat, DateTime, PromptMode, Text } from "@neneys/ui"
+
+DatePicker('#dt', {
+    mode: PromptMode.dialog,
+    dialogTitle: Text('#dtText', {text: "Select a date"}),
+    dateFormat: DateFormat.ddmmyyyy,
+    defaultDate: DateTime.now()
+})
+```

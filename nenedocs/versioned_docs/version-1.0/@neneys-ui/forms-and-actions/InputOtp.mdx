@@ -1,0 +1,69 @@
+---
+sidebar_position: 5
+---
+
+# InputOTP
+> Used to Input and Enter OTP
+
+```ts
+import { InputOTP } from "@neneys/ui"
+
+InputOTP(...)
+```
+
+## Parameters
+
+| Param | Value |
+|:---------|:------:|
+| initialValue | string |
+| onChanged | DoAction |
+| onSubmitted | DoAction |
+| children | InputOTPChildClass[] |
+
+# InputOTPChild
+> Children under InputOTP
+
+## Class Methode
+### InputOTPChild.character
+
+| Param | Value |
+|:---------|:------:|
+| allowDigit | boolean |
+| allowLowercaseAlphabet | boolean |
+| allowUppercaseAlphabet | boolean |
+| obscured | boolean |
+| onlyUppercaseAlphabet | boolean |
+| onlyLowercaseAlphabet | boolean |
+| readOnly | boolean
+
+#### Example
+```ts
+import { InputOTPChild } from "@neneys/ui"
+
+InputOTPChild.character({ allowDigit: true })
+```
+
+### InputOTPChild.space()
+> It omits a space between others in InputOTP <  >
+### InputOTPChild.separator()
+> Gives a - separater
+
+## Example
+
+```ts
+import { InputOTP, InputOTPChild } from "@neneys/ui"
+
+InputOTP('#idInput', {
+    children: [
+        InputOTPChild.character({ allowDigit: true }),
+        InputOTPChild.character({ allowDigit: true }),
+        InputOTPChild.character({ allowDigit: true }),
+        InputOTPChild.space(),
+        InputOTPChild.character({ allowDigit: true }),
+        InputOTPChild.character({ allowDigit: true }),
+        InputOTPChild.character({ allowDigit: true }),
+        InputOTPChild.separator()
+        InputOTPChild.character({ allowDigit: true }),
+    ]
+})
+```

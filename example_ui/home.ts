@@ -44,6 +44,11 @@ export function run(req: Request, res: Response, pass: any) {
                             width: 256,
                             height: 192
                         }),
+                        Button('#pageBtn', {
+                            type: ButtonType.Primary,
+                            child:Text("#txtPageBtn", {text: "PageBtn"}),
+                            onPressed: DoAction(Action.NAVIGATE, '/ui/jstest')
+                        }),
                         Center(Text("#textAb", { text: `Welcome to NeneUI@neneys@ui`, style: TextStyle({}) })),
                         SizedBox("#sz", { width: 10, height: 10 }),
                         Avatar('#avatarNene', {

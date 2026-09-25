@@ -1,0 +1,32 @@
+---
+sidebar_position: 2
+---
+# CheckBox
+> Literally an CheckBox to Check the Box with a Checkmark which marks the checkmark which marks the box of the checkmark which marks the Checkbox Which is Literally an CheckBox to Check the Box with a checkmark which marks, ahhh leaaave it.
+
+```ts
+import { CheckBox } from "@neneys/ui";
+
+CheckBox('#id', { 
+    trailing: ...,
+    value: ...
+})
+```
+
+## Parameters
+
+| Param | Value |
+|:---------|:------:|
+| trailing | Widget |
+| value | boolean |
+
+## Example
+
+```ts
+import { CheckBox, Text } from "@neneys/ui";
+
+CheckBox('#id', { 
+    trailing: Text('#txt', {text: "Checkbox"}),
+    value: false
+})
+```

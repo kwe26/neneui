@@ -10,7 +10,7 @@ export interface CardProps {
 export function Card(id: string, {
     child,
     padding = EdgeInsets.all(2),
-    color,
+    color = "",
     type = "normal"
 }: CardProps){
     return {

@@ -1,0 +1,42 @@
+---
+sidebar_position: 1
+---
+
+# TextField
+> TextField Where you can write Text and in a Field Obv! It is obvious!
+
+```ts
+import { TextField } from "@neneys/ui";
+
+TextField('#textField',{
+    ...
+});
+```
+
+## Parameters
+
+| Param | Value |
+|:---------|:------:|
+| controller | TextEditingController |
+| placeholder | [Text](../components/Text.mdx) |
+| inputType | [InputType](#inputType) |
+| features | Unimplemented |
+
+## InputType
+> Type of TextField Input
+InputType.text
+InputType.number
+InputType.phone
+InputType.password
+InputType.twitter
+
+## Example
+```ts
+import { TextField, TextEditingController, Text, InputType } from "@neneys/ui"
+
+TextField('#fieldText', {
+    controller: TextEditingController({}),
+    placeholder: Text("#text", {text: "Input"}),
+    inputType: InputType.text
+})
+```

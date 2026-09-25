@@ -1,0 +1,104 @@
+---
+sidebar_position: 0
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# Designing an Callback
+> Callback? Yeah So you can direct and send an callback to the Renderer to what to do on what?
+
+## Example
+
+<Tabs>
+    <TabItem value="callbacks/form.ts" label="callbacks/form.ts" default>
+        ```ts
+        import type { Request, Response } from "express";
+        import { Action, Callback, DoAction } from "@neneys/ui"
+
+        export const path = "/ui/test_callback"
+
+        export async function run(req: Request, res: Response, pass: any) {
+            let callbac = Callback({
+                callbacks: [
+                    DoAction(Action.SHOW_TOAST, `The Server Saw What You wrote ${req.body.username} and ${req.body.password}`)
+                ]
+            })
+
+            res.json(callbac);
+        }
+        ```
+    </TabItem> 
+    <TabItem value="interface/home.ts" label="callbacks/home.ts" default>
+        ```ts
+        import type { Request, Response } from "express";
+        import { AppBar, Colors, Column, CrossAxis,FontWeight, Iconify, MainAxis, SingleChildScrollView, Scaffold, Text, TextStyle, TextAlign, TextField, SizedBox, InputType, TextEditingController, Button,  ButtonType, Action, DoAction, FormSubmitAction } from "@neneys/ui";
+
+        export const path = "/ui/main"
+        export function run(req: Request, res: Response, pass: any) {
+            let scaffold = Scaffold('#mainScaffold', {
+                appBar: AppBar('#appBar', {
+                    leading: Iconify("home", { color: Colors.white }),
+                    title: Text('#appBarText', { text: "NeneUI Example", style: TextStyle({
+                        color: Colors.white
+                    }) })
+                }),
+                preActions: [],
+                body: SingleChildScrollView('#sch', {
+                    child: Column(
+                        '#mainColumn',
+                        {
+                            mainAxisAlignment: MainAxis.center,
+                            crossAxisAlignment: CrossAxis.center,
+                            children: [
+                                Text('#textNene', {
+                                    text: "Welcome to NeneUI!",
+                                    align: TextAlign.center,
+                                    style: TextStyle(
+                                        {
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 32
+                                        }
+                                    )
+                                }),
+                                Text("#neneText2", {text: "You can start modifying example_ui/home.ts to add or remove more Widgets and Customize it with your needs!!!"}),
+                                TextField("#userName", {
+                                    controller: TextEditingController({}),
+                                    inputType: InputType.text,
+                                    placeholder: Text('#placeText', { text: "Username" })
+                                }),
+                                SizedBox("#sz", { width: 10, height: 10 }),
+                                TextField("#userPassword", {
+                                    controller: TextEditingController({}),
+                                    inputType: InputType.password,
+                                    placeholder: Text('#placeText', { text: "Password" })
+                                }),
+                                SizedBox("#sz", { width: 10, height: 10 }),
+                                Button('#submitButton', {
+                                    type: ButtonType.Success,
+                                    child: Text('#submitButtonText', { text: "Submit" }),
+                                    onPressed: DoAction(Action.SUBMIT, FormSubmitAction({
+                                        variables: ["#userPassword.controller", "#userName.controller"],
+                                        varNames: ["password", "username", "date"],
+                                        callbackPath: "/ui/test_callback"
+                                    }))
+                                }),
+                            ]
+                        }
+                    )
+                })
+            });
+
+            res.json(scaffold);
+        };
+        ```
+    </TabItem> 
+</Tabs>
+
+## What it does?
+
+Basically the DoAction's Action.SUBMIT Performs the Action of Sending the Variables from the Client Side into the Server-Side to /ui/test_callback route and which in returns actions to Perform and that Action could be anyting from shoing a Toast to Execution of Unrestricted JavaScript.
+
+## Explanation
+
+We will walkthrough each of theese components on How it works and it's appropriate parameters.

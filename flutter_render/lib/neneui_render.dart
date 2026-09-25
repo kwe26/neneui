@@ -694,6 +694,7 @@ class _NeneUIState extends State<NeneUIMain> {
   }
 
   void initJs() {
+    print(widget.path.toString().replaceAll(widget.baseUrl, ""));
     runtime.evaluate("""
       function action(name, mainData) {
         sendMessage('Action', JSON.stringify({ name, mainData }))
