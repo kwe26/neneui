@@ -1,0 +1,29 @@
+---
+sidebar_position: 0
+---
+
+# Card
+> Card Widget
+
+```ts
+import { Card } from "@neneys/ui"
+
+Card("#id", {...})
+```
+
+## Parameters
+| Param | Value |
+|:---------|:------:|
+| padding | [EdgeInsets](../components//MiscTypes.mdx#edgeinsets) |
+| child | Widget |
+| color | HEXCODE |
+| type | `filled`, `outlined`, `normal` |
+
+## Example
+```ts
+import { Card, Empty } from "@neneys/ui"
+
+Card('#card', {
+    child: Empty()
+})
+```

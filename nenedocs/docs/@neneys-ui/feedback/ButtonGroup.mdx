@@ -1,0 +1,39 @@
+---
+sidebar_position: 1
+---
+# ButtonGroup
+> A Group of Buttons Literally
+
+```ts
+import { ButtonGroup } from "@neneys/ui"
+
+ButtonGroup('#id', {..})
+```
+
+## Parameters
+| Param | Value |
+|:---------|:------:|
+| children | List of [Button](./Button.mdx) |
+| direction | [Direction](../components/MiscTypes.mdx#direction)
+
+## Example
+
+```ts
+import { Button, ButtonType, Action, DoAction, Text, ButtonGroup, Direction } from "@neneys/ui";
+
+ButtonGroup('#btnGroup', {
+    children: [
+        Button('#button', {
+            child: Text('#buttonText', {text: "Hello World"}),
+            type: ButtonType.Primary,
+            onPressed: DoAction(Action.SHOW_TOAST, "Hello World")
+        }),
+        Button('#button', {
+            child: Text('#buttonText', {text: "Hello World"}),
+            type: ButtonType.Primary,
+            onPressed: DoAction(Action.SHOW_TOAST, "Hello World")
+        })
+    ],
+    direction: Direction.Horizontal
+})
+```
