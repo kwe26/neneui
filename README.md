@@ -6,6 +6,9 @@
 
 Build Flutter interfaces dynamically from a JavaScript server.
 
+# Docs
+You can access docs at [Here](https://kwe26.github.io/neneui/) The New Docs
+
 # Small Little Demo
 
 [Watch the Video on YouTube](https://www.youtube.com/watch?v=ts1DRFQp28c)
@@ -77,6 +80,6 @@ cd ./flutter_render/example && flutter run -d
 ```
 
 # Links & Credits
-- [Documented Widgets](docs/Widgets.md)
+- [Documented Widgets](https://kwe26.github.io/neneui/)
 - [Sample App](https://github.com/kwe26/neneui-sample)
 - [shadcn_ui Flutter used for UI Components](https://github.com/sunarya-thito/shadcn_flutter)

@@ -16,8 +16,8 @@ export interface ImageProps {
 
 export function Image(id: string, {
     path = AssetImage(""),
-    width = 0,
-    height = 0,
+    width = 100,
+    height = 100,
     scale = 1.0,
     color = "#000000",
     repeat = ImageRepeat.noRepeat,
