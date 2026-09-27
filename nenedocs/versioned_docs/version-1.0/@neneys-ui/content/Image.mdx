@@ -1,0 +1,37 @@
+---
+sidebar_position: 1
+---
+
+# Image
+> Image Widget to Show Images/SVG/GIFs
+
+```ts
+import { Image } from "@neneys/ui"
+
+Image('#id', {...})
+```
+
+## Parameters
+| Param | Value |
+|:---------|:------:|
+| path | [AssetImage](../components/MiscTypes.mdx#assetimage) or [NetworkImage](../components/MiscTypes.mdx#networkimage) |
+| width | int |
+| height | int |
+| scale | double |
+| color | HEX Code |
+| repeat | [ImageRepeat](../components/MiscTypes.mdx#imagerepeat) |
+| fit | [BoxFit](../components/MiscTypes.mdx#boxfit) |
+| alignment | [Alignment](../components/MiscTypes.mdx#alignment) |
+| filterQuality | [FilterQuality](../components/MiscTypes.mdx#filterquality) |
+| loadingWidget | Widget |
+| errorWidget | Widget |
+
+## Example
+```ts
+import { Image, NetworkImage } from "@neneys/ui";
+
+Image('#imageId', {
+    path: NetworkImage("..url...")
+})
+```
+

@@ -1,0 +1,52 @@
+---
+sidebar_position: 0
+---
+# Button
+> A button that is clickable, every button is clickable, unless you dont make it clickable
+
+```ts
+import { Button } from "@neneys/ui"
+
+Button('#id', { ... })
+```
+
+## Parameters
+| Param | Value |
+|:---------|:------:|
+| child | [Text](../components/Text.mdx) |
+| leading | Icon |
+| type | [ButtonType](#buttontype) |
+| density | [ButtonDensity](#buttondensity) |
+| shape | [ButtonShape](#buttonshape) |
+| disabled | bool |
+| onPressed | [DoAction](../forms-and-actions/Actions.mdx#doaction)
+
+## ButtonType
+- ButtonType.Normal
+- ButtonType.Primary
+- ButtonType.Success
+- ButtonType.Danger
+- ButtonType.Info
+- ButtonType.Warning
+
+## ButtonDensity
+- ButtonDensity.compact
+- ButtonDensity.dense
+- ButtonDensity.normal
+- ButtonDensity.comfortable
+- ButtonDensity.icon
+
+## ButtonShape
+- ButtonShape.circle
+- ButtonShape.rectangle
+
+## Example
+```ts
+import { Button, ButtonType, Action, DoAction, Text } from "@neneys/ui"
+
+Button('#button', {
+    child: Text('#buttonText', {text: "Hello World"}),
+    type: ButtonType.Primary,
+    onPressed: DoAction(Action.SHOW_TOAST, "Hello World")
+})
+```

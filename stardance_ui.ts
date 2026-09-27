@@ -1,6 +1,5 @@
 import { Brightness, ColorScheme, Density, Theme } from "./lib/http/theme";
 import { NeneServer } from "./lib/widgets";
-import { NenePayments, RazorpayGateway } from "./@neneys/payments/lib/index"
 
 const theme = Theme({
     colorScheme: ColorScheme({

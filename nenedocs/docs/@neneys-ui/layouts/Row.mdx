@@ -1,0 +1,30 @@
+---
+sidebar_position: 1
+---
+# Row
+> Horizontal Alignment of Widgets
+
+```ts
+import { Row } from "@neneys";
+
+Row('#id', {...})
+```
+
+## Parameters
+| Param | Value |
+|:---------|:------:|
+| mainAxisAlignment | [MainAxis](../components/MiscTypes.mdx#mainaxis) |
+| crossAxisAlignment | [CrossAxis](../components/MiscTypes.mdx#mainaxis) |
+| foreach | bool |
+| children | Widgets[] or Foreach() |
+
+## Example
+```ts
+import { Row, Text } from "@neneys/ui"
+
+Row('#mainCol', {
+    children: [
+        Text('#textA', {text: "Hello World"})
+    ]
+})
+```

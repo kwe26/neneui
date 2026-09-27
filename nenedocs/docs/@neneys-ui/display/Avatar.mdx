@@ -1,0 +1,39 @@
+---
+sidebar_position: 0
+---
+# Avatar
+> Avatar like Avatar 2
+
+```ts
+import { Avatar } from "@neneys/ui"
+
+Avatar("#id", {...})
+```
+
+## AvatarBadge
+```ts
+import { AvatarBadge } from "@neneys/ui"
+
+AvatarBadge({
+    size: ...,
+    child: ...,
+    color: ....
+})
+```
+
+## Parameters
+| Param | Value |
+|:---------|:------:|
+| backgroundColor | Hex Code |
+| initials | string |
+| badge | [AvatarBadge](#avatarbadge) |
+| image | [AssetImage](../components/MiscTypes.mdx#assetimage) or [NetworkImage](../components/MiscTypes.mdx#networkimage) |
+
+## Example
+```ts
+import { Avatar, NetworkImage } from "@neneys/ui"
+
+Avatar('#ava', {
+    image: NetworkImage('https://example.com/exam.png')
+})
+```

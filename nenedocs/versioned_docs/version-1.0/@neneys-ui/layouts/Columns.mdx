@@ -1,0 +1,30 @@
+---
+sidebar_position: 0
+---
+# Column
+> Vertical Alignment of Widgets
+
+```ts
+import { Column } from "@neneys";
+
+Column('#id', {...})
+```
+
+## Parameters
+| Param | Value |
+|:---------|:------:|
+| mainAxisAlignment | [MainAxis](../components/MiscTypes.mdx#mainaxis) |
+| crossAxisAlignment | [CrossAxis](../components/MiscTypes.mdx#mainaxis) |
+| foreach | bool |
+| children | Widgets[] or Foreach() |
+
+## Example
+```ts
+import { Column, Text } from "@neneys/ui"
+
+Column('#mainCol', {
+    children: [
+        Text('#textA', {text: "Hello World"})
+    ]
+})
+```
