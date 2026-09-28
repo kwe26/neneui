@@ -41,6 +41,7 @@ class UrlScreen extends StatefulWidget {
 class _UrlScreenState extends State<UrlScreen> {
   final urlController = TextEditingController(text: "http://localhost:3500");
   Map<String, dynamic> plugins = {};
+  CheckboxState _state = CheckboxState.unchecked;
 
   @override
   void dispose() {
@@ -55,7 +56,11 @@ class _UrlScreenState extends State<UrlScreen> {
 
     Navigator.of(context).pushReplacement(
       ShadcnPageRoute(
-        builder: (ctx) => NenePreview(url: url, plugins: plugins),
+        builder: (ctx) => NenePreview(
+          url: url,
+          plugins: plugins,
+          enableOrb: _state == CheckboxState.checked ? true : false,
+        ),
       ),
     );
   }
@@ -197,6 +202,18 @@ class _UrlScreenState extends State<UrlScreen> {
                       ),
                       const SizedBox(height: 10),
                       const Divider(),
+                      Checkbox(
+                        state: _state,
+                        onChanged: (value) {
+                          setState(() {
+                            _state = value;
+                          });
+                        },
+                        // Optional label placed on the trailing side.
+                        trailing: const Text('Enable Debug Bar/Orb'),
+                      ),
+                      const Divider(),
+                      const SizedBox(height: 10),
                       const SizedBox(height: 10),
                       Text("Plugins: ", style: TextStyle(fontSize: 18)),
                       const SizedBox(height: 10),
@@ -271,9 +288,15 @@ class _UrlScreenState extends State<UrlScreen> {
 
 class NenePreview extends StatelessWidget {
   final String url;
+  final bool enableOrb;
   final Map<String, dynamic> plugins;
 
-  const NenePreview({super.key, required this.url, required this.plugins});
+  const NenePreview({
+    super.key,
+    required this.url,
+    required this.plugins,
+    required this.enableOrb,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -281,6 +304,7 @@ class NenePreview extends StatelessWidget {
       baseUrl: url,
       title: 'NeneUI Tester',
       plugins: plugins,
+      debugOrb: enableOrb,
       debugShowCheckedModeBanner: false,
     );
   }

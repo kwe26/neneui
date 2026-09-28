@@ -17,6 +17,7 @@ class dFrame {
         baseUrl: baseUrl,
         plugins: {},
         captureErrors: false,
+        debugOrb: false,
         path: baseUrl + data['props']['framePath'],
         showScaffold: false,
       );

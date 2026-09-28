@@ -19,6 +19,7 @@ class InitUI {
     required String title,
     Map<String, dynamic> plugins = const {},
     bool debugShowCheckedModeBanner = true,
+    bool debugOrb = false,
     ThemeData theme = const ThemeData(
       colorScheme: ColorSchemes.lightNeutral,
       surfaceOpacity: 0.8,
@@ -30,6 +31,7 @@ class InitUI {
       baseUrl: baseUrl,
       title: title,
       plugins: plugins,
+      debugOrb: debugOrb,
       debugShowCheckedModeBanner: debugShowCheckedModeBanner,
       fallbackTheme: const ThemeData(
         colorScheme: ColorSchemes.darkNeutral,
@@ -45,6 +47,7 @@ class InitUI {
 class _NeneUIInitializer extends StatefulWidget {
   final String baseUrl;
   final String title;
+  final bool debugOrb;
   final Map<String, dynamic> plugins;
   final bool debugShowCheckedModeBanner;
   final ThemeData fallbackTheme;
@@ -54,6 +57,7 @@ class _NeneUIInitializer extends StatefulWidget {
     required this.baseUrl,
     required this.title,
     required this.plugins,
+    required this.debugOrb,
     required this.debugShowCheckedModeBanner,
     required this.fallbackTheme,
     required this.defaultPage,
@@ -206,6 +210,7 @@ class _NeneUIInitializerState extends State<_NeneUIInitializer> {
               plugins: widget.plugins,
               path: "${widget.baseUrl}${widget.defaultPage}",
               baseUrl: widget.baseUrl,
+              debugOrb: widget.debugOrb,
               captureErrors: captureErrors,
               showScaffold: true,
             ),
@@ -220,6 +225,7 @@ class NeneUIMain extends StatefulWidget {
   final String path;
   final String baseUrl;
   final bool captureErrors;
+  final bool debugOrb;
   final Map<String, dynamic> plugins;
   final bool showScaffold;
 
@@ -228,6 +234,7 @@ class NeneUIMain extends StatefulWidget {
     required this.baseUrl,
     required this.plugins,
     required this.path,
+    required this.debugOrb,
     required this.showScaffold,
     required this.captureErrors,
   });
@@ -243,7 +250,9 @@ class _NeneUIState extends State<NeneUIMain> {
   String errorText = "";
 
   Map<String, dynamic> ui = {};
-  Map<String, dynamic> idDatabase = {"variables": <String, dynamic>{}};
+  Map<String, dynamic> idDatabase = {
+    "variables": <String, dynamic>{"_stateLoading_": false},
+  };
   List<String> eventsFired = [];
 
   @override
@@ -257,6 +266,7 @@ class _NeneUIState extends State<NeneUIMain> {
     setState(() {
       erroredOut = false;
       isUIProcessing = true;
+      idDatabase['variables']['_debugOrb_'] = widget.debugOrb;
     });
 
     initJs();
@@ -264,11 +274,7 @@ class _NeneUIState extends State<NeneUIMain> {
     try {
       var reqs = await http.get(
         Uri.parse(widget.path),
-        headers: {
-          "User-Agent": "NeneUI/1.0",
-          //   "DeviceWidthHeight":
-          //       "${MediaQuery.of(context).size.width.toString()}x${MediaQuery.of(context).size.height.toString()}",
-        },
+        headers: {"User-Agent": "NeneUI/1.0"},
       );
 
       if (reqs.statusCode == 200) {
@@ -277,6 +283,50 @@ class _NeneUIState extends State<NeneUIMain> {
         setState(() {
           ui = jsonDecod;
           isUIProcessing = false;
+        });
+
+        setState(() {
+          idDatabase['variables']['_stateLoading_'] = false;
+        });
+      } else {
+        setState(() {
+          erroredOut = true;
+          errorText = reqs.reasonPhrase!;
+        });
+      }
+    } catch (error) {
+      setState(() {
+        erroredOut = true;
+        errorText = error.toString();
+      });
+    }
+  }
+
+  void softReloadUI() async {
+    setState(() {
+      erroredOut = false;
+      isUIProcessing = false;
+      idDatabase['variables']['_debugOrb_'] = widget.debugOrb;
+    });
+
+    initJs();
+
+    try {
+      var reqs = await http.get(
+        Uri.parse(widget.path),
+        headers: {"User-Agent": "NeneUI/1.0"},
+      );
+
+      if (reqs.statusCode == 200) {
+        var jsonDecod = jsonDecode(reqs.body);
+
+        setState(() {
+          ui = jsonDecod;
+          isUIProcessing = false;
+        });
+
+        setState(() {
+          idDatabase['variables']['_stateLoading_'] = false;
         });
       } else {
         setState(() {
@@ -301,6 +351,14 @@ class _NeneUIState extends State<NeneUIMain> {
         eventsFired.add(event);
       });
     });
+
+    if (event == Events.RELOAD) {
+      setState(() {
+        idDatabase['variables']['_stateLoading_'] = true;
+      });
+      softReloadUI();
+    }
+
     if (event == Events.REGISTER_ID) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         setState(() {
@@ -379,6 +437,7 @@ class _NeneUIState extends State<NeneUIMain> {
             baseUrl: widget.baseUrl,
             captureErrors: widget.captureErrors,
             showScaffold: true,
+            debugOrb: widget.debugOrb,
             plugins: widget.plugins,
           ),
         ),
@@ -393,6 +452,7 @@ class _NeneUIState extends State<NeneUIMain> {
             baseUrl: widget.baseUrl,
             captureErrors: widget.captureErrors,
             plugins: widget.plugins,
+            debugOrb: widget.debugOrb,
             showScaffold: true,
           ),
         ),
@@ -548,29 +608,9 @@ class _NeneUIState extends State<NeneUIMain> {
         if (fileVariables.isNotEmpty) {
           final progress = ValueNotifier<double>(0);
 
-          showOverlay(
-            context,
-            DialogConfiguration(),
-            builder: (context) {
-              return ValueListenableBuilder<double>(
-                valueListenable: progress,
-                builder: (_, value, _) {
-                  return AlertDialog(
-                    content: SizedBox(
-                      width: 50,
-                      height: 50,
-                      child: Column(
-                        children: [
-                          CircularProgressIndicator(value: value),
-                          Text("${(value * 100).toStringAsFixed(1)}%"),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              );
-            },
-          );
+          setState(() {
+            idDatabase['variables']['_stateLoading_'] = true;
+          });
 
           final request = ProgressMultipartRequest(
             "POST",
@@ -614,7 +654,9 @@ class _NeneUIState extends State<NeneUIMain> {
           final body = await response.stream.bytesToString();
 
           if (response.statusCode == 200) {
-            closeOverlay(context);
+            setState(() {
+              idDatabase['variables']['_stateLoading_'] = false;
+            });
 
             final json = jsonDecode(body);
 
@@ -627,7 +669,9 @@ class _NeneUIState extends State<NeneUIMain> {
               );
             }
           } else {
-            closeOverlay(context);
+            setState(() {
+              idDatabase['variables']['_stateLoading_'] = false;
+            });
             eventExec(Events.INVOKE_TOAST, response.reasonPhrase ?? body);
           }
 
@@ -639,17 +683,9 @@ class _NeneUIState extends State<NeneUIMain> {
               CoreParser.parseKVariable(idDatabase['variables'][vb]).toString();
         }
 
-        showOverlay(
-          context,
-          DialogConfiguration(),
-          builder: (ctx) => AlertDialog(
-            content: SizedBox(
-              width: 50,
-              height: 50,
-              child: Center(child: CircularProgressIndicator(size: 18)),
-            ),
-          ),
-        );
+        setState(() {
+          idDatabase['variables']['_stateLoading_'] = true;
+        });
 
         var response = await http.post(
           Uri.parse(widget.baseUrl + data['callbackPath']),
@@ -659,7 +695,9 @@ class _NeneUIState extends State<NeneUIMain> {
               : {'User-agent': 'NeneUI/1.0'},
         );
 
-        closeOverlay(context);
+        setState(() {
+          idDatabase['variables']['_stateLoading_'] = false;
+        });
 
         if (response.statusCode == 200) {
           //closeOverlay(context);
@@ -674,7 +712,9 @@ class _NeneUIState extends State<NeneUIMain> {
           }
         } else {
           // Navigator.of(context).pop();
-          closeOverlay(context);
+          setState(() {
+            idDatabase['variables']['_stateLoading_'] = false;
+          });
           eventExec(Events.INVOKE_TOAST, response.reasonPhrase);
         }
       } catch (error) {
@@ -901,12 +941,6 @@ class _NeneUIState extends State<NeneUIMain> {
                   ],
                 ),
                 const Gap(10),
-                const Text("Events Fired Recently")
-                    .small()
-                    .mono()
-                    .withPadding(horizontal: 16, vertical: 8),
-                for (var event in eventsFired)
-                  if (event != "register_id") Text(event.toString()),
               ],
             ),
           ),

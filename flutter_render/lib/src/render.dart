@@ -318,6 +318,7 @@ class Daikon {
           context: context,
           data: ui,
           reRender: reRender,
+          idMap: idMap,
           event: event,
         );
 

@@ -10,6 +10,7 @@ class Events {
   static const String DAIKON_DEBUG = "daikon_debugger";
   static const String SET_VAR = "setvar";
   static const String DIALOG = "dialog";
+  static const String RELOAD = "reload";
   static const String SUBMIT = "submit";
   static const String INVOKE_POP = "pop";
   static const String INVOKE_ONE_TIME_EXECUTION = "iote";
