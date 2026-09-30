@@ -302,7 +302,7 @@ class NenePreview extends StatelessWidget {
   Widget build(BuildContext context) {
     return InitUI.init(
       baseUrl: url,
-      title: 'NeneUI Tester',
+      title: 'NeneUI Testing Kit',
       plugins: plugins,
       debugOrb: enableOrb,
       debugShowCheckedModeBanner: false,

@@ -91,6 +91,39 @@ class Daikon {
           setState: setState,
         );
 
+        if (idMap['variables']['_mouseHover_'] == true) {
+          return MouseRegion(
+            cursor: SystemMouseCursors.precise,
+            onEnter: (_) {
+              if (idMap['variables']['_hoveredWidget_'] != nene['id']) {
+                setState(() {
+                  idMap['variables']['_hoveredWidget_'] = nene['id'];
+                });
+              }
+            },
+            onExit: (_) {
+              if (idMap['variables']['_hoveredWidget_'] == nene['id']) {
+                setState(() {
+                  idMap['variables']['_hoveredWidget_'] = null;
+                });
+              }
+            },
+            child: Container(
+              foregroundDecoration:
+                  idMap['variables']['_hoveredWidget_'] == nene['id']
+                  ? BoxDecoration(
+                      color: const Color(0x332196F3),
+                      border: Border.all(
+                        color: const Color(0xFF2196F3),
+                        width: 2,
+                      ),
+                    )
+                  : null,
+              child: widget,
+            ),
+          );
+        }
+
         if (contextMenuWidgets.contains(nene['name'])) {
           return ContextMenu(
             child: widget,

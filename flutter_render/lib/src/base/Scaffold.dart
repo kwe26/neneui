@@ -32,6 +32,13 @@ class dScaffold {
               title: Text("Debug (Bar) - Enabled"),
               trailing: [
                 IconButton(
+                  icon: Icon(LucideIcons.mouse),
+                  variance: ButtonStyle.primaryIcon(),
+                  onPressed: () {
+                    event(Events.TOGGL_MOUSEHOVER, "Daikon-Legs");
+                  },
+                ),
+                IconButton(
                   icon: Icon(LucideIcons.bug),
                   variance: ButtonStyle.destructiveIcon(),
                   onPressed: () {

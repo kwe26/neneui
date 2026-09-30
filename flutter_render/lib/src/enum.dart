@@ -19,4 +19,5 @@ class Events {
   static const String PAY = "pay";
   static const String LAUNCH_URL = "launch_url";
   static const String SELECT_FILE = "select_file";
+  static const String TOGGL_MOUSEHOVER = "toggl_mousehovr";
 }

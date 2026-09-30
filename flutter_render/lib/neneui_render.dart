@@ -251,7 +251,10 @@ class _NeneUIState extends State<NeneUIMain> {
 
   Map<String, dynamic> ui = {};
   Map<String, dynamic> idDatabase = {
-    "variables": <String, dynamic>{"_stateLoading_": false},
+    "variables": <String, dynamic>{
+      "_stateLoading_": false,
+      "_mouseHover_": false,
+    },
   };
   List<String> eventsFired = [];
 
@@ -371,6 +374,18 @@ class _NeneUIState extends State<NeneUIMain> {
           });
         });
       });
+    }
+
+    if (event == Events.TOGGL_MOUSEHOVER) {
+      if (idDatabase['variables']['_mouseHover_'] == true) {
+        setState(() {
+          idDatabase['variables']['_mouseHover_'] = false;
+        });
+      } else if (idDatabase['variables']['_mouseHover_'] == false) {
+        setState(() {
+          idDatabase['variables']['_mouseHover_'] = true;
+        });
+      }
     }
 
     if (event == Events.SELECT_FILE) {
