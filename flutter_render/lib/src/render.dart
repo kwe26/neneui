@@ -23,6 +23,7 @@ import 'package:neneui_render/src/dispaly/Avatar.dart';
 import 'package:neneui_render/src/dispaly/ChatBubble.dart';
 import 'package:neneui_render/src/dispaly/ChatGroup.dart';
 import 'package:neneui_render/src/dispaly/CodeSnippet.dart';
+import 'package:neneui_render/src/dispaly/NeneDisplay.dart';
 import 'package:neneui_render/src/dispaly/Table.dart';
 import 'package:neneui_render/src/dispaly/TableCell.dart';
 import 'package:neneui_render/src/dispaly/TableRow.dart';
@@ -41,6 +42,7 @@ import 'package:neneui_render/src/navigation/NavigationDivider.dart';
 import 'package:neneui_render/src/navigation/NavigationGroup.dart';
 import 'package:neneui_render/src/navigation/NavigationItem.dart';
 import 'package:neneui_render/src/navigation/NavigationRail.dart';
+import 'package:neneui_render/src/navigation/NeneBottomnavbar.dart';
 import 'package:neneui_render/src/overlay/HoverCard.dart';
 import 'package:neneui_render/src/rowscol/Column.dart';
 import 'package:neneui_render/src/rowscol/Flex.dart';
@@ -492,6 +494,15 @@ class Daikon {
           event: event,
         );
 
+      case 'NeneNavbottom':
+        return DNeneBottomnavbar.run(
+          context: context,
+          data: ui,
+          idDatabase: idMap,
+          reRender: reRender,
+          event: event,
+        );
+
       case 'Breadcrumb':
         return DBreadcrumb.run(
           context: context,
@@ -540,6 +551,15 @@ class Daikon {
         return dNavigationDivider.run(
           context: context,
           data: ui,
+          reRender: reRender,
+          event: event,
+        );
+
+      case 'NeneDisplay':
+        return DNeneDisplay.run(
+          context: context,
+          data: ui,
+          idDatabase: idMap,
           reRender: reRender,
           event: event,
         );

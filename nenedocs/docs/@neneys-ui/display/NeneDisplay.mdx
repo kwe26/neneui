@@ -1,0 +1,36 @@
+---
+sidebar_position: 2
+---
+# NeneDisplay
+> Displays the Portion assigned to an Sub-Route from Bottom Navbar or Index Changes. For Single Page Navigation System
+
+```ts
+import { NeneDisplay } from "@neneys/ui"
+
+NeneDisplay(...)
+```
+
+:::info
+
+It only supports being in root of Scaffold Body only. And the Sub Widgets Must not have any Scaffold within it.
+
+:::
+
+## Parameters
+| Param | Value |
+|:---------|:------:|
+| followIndex | string |
+| urlMap | Map<int, string> |
+
+## Example
+
+```ts
+import { NeneDisplay } from "@neneys/ui"
+
+NeneDisplay({
+    urlMap: {
+        0: "/ui/route_a",
+        1: "/ui/route_b"
+    }
+})
+```

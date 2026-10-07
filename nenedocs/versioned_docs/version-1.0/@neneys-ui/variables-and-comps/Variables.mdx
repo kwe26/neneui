@@ -1,0 +1,41 @@
+---
+sidebar_position: 0
+---
+
+# Variables
+> Yes the Variables that you can set using SetVar DoAction
+
+# Show/Refer the Variable
+```ts
+Var({
+    template: "%1",
+    variable: "selFile.name"
+})
+```
+> It replaces %n with the variable seperated by , (commas)
+
+You can do similar thing like
+```ts
+Var({
+    template: "%1 says Hello and %2 says bye",
+    variable: "vara,varb"
+})
+```
+
+# Usage in AssetImage, NetworkImage
+
+```ts
+import { Var, AssetImage, NetworkImage } from "@neneys/ui"
+
+Var({
+    template: AssetImage("%1"),
+    variable: "image_var"
+})
+
+Var({
+    template: NetworkImage("%1"),
+    variable: "image_var"
+})
+```
+
+> You can assign it directly to the source of Image and it will work.

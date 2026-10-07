@@ -6,7 +6,7 @@ export interface IconifyProps {
     prefix?: string
 }
 
-export function Iconify(name: string, {size = 24, color = Colors.black, prefix = "material-symbols"}: IconifyProps){
+export function Iconify(name: string, {size = 24, color = "#DEFAULT", prefix = "material-symbols"}: IconifyProps){
     return {
         name: "Iconify",
         props: {

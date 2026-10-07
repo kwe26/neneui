@@ -254,9 +254,16 @@ class _NeneUIState extends State<NeneUIMain> {
     "variables": <String, dynamic>{
       "_stateLoading_": false,
       "_mouseHover_": false,
+      "_index_": 0,
+      "_display_": {},
+      "_displayLoading_": false,
     },
   };
   List<String> eventsFired = [];
+
+  int fired = 0;
+
+  Map<String, dynamic> neneDisplay = {};
 
   @override
   void initState() {
@@ -290,6 +297,42 @@ class _NeneUIState extends State<NeneUIMain> {
 
         setState(() {
           idDatabase['variables']['_stateLoading_'] = false;
+        });
+      } else {
+        setState(() {
+          erroredOut = true;
+          errorText = reqs.reasonPhrase!;
+        });
+      }
+    } catch (error) {
+      setState(() {
+        erroredOut = true;
+        errorText = error.toString();
+      });
+    }
+  }
+
+  void displayLoadUri(String url) async {
+    setState(() {
+      idDatabase['variables']['_displayLoading_'] = true;
+    });
+
+    try {
+      var reqs = await http.get(
+        Uri.parse(widget.baseUrl + url),
+        headers: {"User-Agent": "NeneUI/1.0"},
+      );
+
+      if (reqs.statusCode == 200) {
+        var jsonDecod = jsonDecode(reqs.body);
+
+        setState(() {
+          idDatabase['variables']['_display_'] = jsonDecod;
+          idDatabase['variables']['_displayLoading_'] = false;
+        });
+
+        setState(() {
+          idDatabase['variables']['_displayLoading_'] = false;
         });
       } else {
         setState(() {
@@ -362,6 +405,12 @@ class _NeneUIState extends State<NeneUIMain> {
       softReloadUI();
     }
 
+    if (event == Events.UPDATE_INDEX) {
+      setState(() {
+        idDatabase['variables']['_index_'] = data;
+      });
+    }
+
     if (event == Events.REGISTER_ID) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         setState(() {
@@ -425,6 +474,48 @@ class _NeneUIState extends State<NeneUIMain> {
 
         idDatabase['variables'][data['variable'] + ".size"] = fileSize;
       });
+    }
+
+    if (event == Events.SET_DISPLAY_URLS) {
+      setState(() {
+        neneDisplay = data;
+      });
+    }
+
+    if (event == Events.RELOAD_DISPLAY_ONCE) {
+      if (fired == 1) return;
+      setState(() {
+        fired = 1;
+      });
+      var indexId = int.parse(
+        idDatabase['variables'][neneDisplay['followIndex']].toString(),
+      );
+
+      try {
+        displayLoadUri(
+          Map.from(neneDisplay['urlMap']).values.elementAt(indexId),
+        );
+      } catch (error) {
+        print("Loading Failed: $error");
+      }
+    }
+
+    if (event == Events.RELOAD_DISPLAY) {
+      setState(() {
+        idDatabase['variables']['_displayLoading_'] = true;
+        idDatabase['variables']['_display_'] = {};
+      });
+      var indexId = int.parse(
+        idDatabase['variables'][neneDisplay['followIndex']].toString(),
+      );
+
+      try {
+        displayLoadUri(
+          Map.from(neneDisplay['urlMap']).values.elementAt(indexId),
+        );
+      } catch (error) {
+        print("Loading Failed: $error");
+      }
     }
 
     if (event == Events.INVOKE_ONE_TIME_EXECUTION) {

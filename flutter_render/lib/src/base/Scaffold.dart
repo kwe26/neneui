@@ -79,7 +79,10 @@ class dScaffold {
         ],
         // drawer: reRender(data['props']['drawer']),
         child: reRender(data['props']['body']),
-        footers: [reRender(data['props']['bottom'] ?? {})],
+        footers: [
+          if (data['props']['bottom']['name'] == "NeneNavbottom") Divider(),
+          reRender(data['props']['bottom'] ?? {}),
+        ],
       );
     } else {
       return SizedBox();

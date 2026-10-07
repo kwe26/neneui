@@ -10,26 +10,30 @@ class Iconify {
     required Function reRender,
     required Function event,
   }) {
-    if (data['name'] == "Iconify") {
-      event(Events.REGISTER_ID, {'id': data['id'], 'props': data['props']});
-
-      return SvgPicture.network(
-        "https://api.iconify.design/${data['props']['icon']}.svg",
-        height: double.parse(data['props']['size'].toString()),
-        width: double.parse(data['props']['size'].toString()),
-        errorBuilder: (context, obj, trace) => Icon(
-          LucideIcons.imageOff,
-          size: double.parse(data['props']['size'].toString()),
-        ),
-        colorFilter: ColorFilter.mode(
-          data['props']['color'] == null || data['props']['color'] == "#DEFAULT"
-              ? Theme.of(context).colorScheme.foreground
-              : ColorParse.parseColor(data['props']['color']),
-          BlendMode.srcIn,
-        ),
-      );
-    } else {
-      return SizedBox();
+    if (data['name'] != 'Iconify') {
+      return const SizedBox();
     }
+
+    event(Events.REGISTER_ID, {'id': data['id'], 'props': data['props']});
+
+    final props = data['props'];
+
+    final size = double.tryParse(props['size']?.toString() ?? '') ?? 24;
+
+    final color = props['color']?.toString();
+
+    final iconColor = color == null || color == '#DEFAULT'
+        ? Theme.of(context).colorScheme.foreground
+        : ColorParse.parseColor(color);
+
+    return SvgPicture.network(
+      'https://api.iconify.design/${props['icon']}.svg',
+      height: size,
+      width: size,
+      colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
+      errorBuilder: (context, error, stackTrace) {
+        return Icon(LucideIcons.imageOff, size: size, color: iconColor);
+      },
+    );
   }
 }

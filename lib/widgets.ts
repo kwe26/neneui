@@ -31,6 +31,7 @@ export * from "./display/CodeSnippet"
 export * from "./display/Skeleton"
 export * from "./display/ChatBubble"
 export * from "./display/ChatGroup"
+export * from "./display/NeneDisplay"
 
 // Form
 export * from "./form/TextField"
@@ -46,6 +47,7 @@ export * from "./navigation/NavigationGroup";
 export * from "./navigation/NavigationDivider"
 export * from "./navigation/NavigationRail"
 export * from "./navigation/Breadcrumb";
+export * from "./navigation/NeneNavBar";
 
 // Feedback
 export * from "./feedback/ProgressIndicator"

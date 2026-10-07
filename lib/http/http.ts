@@ -144,7 +144,10 @@ export async function NeneServer({
                 // Register by Importing
                 let importFile = (await import(join(uiPathDir, file)))
                 if(verbose) console.log(`[#NENE] : UI : ${importFile.path}`)
-                app.get(importFile.path, (req, res) => importFile.run(req, res, pass));
+                app.get(importFile.path, (req, res) => {
+                    console.log(`[#NENE]: UI: ${importFile.path} Accessed by User!`);
+                    importFile.run(req, res, pass);
+                });
             }else{
                 let dir_fd = fs.statSync(join(uiPathDir, file));
                 if(dir_fd.isDirectory()) readDir(join(uiPathDir, file));
