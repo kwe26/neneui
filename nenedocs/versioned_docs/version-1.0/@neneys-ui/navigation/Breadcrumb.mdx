@@ -1,0 +1,35 @@
+---
+sidebar_position: 0
+---
+# Breadcrumb
+> Breadcumbs, you left some crumbs in your face
+
+```ts
+import { Breadcrumb } from "@neneys/ui"
+
+Breadcrumb('#id', {....})
+```
+
+## Parameters
+| Param | Value |
+|:---------|:------:|
+| separator | [BreadcrumbSeparator](../components/MiscTypes.mdx#breadcrumbseparator) |
+| children | Widgets |
+
+## Example
+
+```ts
+import { Breadcrumb, Text, BreadcrumbSeparator } from "@neneys/ui";
+
+Breadcrumb('#bcb', {
+    separator: BreadcrumbSeparator.arrowSeparator,
+    children: [
+        Text("#txt1", {
+            text: "Home"
+        }),
+        Text("#txt2", {
+            text: "Second Home"
+        })
+    ]
+})
+```

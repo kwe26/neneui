@@ -1,0 +1,56 @@
+---
+sidebar_position: 1
+---
+# NeneNavbottom
+> Bottom Navigation Bar for NeneUI Customized Widget
+
+```ts
+import { NeneNavbottom } from "@neneys/ui"
+
+NeneNavbottom({....})
+```
+
+## NeneNavItem
+> Navbar Item for NeneNavBottom
+```ts
+import { NeneNavItem, Iconify } from "@neneys/ui"
+
+NeneNavItem({
+    index: 0,
+    icon: Iconify("home", {}),
+    title: "Home"
+})
+```
+
+## NavType
+- NavType.normal
+- NavType.float
+
+## Parameters
+| Param | Value |
+|:---------|:------:|
+| items | [NeneNavItem[]](#nenenavitem) |
+| executeDisplay | bool |
+| type | [NavType](#navtype)|
+
+:::info
+
+It is always assigned to variable named *\_index\_* only!
+
+:::
+
+## Example
+```ts
+import { NeneNavItem, Iconify, NeneNavbottom, NavType  } from "@neneys/ui"
+
+NeneNavbottom({
+    items: [
+        NeneNavItem({
+            index: 0,
+            icon: Iconify("home", {}),
+            title: "Home"
+        })
+    ],
+    type: NavType.normal
+})
+```

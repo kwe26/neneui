@@ -1,0 +1,29 @@
+---
+sidebar_position: 3
+---
+# SingleChildScrollView
+> Allows Scrolling in a Child Widget
+
+```ts
+import { SingleChildScrollView } from "@neneys/ui"
+
+SingleChildScrollView("#id", ...)
+```
+
+## Parameters
+## Parameters
+| Param | Value |
+|:---------|:------:|
+| child | Widget |
+| physics | [ScrollPhysics](../components/MiscTypes.mdx#scrollphysics) |
+| scrollDirection | [Direction](../components/MiscTypes.mdx#Direction) |
+| reverse | bool |
+
+## Example
+```ts
+import { SingleChildScrollView, Column } from "@neneys/ui"
+
+SingleChildScrollView('#scv', {
+    child: Column(...)
+})
+```
