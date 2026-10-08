@@ -17,7 +17,7 @@ class dCard {
       return Card(
         child: reRender(data['props']['child']),
         filled: data['props']['type'] == "filled" ? true : false,
-        fillColor: ColorParse.parseColor(data['props']['color']),
+        fillColor: ColorParse.parseColor(data?['props']?['color'] ?? ""),
         padding: CoreParser.parseEdge(data['props']['padding']),
       );
     } else {

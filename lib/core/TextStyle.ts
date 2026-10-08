@@ -13,7 +13,7 @@ export function TextStyle({
     height = 1.0,
     fontSize = 14,
     fontWeight = FontWeight.w400,
-    color = Colors.black,
+    color = "#default",
     decoration = TextDecoration.none,
     fontStyle = FontStyle.normal
 }: TextStyleProps) {

@@ -15,7 +15,7 @@ class dTextstyle {
       case 'w400':
         return FontWeight.w400;
       case 'w500':
-        return FontWeight.w300;
+        return FontWeight.w500;
       default:
         return FontWeight.normal;
     }
@@ -37,6 +37,14 @@ class dTextstyle {
     return FontStyle.italic;
   }
 
+  static Color textColor(String color, BuildContext context) {
+    if (color == "#DEFAULT" || color == "#default") {
+      return Theme.of(context).colorScheme.foreground;
+    }
+
+    return ColorParse.parseColor(color);
+  }
+
   static TextStyle run(
     Map<String, dynamic> data,
     BuildContext context,
@@ -46,11 +54,7 @@ class dTextstyle {
       height: double.parse(data['height'].toString()),
       fontSize: double.parse(data['fontSize'].toString()),
       fontWeight: dTextstyle.fw(data['fontWeight']),
-      color: isAppBar
-          ? data['color'] == '#DEFAULT'
-                ? Theme.of(context).colorScheme.primaryForeground
-                : ColorParse.parseColor(data['color'])
-          : ColorParse.parseColor(data['color']),
+      color: dTextstyle.textColor(data['color'].toString(), context),
       decoration: dTextstyle.textDParse(data['decoration']),
       fontStyle: dTextstyle.fst(data['fontStyle']),
     );
