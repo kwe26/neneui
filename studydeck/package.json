@@ -1,0 +1,20 @@
+{
+  "name": "studydeck-server",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "bun --watch index.ts",
+    "start": "bun index.ts",
+    "update-nene": "bun update @neneys/ui"
+  },
+  "dependencies": {
+    "@neneys/ui": "github:kwe26/neneui#main"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  }
+}
