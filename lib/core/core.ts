@@ -263,6 +263,18 @@ export enum ChatBubbleType {
     tail = "tail"
 }
 
+export function SetPrefs(name: string, value: string) {
+    return {name, value};
+}
+
+export function PrefExists(name: string, exists: any, not: any){
+    return {
+        name,
+        exists,
+        not
+    }
+}
+
 export * from "./TextStyle"
 export * from "./BoxDecoration"
 export * from "./Actions"

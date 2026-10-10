@@ -13,7 +13,10 @@ export enum Action {
     PROPS = "props",
     PAY ="pay",
     LAUNCH_URL = "launch_url",
-    SELECT_FILE = "select_file"
+    SELECT_FILE = "select_file",
+    SET_PREFS = "set_prefs",
+    REM_PREFS = "rem_prefs",
+    PREF_EXISTS = "exist_prefs"
 }
 
 export function DoAction(action: Action, data: any){

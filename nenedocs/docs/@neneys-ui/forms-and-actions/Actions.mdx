@@ -107,6 +107,22 @@ DoAction(Action.SELECT_FILE, SelectFile({
 }))
 ```
 
+## Action.SET_PREFS
+> Sets Shared Preference
+```ts
+import { Action, DoAction, SetPrefs } from "@neneys/ui";
+
+DoAction(Action.SET_PREFS, SetPrefs("[pref_name]", "value"))
+```
+
+## Action.REM_PREFS
+> Removes Shared Preference
+```ts
+import { Action, DoAction } from "@neneys/ui";
+
+DoAction(Action.REM_PREFS, "[pref_name]")
+```
+
 ## Action.SUBMIT
 > Submit the Variable and Forms to the Server Callback
 

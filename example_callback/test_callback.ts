@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import { Action, AlertDialog, Button, ButtonType, Callback, DoAction, Iconify, InputType, NewProps, setVar, Text, TextEditingController, TextField } from "../lib/widgets";
+import { Action, AlertDialog, Button, ButtonType, Callback, DoAction, Iconify, InputType, NewProps, SetPrefs, setVar, Text, TextEditingController, TextField } from "../lib/widgets";
 import { CreateNenePayments, PGList } from "../@neneys/payments/lib";
 
 export const path = "/ui/test_callback"
@@ -24,17 +24,17 @@ export async function run(req: Request, res: Response, pass: any) {
             //         ]
             //     }
             // )),
-            DoAction(Action.PAY, await CreateNenePayments({
-                Secret: "1234",
-                CustomerName: "John Doe",
-                CustomerPhone: "+914653958302",
-                CustomerEmail: "main@mail.com",
-                Amount: 1500,
-                Notes: "",
-                PaymentGateway: PGList.Razorpay,
-                onSuccess: DoAction(Action.SHOW_TOAST, "WOHOOO!!"),
-                onFailure: DoAction(Action.SHOW_TOAST, "You suck!")
-            }, pass)),
+            // DoAction(Action.PAY, await CreateNenePayments({
+            //     Secret: "1234",
+            //     CustomerName: "John Doe",
+            //     CustomerPhone: "+914653958302",
+            //     CustomerEmail: "main@mail.com",
+            //     Amount: 1500,
+            //     Notes: "",
+            //     PaymentGateway: PGList.Razorpay,
+            //     onSuccess: DoAction(Action.SHOW_TOAST, "WOHOOO!!"),
+            //     onFailure: DoAction(Action.SHOW_TOAST, "You suck!")
+            // }, pass)),
             // DoAction(Action.PROPS, NewProps({
             //     id: "#userPassword",
             //     props: TextField('#userPassword', {
@@ -52,6 +52,8 @@ export async function run(req: Request, res: Response, pass: any) {
             //         ]
             //     }
             // ))
+
+            DoAction(Action.SET_PREFS, SetPrefs("hello", new Date().toDateString()))
         ]
     });
 

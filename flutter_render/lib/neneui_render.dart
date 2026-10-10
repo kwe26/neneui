@@ -11,6 +11,7 @@ import 'package:neneui_render/src/render.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:file_picker/file_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class InitUI {
@@ -265,6 +266,8 @@ class _NeneUIState extends State<NeneUIMain> {
 
   Map<String, dynamic> neneDisplay = {};
 
+  late SharedPreferences prefs;
+
   @override
   void initState() {
     super.initState();
@@ -273,9 +276,12 @@ class _NeneUIState extends State<NeneUIMain> {
   }
 
   void fetchUIRender() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+
     setState(() {
       erroredOut = false;
       isUIProcessing = true;
+      prefs = pref;
       idDatabase['variables']['_debugOrb_'] = widget.debugOrb;
     });
 
@@ -518,6 +524,19 @@ class _NeneUIState extends State<NeneUIMain> {
       }
     }
 
+    if (event == Events.SET_PREFS) {
+      String name = data['name'];
+      String value = data['value'].toString();
+
+      prefs.setString(name, value);
+    }
+
+    if (event == Events.REM_PREFS) {
+      String name = data;
+
+      prefs.remove(name);
+    }
+
     if (event == Events.INVOKE_ONE_TIME_EXECUTION) {
       if (ioteDone) return;
       setState(() {
@@ -596,13 +615,9 @@ class _NeneUIState extends State<NeneUIMain> {
         if (plugin != null) {
           if (plugin['plugin'] == "nene_payments") {
             if (plugin['actionResolver'] is! Function) {
-              print("ACTION RESOLVER IS NOT A FUNCTION!");
-              print(plugin['actionResolver'].runtimeType);
               return;
             }
-            print("NENE UI CALLED");
-            print(data);
-            print(plugin);
+
             plugin['actionResolver'](context, data, (callback) {
               if (callback == null) {
                 eventExec(event, "Something Went Wrong with Payments System");
@@ -727,9 +742,17 @@ class _NeneUIState extends State<NeneUIMain> {
           );
 
           for (var vb in variables) {
-            request.fields[varNames[variables.indexOf(vb)]] =
-                CoreParser.parseKVariable(idDatabase['variables'][vb])
-                    .toString();
+            request.fields[varNames[variables.indexOf(
+              vb,
+            )]] = idDatabase['variables'][vb].toString().startsWith("prefs.")
+                ? prefs.getString(
+                    idDatabase['variables'][vb].toString().replaceFirst(
+                      "prefs.",
+                      "",
+                    ),
+                  )!
+                : CoreParser.parseKVariable(idDatabase['variables'][vb])
+                      .toString();
           }
 
           for (var i = 0; i < fileVariables.length; i++) {

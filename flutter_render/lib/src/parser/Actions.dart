@@ -37,6 +37,12 @@ class ActionsPerf {
       event(Events.SELECT_FILE, mainData);
     } else if (action == "pay") {
       event(Events.PAY, mainData);
+    } else if (action == "set_prefs") {
+      event(Events.SET_PREFS, mainData);
+    } else if (action == "rem_prefs") {
+      event(Events.REM_PREFS, mainData);
+    } else if (action == "exist_prefs") {
+      event(Events.PREF_EXISTS, mainData);
     }
 
     debugPrint(action);

@@ -66,9 +66,9 @@ class Daikon {
     required Function setState,
   }) {
     if (ui is! Map<String, dynamic>) {
-      print("INVALID UI:");
-      print(ui.runtimeType);
-      print(ui);
+      debugPrint("INVALID UI:");
+      debugPrint(ui.runtimeType.toString());
+      debugPrint(ui.toString());
       throw Exception("UI must be a Map");
     }
     String wName = ui['name'].toString();

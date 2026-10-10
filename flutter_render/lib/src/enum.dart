@@ -24,4 +24,7 @@ class Events {
   static const String SET_DISPLAY_URLS = "set_display_urls";
   static const String RELOAD_DISPLAY = "reload_display";
   static const String RELOAD_DISPLAY_ONCE = "reload_display_once";
+  static const String SET_PREFS = "set_prefs";
+  static const String REM_PREFS = "rem_prefs";
+  static const String PREF_EXISTS = "exist_prefs";
 }
