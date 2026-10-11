@@ -537,6 +537,26 @@ class _NeneUIState extends State<NeneUIMain> {
       prefs.remove(name);
     }
 
+    if (event == Events.PREF_EXISTS) {
+      String name = data['name'];
+
+      if (prefs.containsKey(name)) {
+        ActionsPerf.perform(
+          context,
+          eventExec,
+          data['exists']['action'],
+          data['exists']['data'],
+        );
+      } else {
+        ActionsPerf.perform(
+          context,
+          eventExec,
+          data['not']['action'],
+          data['not']['data'],
+        );
+      }
+    }
+
     if (event == Events.INVOKE_ONE_TIME_EXECUTION) {
       if (ioteDone) return;
       setState(() {

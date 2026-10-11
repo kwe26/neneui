@@ -123,6 +123,14 @@ import { Action, DoAction } from "@neneys/ui";
 DoAction(Action.REM_PREFS, "[pref_name]")
 ```
 
+## Action.PREF_EXISTS
+```ts
+import { Action, DoAction, PrefExists } from "@neneys/ui";
+
+DoAction(Action.PREF_EXISTS, PrefExists("[var_name]", "exist_action", "not_exist_action"))
+
+```
+
 ## Action.SUBMIT
 > Submit the Variable and Forms to the Server Callback
 
@@ -142,6 +150,8 @@ FormSubmitAction({
 In Variables #varA -> var_a recieved on req.body.
 
 You can also pass down the files such like
+
+in varNames use *prefs.`name`* to access a preference
 
 ```ts
 import { FormSubmitAction } from "@neneys/ui"
