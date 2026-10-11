@@ -7,7 +7,7 @@
 Build Flutter interfaces dynamically from a JavaScript server.
 
 # Docs
-You can access docs at [Here](https://kwe26.github.io/neneui/) The New Docs
+You can access docs at [Here](https://kwe26.github.io/neneui/)
 
 # Small Little Demo
 
@@ -35,7 +35,7 @@ You can access docs at [Here](https://kwe26.github.io/neneui/) The New Docs
 ### Psst!`
 *In case you don't have Flutter SDK Installed or don't wannta compile things, you can try out the modications you made in example_ui in NeneUI Testing Kit*
 
-[NeneUI Testing Kit](https://github.com/kwe26/neneui/releases/tag/nene-tester-1.0.0)
+[NeneUI Testing Kit](https://github.com/kwe26/neneui/releases/tag/nene-tester-1.0.1)
 
 
 ## Getting Started With an Sample

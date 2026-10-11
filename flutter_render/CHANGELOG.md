@@ -27,3 +27,9 @@
 * Fix Issues with Render
 * Fix FormSubmit Blackout Issue.
 * Migrate to flutter_quickjs from flutter_js
+
+## 0.0.7
+* Major Changes
+* NeneDispaly and Custom BottomNavBar Widgets
+* Bug Fixes
+* Shared Preferences
