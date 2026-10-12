@@ -16,6 +16,7 @@ export enum Action {
     SELECT_FILE = "select_file",
     SET_PREFS = "set_prefs",
     REM_PREFS = "rem_prefs",
+    SOFT_RELOAD = "soft_reload",
     PREF_EXISTS = "exist_prefs"
 }
 

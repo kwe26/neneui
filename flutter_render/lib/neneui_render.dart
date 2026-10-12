@@ -757,7 +757,9 @@ class _NeneUIState extends State<NeneUIMain> {
 
     if (event == Events.SUBMIT) {
       try {
-        Map<String, dynamic> buildRequest = {};
+        Map<String, dynamic> buildRequest = {
+          'shared_pref_body': await getAllPrefsAsBody(),
+        };
         List<String> variables = List.from(data['variables']);
         List<String> varNames = List.from(data['varNames']);
 

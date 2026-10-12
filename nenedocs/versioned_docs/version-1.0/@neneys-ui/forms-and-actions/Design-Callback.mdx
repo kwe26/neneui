@@ -99,6 +99,18 @@ import TabItem from '@theme/TabItem';
 
 Basically the DoAction's Action.SUBMIT Performs the Action of Sending the Variables from the Client Side into the Server-Side to /ui/test_callback route and which in returns actions to Perform and that Action could be anyting from shoing a Toast to Execution of Unrestricted JavaScript.
 
+## Callback Helpers
+
+- GetPrefs
+> Present in Both Callback and UI (if ReqMode is Post)
+GetPrefs(pass, String)
+
+- GetFile
+> Presents the Path of the File Uploaded
+GetFile(pass, name)
+
+Must be Imported from `import { GetPrefs, GetFile } from "@neneys/ui"`
+
 ## Explanation
 
 We will walkthrough each of theese components on How it works and it's appropriate parameters.

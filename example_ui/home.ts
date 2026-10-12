@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import { Action, AppBar, Avatar, AvatarBadge, BoxFit, Breadcrumb, BreadcrumbSeparator, Button, ButtonType, Center, Colors, Column, CrossAxis, DatePicker, DoAction, Empty, FormSubmitAction, Frame, Iconify, Image, InputOTP, InputOTPChild, InputType, LaunchURL, MainAxis, MemoryImage, NetworkImage, PromptMode, Row, Scaffold, SelectFile, setVar, SingleChildScrollView, SizedBox, Text, TextEditingController, TextField, TextStyle, Var, VideoPlugin } from "../lib/widgets";
+import { Action, AppBar, Avatar, AvatarBadge, BoxFit, Breadcrumb, BreadcrumbSeparator, Button, ButtonType, Center, Colors, Column, CrossAxis, DatePicker, DoAction, Empty, FormSubmitAction, Frame, GetPrefs, Iconify, Image, InputOTP, InputOTPChild, InputType, LaunchURL, MainAxis, MemoryImage, NetworkImage, PromptMode, Row, Scaffold, SelectFile, setVar, SingleChildScrollView, SizedBox, Text, TextEditingController, TextField, TextStyle, Var, VideoPlugin } from "../lib/widgets";
 import { DateTime } from "../lib/core/DateTime";
 import { ForEach } from "../lib/core/ForEach";
 
@@ -49,7 +49,7 @@ export function run(req: Request, res: Response, pass: any) {
                             child:Text("#txtPageBtn", {text: "PageBtn"}),
                             onPressed: DoAction(Action.NAVIGATE, '/ui/jstest')
                         }),
-                        Center(Text("#textAb", { text: `Welcome to NeneUI@neneys@ui`, style: TextStyle({}) })),
+                        Center(Text("#textAb", { text: `Welcome to ${GetPrefs(pass, "hello")}`, style: TextStyle({}) })),
                         SizedBox("#sz", { width: 10, height: 10 }),
                         Avatar('#avatarNene', {
                             backgroundColor: '#7711a0F',
@@ -145,6 +145,8 @@ export function run(req: Request, res: Response, pass: any) {
                                         onPressed: DoAction(Action.SUBMIT, FormSubmitAction({
                                             variables: ["#userPassword.controller", "#userName.controller", "#dtp.controller"],
                                             varNames: ["password", "username", "date"],
+                                            fileNames: ["file"],
+                                            fileVariable: ["selFile"],
                                             callbackPath: "/ui/test_callback"
                                         }))
                                     }),

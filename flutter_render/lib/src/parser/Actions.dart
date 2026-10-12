@@ -43,6 +43,8 @@ class ActionsPerf {
       event(Events.REM_PREFS, mainData);
     } else if (action == "exist_prefs") {
       event(Events.PREF_EXISTS, mainData);
+    } else if (action == "soft_reload") {
+      event(Events.RELOAD, mainData);
     }
 
     debugPrint(action);

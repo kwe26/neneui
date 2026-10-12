@@ -1,4 +1,4 @@
-import express from "express"
+import express, { type Request } from "express"
 import * as fs from "node:fs";
 import { join } from "path";
 import { Action, DoAction } from "../widgets";
@@ -82,6 +82,27 @@ export async function NeneServer({
         storage,
     });
 
+    function attachFiles(pass: any, req: Request): void {
+        const files: Express.Multer.File[] = Array.isArray(req.files)
+            ? req.files
+            : req.file
+            ? [req.file]
+            : [];
+
+        if (files.length === 0) return;
+
+        const map: Record<string, string> = {};
+
+        for (const file of files) {
+            // path.relative gives you the path without the leading cwd;
+            // normalise to forward slashes so it's portable (and URL-safe).
+            const rel = path.relative(process.cwd(), file.path).split(path.sep).join("/");
+            map[file.fieldname] = rel;
+        }
+
+        pass.files = map;
+        }
+
     app.get("/__neneui__", async (req, res) => {
         res.json({
             "name": "__neneui__",
@@ -160,7 +181,7 @@ export async function NeneServer({
                 }else{
                     app.post(importFile.path, (req, res) => {
                         console.log(`[#NENE]: UI: ${importFile.path} Accessed by User!`);
-                        pass.shared_pref_body = req.body?.prefs;
+                        pass.shared_pref_body = req.body?.shared_pref_body;
                         importFile.run(req, res, pass);
                     });
                 }
@@ -183,7 +204,11 @@ export async function NeneServer({
                 // Register by Importing
                 let importFile = (await import(join(callbackPathDir, file)))
                 if(verbose) console.log(`[#NENE] : Callback : ${importFile.path}`)
-                app.post(importFile.path,upload.any() ,(req, res) => importFile.run(req, res, pass));
+                app.post(importFile.path,upload.any() ,(req, res) => {
+                    pass.files =  {};
+                    attachFiles(pass, req);
+                    importFile.run(req, res, pass);
+                });
             }else{
                 let dir_fd = fs.statSync(join(callbackPathDir, file));
                 if(dir_fd.isDirectory()) readDir(join(callbackPathDir, file));
@@ -205,7 +230,7 @@ export function GetPrefs(pass: any, name: string): string | undefined {
   try {
     decode = JSON.parse(atob(pass.shared_pref_body));
   } catch {
-    throw new Error('shared_pref_body is not valid base64-encoded JSON');
+    decode = {}
   }
 
   if (!Object.prototype.hasOwnProperty.call(decode, name)) {
@@ -214,6 +239,17 @@ export function GetPrefs(pass: any, name: string): string | undefined {
   return decode[name] as string;
 }
 
+export function GetFile(pass: any, name: string): string | undefined {
+  const files = pass?.files;
+  if (!files || typeof files !== "object") return undefined;
+
+  if (!Object.prototype.hasOwnProperty.call(files, name)) return undefined;
+
+  const rel = files[name];
+  if (typeof rel !== "string" || rel.length === 0) return undefined;
+
+  return (rel);
+}
 
 export interface CallbackProps {
     callbacks: {action: Action, data: any}[]

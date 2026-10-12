@@ -1,11 +1,12 @@
 import type { Request, Response } from "express";
-import { Action, AlertDialog, Button, ButtonType, Callback, DoAction, Iconify, InputType, NewProps, SetPrefs, setVar, Text, TextEditingController, TextField } from "../lib/widgets";
+import { Action, AlertDialog, Button, ButtonType, Callback, DoAction, GetFile, GetPrefs, Iconify, InputType, NewProps, SetPrefs, setVar, Text, TextEditingController, TextField } from "../lib/widgets";
 import { CreateNenePayments, PGList } from "../@neneys/payments/lib";
 
 export const path = "/ui/test_callback"
 
 export async function run(req: Request, res: Response, pass: any) {
-    console.log(req.body);
+    console.log(GetFile(pass, "file"));
+    console.log(GetPrefs(pass, "hello"));
 
     let callbac = Callback({
         callbacks: [
@@ -53,11 +54,12 @@ export async function run(req: Request, res: Response, pass: any) {
             //     }
             // ))
 
-            DoAction(Action.SET_PREFS, SetPrefs("hello", new Date().toDateString()))
-        ]
-    });
+            DoAction(Action.SET_PREFS, SetPrefs("hello", new Date().toLocaleTimeString())),
 
-    console.log(callbac);
+            DoAction(Action.SOFT_RELOAD, "")
+        ]
+
+    });
 
     res.json(callbac);
 }
