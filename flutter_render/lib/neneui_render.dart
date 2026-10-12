@@ -275,6 +275,21 @@ class _NeneUIState extends State<NeneUIMain> {
     fetchUIRender();
   }
 
+  Future<String> getAllPrefsAsBody() async {
+    final prefs = await SharedPreferences.getInstance();
+    final keys = prefs.getKeys();
+
+    final Map<String, dynamic> all = {};
+    for (final key in keys) {
+      final value = prefs.get(key);
+      if (value != null) {
+        all[key] = value;
+      }
+    }
+
+    return base64Encode(utf8.encode(jsonEncode(all)));
+  }
+
   void fetchUIRender() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
 
@@ -288,8 +303,9 @@ class _NeneUIState extends State<NeneUIMain> {
     initJs();
 
     try {
-      var reqs = await http.get(
+      var reqs = await http.post(
         Uri.parse(widget.path),
+        body: {'shared_pref_body': await getAllPrefsAsBody()},
         headers: {"User-Agent": "NeneUI/1.0"},
       );
 
@@ -324,8 +340,9 @@ class _NeneUIState extends State<NeneUIMain> {
     });
 
     try {
-      var reqs = await http.get(
-        Uri.parse(widget.baseUrl + url),
+      var reqs = await http.post(
+        Uri.parse(widget.path),
+        body: {'shared_pref_body': await getAllPrefsAsBody()},
         headers: {"User-Agent": "NeneUI/1.0"},
       );
 
@@ -364,8 +381,9 @@ class _NeneUIState extends State<NeneUIMain> {
     initJs();
 
     try {
-      var reqs = await http.get(
+      var reqs = await http.post(
         Uri.parse(widget.path),
+        body: {'shared_pref_body': await getAllPrefsAsBody()},
         headers: {"User-Agent": "NeneUI/1.0"},
       );
 
@@ -872,11 +890,21 @@ class _NeneUIState extends State<NeneUIMain> {
     }
 
     if (event == Events.SET_VAR) {
+      dynamic val = data['val'];
+
+      if (val.toString().contains("{prefs.")) {
+        if (prefs.containsKey(val.toString().replaceFirst("{prefs.", ""))) {
+          val = prefs.get(val.toString().replaceFirst("{prefs.", ""));
+        } else {
+          val = val;
+        }
+      }
+
       setState(() {
         if ((idDatabase['variables'] as Map).containsKey(data['var'])) {
-          idDatabase['variables'][data['var']] = data['val'];
+          idDatabase['variables'][data['var']] = val;
         } else {
-          idDatabase['variables'][data['var']] = data['val'];
+          idDatabase['variables'][data['var']] = val;
         }
       });
     }

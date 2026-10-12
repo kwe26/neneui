@@ -1,5 +1,5 @@
 import { Brightness, ColorScheme, Density, Theme } from "./lib/http/theme";
-import { NeneServer } from "./lib/widgets";
+import { NeneServer, ReqType } from "./lib/widgets";
 import { NenePayments, RazorpayGateway } from "./@neneys/payments/lib/index"
 
 const theme = Theme({
@@ -53,6 +53,7 @@ NeneServer({
     uiPath: "./example_ui",
     verbose: true,
     themeDark: theme,
+    reqType: ReqType.POST,
     payments: NenePayments({
         NeneUI: true,
         SecretKey: "1234",

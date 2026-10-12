@@ -7,10 +7,16 @@ import multer from "multer";
 import { Theme, type ThemeProps } from "./theme";
 import { JavaScriptEngine, type JavascriptEngine } from "./javascript";
 
+export enum ReqType {
+    GET = "get",
+    POST = "post"
+}
+
 export interface NeneServerProps {
     port: number,
     uiPath: string,
     verbose?: boolean,
+    reqType?: ReqType,
     pass?: any,
     payments?: any,
     jsEngine?: JavascriptEngine,
@@ -27,6 +33,7 @@ export async function NeneServer({
     pass = {},
     themeLight = Theme({}),
     themeDark = Theme({}),
+    reqType = ReqType.GET,
     payments = null,
     captureErrors = false,
     jsEngine = JavaScriptEngine({ enabled: true }),
@@ -50,6 +57,7 @@ export async function NeneServer({
 
     pass = {
         ...pass,
+        reqType,
         port: port,
     }
 
@@ -144,10 +152,18 @@ export async function NeneServer({
                 // Register by Importing
                 let importFile = (await import(join(uiPathDir, file)))
                 if(verbose) console.log(`[#NENE] : UI : ${importFile.path}`)
-                app.get(importFile.path, (req, res) => {
-                    console.log(`[#NENE]: UI: ${importFile.path} Accessed by User!`);
-                    importFile.run(req, res, pass);
-                });
+                if(reqType == ReqType.GET) {
+                    app.all(importFile.path, (req, res) => {
+                        console.log(`[#NENE]: UI: ${importFile.path} Accessed by User!`);
+                        importFile.run(req, res, pass);
+                    });
+                }else{
+                    app.post(importFile.path, (req, res) => {
+                        console.log(`[#NENE]: UI: ${importFile.path} Accessed by User!`);
+                        pass.shared_pref_body = req.body?.prefs;
+                        importFile.run(req, res, pass);
+                    });
+                }
             }else{
                 let dir_fd = fs.statSync(join(uiPathDir, file));
                 if(dir_fd.isDirectory()) readDir(join(uiPathDir, file));
@@ -179,6 +195,25 @@ export async function NeneServer({
         if(verbose) console.log(`[#NENE] : Listening at *:${port}`)
     })
 }
+
+export function GetPrefs(pass: any, name: string): string | undefined {
+  if (pass.reqType === ReqType.GET) {
+    throw new Error('ReqType must be POST in order to use GetPrefs');
+  }
+
+  let decode: Record<string, unknown>;
+  try {
+    decode = JSON.parse(atob(pass.shared_pref_body));
+  } catch {
+    throw new Error('shared_pref_body is not valid base64-encoded JSON');
+  }
+
+  if (!Object.prototype.hasOwnProperty.call(decode, name)) {
+    return undefined;
+  }
+  return decode[name] as string;
+}
+
 
 export interface CallbackProps {
     callbacks: {action: Action, data: any}[]
