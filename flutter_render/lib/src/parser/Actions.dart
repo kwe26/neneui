@@ -45,6 +45,12 @@ class ActionsPerf {
       event(Events.PREF_EXISTS, mainData);
     } else if (action == "soft_reload") {
       event(Events.RELOAD, mainData);
+    } else if (action == "send_socket") {
+      event(Events.SEND_SOCKET, mainData);
+    } else if (action == "multi_action") {
+      event(Events.MULTI_ACTION, mainData);
+    } else if (action == "clear") {
+      event(Events.CLEAR, mainData);
     }
 
     debugPrint(action);

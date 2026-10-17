@@ -17,7 +17,10 @@ export enum Action {
     SET_PREFS = "set_prefs",
     REM_PREFS = "rem_prefs",
     SOFT_RELOAD = "soft_reload",
-    PREF_EXISTS = "exist_prefs"
+    PREF_EXISTS = "exist_prefs",
+    SEND_SOCKET = "send_socket",
+    MULTI_ACTION = "multi_action",
+    CLEAR = "clear"
 }
 
 export function DoAction(action: Action, data: any){

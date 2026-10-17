@@ -131,12 +131,22 @@ DoAction(Action.PREF_EXISTS, PrefExists("[var_name]", "exist_action", "not_exist
 
 ```
 
+## Action.MULTI_ACTION
+> Perform Multiple Actions
+```ts
+import { Action, DoAction } from "@neneys/ui";
+
+DoAction(Action.MULTI_ACTION, [
+    ...DoActions
+])
+```
+
 ## Action.SUBMIT
 > Submit the Variable and Forms to the Server Callback
 
-
 ### FormSubmitAction
 > FormSubmitAction Parameter to be Specified in DoAction below
+> Could also be used in Action.SEND_SOCKET
 ```ts
 import { FormSubmitAction } from "@neneys/ui"
 

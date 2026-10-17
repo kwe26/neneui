@@ -32,6 +32,7 @@ export * from "./display/Skeleton"
 export * from "./display/ChatBubble"
 export * from "./display/ChatGroup"
 export * from "./display/NeneDisplay"
+export * from "./display/WebSocket"
 
 // Form
 export * from "./form/TextField"

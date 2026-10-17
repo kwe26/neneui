@@ -27,6 +27,7 @@ import 'package:neneui_render/src/dispaly/NeneDisplay.dart';
 import 'package:neneui_render/src/dispaly/Table.dart';
 import 'package:neneui_render/src/dispaly/TableCell.dart';
 import 'package:neneui_render/src/dispaly/TableRow.dart';
+import 'package:neneui_render/src/dispaly/WebSocket.dart';
 import 'package:neneui_render/src/enum.dart';
 import 'package:neneui_render/src/feedback/Button.dart';
 import 'package:neneui_render/src/feedback/ButtonGroup.dart';
@@ -697,6 +698,15 @@ class Daikon {
           data: ui,
           reRender: reRender,
           reRenderList: reRenderList,
+          event: event,
+        );
+
+      case 'WebSocket':
+        return DWebSocket.run(
+          context: context,
+          data: ui,
+          idDatabase: idMap,
+          reRender: reRender,
           event: event,
         );
 

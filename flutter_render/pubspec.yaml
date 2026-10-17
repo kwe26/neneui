@@ -26,6 +26,7 @@ dependencies:
   quickjs_engine: ^0.1.5
   url_launcher: ^6.3.2
   shared_preferences: ^2.5.6
+  web_socket_channel: ^3.0.3
 
 dev_dependencies:
   flutter_test:

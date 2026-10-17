@@ -27,4 +27,8 @@ class Events {
   static const String SET_PREFS = "set_prefs";
   static const String REM_PREFS = "rem_prefs";
   static const String PREF_EXISTS = "exist_prefs";
+  static const String INIT_WSS_ONCE = "init_wss_once";
+  static const String SEND_SOCKET = "send_socket";
+  static const String CLEAR = "clear";
+  static const String MULTI_ACTION = "multi_action";
 }

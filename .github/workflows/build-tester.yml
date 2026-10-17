@@ -13,7 +13,6 @@ jobs:
   build-windows:
     name: Windows
     runs-on: windows-latest
-
     defaults:
       run:
         working-directory: nene_tester
@@ -24,6 +23,10 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
+          cache: true
+
+      - name: Enable Windows Desktop
+        run: flutter config --enable-windows-desktop
 
       - name: Get dependencies
         run: flutter pub get
@@ -31,25 +34,25 @@ jobs:
       - name: Build Windows
         run: flutter build windows --release
 
-      - name: Compress
+      - name: Compress directly in build folder
         shell: pwsh
         run: |
           Compress-Archive `
-            -Path build/windows/x64/runner/Release/* `
-            -DestinationPath ../windows.zip `
-            -CompressionLevel Optimal
+            -Path "build/windows/x64/runner/Release/*" `
+            -DestinationPath "build/windows/windows.zip" `
+            -CompressionLevel Optimal `
+            -Force
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: windows
-          path: nene_tester/windows.zip
-
+          path: nene_tester/build/windows/windows.zip
+          if-no-files-found: error
 
   build-android:
     name: Android
     runs-on: ubuntu-latest
-
     defaults:
       run:
         working-directory: nene_tester
@@ -57,9 +60,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: "17"
+
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
+          cache: true
 
       - name: Get dependencies
         run: flutter pub get
@@ -67,20 +76,21 @@ jobs:
       - name: Build APK
         run: flutter build apk --release
 
-      - name: Rename APK
-        run: cp build/app/outputs/flutter-apk/app-release.apk ../android.apk
+      - name: Zip APK directly in flutter-apk folder
+        run: |
+          cd build/app/outputs/flutter-apk
+          zip -9 -r android-apk.zip app-release.apk
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: android
-          path: nene_tester/android.apk
-
+          path: nene_tester/build/app/outputs/flutter-apk/android-apk.zip
+          if-no-files-found: error
 
   build-ios:
     name: iOS
     runs-on: macos-latest
-
     defaults:
       run:
         working-directory: nene_tester
@@ -91,27 +101,31 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
+          cache: true
 
       - name: Get dependencies
         run: flutter pub get
 
-      - name: Build iOS
-        run: flutter build ipa --release --no-codesign
+      - name: Build unsigned iOS app
+        run: flutter build ios --release --no-codesign
 
-      - name: Rename IPA
-        run: cp build/ios/ipa/*.ipa ../ios.ipa
+      - name: Package Payload into IPA
+        run: |
+          cd build/ios/iphoneos
+          mkdir -p Payload
+          cp -r *.app Payload/
+          zip -qq -y -r -9 ios.ipa Payload
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: ios
-          path: nene_tester/ios.ipa
-
+          path: nene_tester/build/ios/iphoneos/ios.ipa
+          if-no-files-found: error
 
   build-macos:
     name: macOS
     runs-on: macos-latest
-
     defaults:
       run:
         working-directory: nene_tester
@@ -122,6 +136,10 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
+          cache: true
+
+      - name: Enable macOS Desktop
+        run: flutter config --enable-macos-desktop
 
       - name: Get dependencies
         run: flutter pub get
@@ -129,22 +147,21 @@ jobs:
       - name: Build macOS
         run: flutter build macos --release
 
-      - name: Compress
+      - name: Compress macOS app bundle
         run: |
           cd build/macos/Build/Products/Release
-          zip -9 -r ../../../../../macos.zip nene_tester.app
+          zip -y -r -9 macos.zip *.app
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: macos
-          path: nene_tester/macos.zip
-
+          path: nene_tester/build/macos/Build/Products/Release/macos.zip
+          if-no-files-found: error
 
   build-linux:
     name: Linux
     runs-on: ubuntu-latest
-
     defaults:
       run:
         working-directory: nene_tester
@@ -155,6 +172,7 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
+          cache: true
 
       - name: Install Linux dependencies
         run: |
@@ -164,7 +182,12 @@ jobs:
             cmake \
             ninja-build \
             pkg-config \
-            libgtk-3-dev
+            libgtk-3-dev \
+            liblzma-dev \
+            libstdc++-12-dev
+
+      - name: Enable Linux Desktop
+        run: flutter config --enable-linux-desktop
 
       - name: Get dependencies
         run: flutter pub get
@@ -172,59 +195,34 @@ jobs:
       - name: Build Linux
         run: flutter build linux --release
 
-      - name: Compress
+      - name: Compress Linux bundle
         run: |
-          cd build/linux/x64/release/bundle
-          tar -czf ../../../../../linux.tar.gz .
+          tar -czf build/linux/linux.tar.gz -C build/linux/x64/release/bundle .
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: linux
-          path: nene_tester/linux.tar.gz
-
+          path: nene_tester/build/linux/linux.tar.gz
+          if-no-files-found: error
 
   release:
     name: Create Release
+    if: startsWith(github.ref, 'refs/tags/')
     needs:
       - build-windows
       - build-android
       - build-ios
       - build-macos
       - build-linux
-
     runs-on: ubuntu-latest
 
     steps:
-      - name: Download Windows
+      - name: Download all artifacts
         uses: actions/download-artifact@v4
         with:
-          name: windows
           path: release
-
-      - name: Download Android
-        uses: actions/download-artifact@v4
-        with:
-          name: android
-          path: release
-
-      - name: Download iOS
-        uses: actions/download-artifact@v4
-        with:
-          name: ios
-          path: release
-
-      - name: Download macOS
-        uses: actions/download-artifact@v4
-        with:
-          name: macos
-          path: release
-
-      - name: Download Linux
-        uses: actions/download-artifact@v4
-        with:
-          name: linux
-          path: release
+          merge-multiple: true
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
@@ -232,7 +230,7 @@ jobs:
           tag_name: ${{ github.ref_name }}
           files: |
             release/windows.zip
-            release/android.apk
+            release/android-apk.zip
             release/ios.ipa
             release/macos.zip
             release/linux.tar.gz

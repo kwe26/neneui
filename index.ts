@@ -1,5 +1,5 @@
 import { Brightness, ColorScheme, Density, Theme } from "./lib/http/theme";
-import { NeneServer, ReqType } from "./lib/widgets";
+import { NeneServer, ReqType, Text } from "./lib/widgets";
 import { NenePayments, RazorpayGateway } from "./@neneys/payments/lib/index"
 
 const theme = Theme({
@@ -54,15 +54,12 @@ NeneServer({
     verbose: true,
     themeDark: theme,
     reqType: ReqType.POST,
-    payments: NenePayments({
-        NeneUI: true,
-        SecretKey: "1234",
-        DatabasePath: "uploads/db.db",
-        DomainUrl: "http://192.168.29.21:3500",
-        PaymentGateways: [
-            RazorpayGateway(process.env['RZP_KEY']!, process.env['SECRET']!)
-        ]
-    }),
+    wss: {
+        path: "/ws",
+        onConnection(socket, req, pass) {
+            console.log("A NeneUI client connected");
+        },
+    },
     captureErrors: true,
     themeLight: theme,
     callbackPath: "./example_callback"

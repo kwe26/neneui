@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/services.dart';
+import 'package:neneui_render/src/base/WebSocket.dart';
 import 'package:quickjs_engine/quickjs_engine.dart';
 import 'package:neneui_render/src/base/customMultipart.dart';
 import 'package:neneui_render/src/enum.dart';
@@ -258,6 +259,7 @@ class _NeneUIState extends State<NeneUIMain> {
       "_index_": 0,
       "_display_": {},
       "_displayLoading_": false,
+      "_wssLoading_": false,
     },
   };
   List<String> eventsFired = [];
@@ -413,6 +415,8 @@ class _NeneUIState extends State<NeneUIMain> {
   }
 
   bool ioteDone = false;
+  bool eventWssFired = false;
+  late NeneWebSocket socket;
   final runtime = getJavascriptRuntime(xhr: true);
 
   void eventExec(dynamic event, dynamic data) async {
@@ -422,11 +426,158 @@ class _NeneUIState extends State<NeneUIMain> {
       });
     });
 
+    if (event == Events.CLEAR) {
+      if (idDatabase['variables'][data] is TextEditingController) {
+        setState(() {
+          (idDatabase['variables'][data] as TextEditingController).clear();
+        });
+      } else if (idDatabase['variables'][data] is CheckboxState) {
+        setState(() {
+          idDatabase['variables'][data] =
+              idDatabase['variables'][data] == CheckboxState.checked
+              ? CheckboxState.unchecked
+              : CheckboxState.checked;
+        });
+      }
+    }
+
+    if (event == Events.INIT_WSS_ONCE) {
+      if (eventWssFired) return;
+
+      setState(() {
+        idDatabase['variables']['wss'] = List.from([]);
+        idDatabase['variables']['_wssLoading_'] = true;
+      });
+
+      final props = Map<String, dynamic>.from(data);
+      final url = props['url']?.toString() ?? '';
+      final actionRecv = props['actionRecv']?.toString() ?? 'action_recv';
+      final widgetRecv = props['widgetRecv']?.toString() ?? 'widget_recv';
+
+      if (url.isEmpty) {
+        debugPrint('[NeneUI] WebSocket URL is missing.');
+        return;
+      }
+
+      eventWssFired = true;
+
+      idDatabase['variables'].putIfAbsent('wss', () => <dynamic>[]);
+
+      bool errorActionFired = false;
+
+      void runWssErrorAction(Object error) {
+        debugPrint('[NeneUI] WebSocket failure: $error');
+
+        if (errorActionFired) return;
+        errorActionFired = true;
+        eventWssFired = false;
+
+        if (mounted) {
+          setState(() {
+            idDatabase['variables']['_wssLoading_'] = false;
+          });
+        }
+
+        final errorAction = props['errorAction'];
+
+        if (errorAction is Map<String, dynamic> &&
+            errorAction['action'] != null) {
+          ActionsPerf.perform(
+            context,
+            eventExec,
+            errorAction['action'],
+            errorAction['data'],
+          );
+        }
+      }
+
+      socket = NeneWebSocket();
+
+      socket.messages.listen(
+        (message) {
+          try {
+            final decoded = jsonDecode(message.toString());
+
+            if (decoded is! Map<String, dynamic>) return;
+
+            final receivedEvent = decoded['event'];
+            final payload = decoded['data'];
+
+            if (receivedEvent == widgetRecv) {
+              if (payload is Map<String, dynamic>) {
+                if (!mounted) return;
+
+                setState(() {
+                  idDatabase['variables']['wss'].add(payload);
+                });
+
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  final controller =
+                      idDatabase['variables']['_wsScroll_'] as ScrollController;
+
+                  if (controller.hasClients) {
+                    controller.animateTo(
+                      controller.position.maxScrollExtent,
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeOut,
+                    );
+                  }
+                });
+              }
+            } else if (receivedEvent == actionRecv) {
+              if (payload is Map<String, dynamic>) {
+                ActionsPerf.perform(
+                  context,
+                  eventExec,
+                  payload['action'],
+                  payload['data'],
+                );
+              }
+            }
+          } catch (error, stackTrace) {
+            runWssErrorAction(error);
+            debugPrintStack(stackTrace: stackTrace);
+          }
+        },
+        onError: (Object error) {
+          runWssErrorAction(error);
+        },
+        onDone: () {
+          runWssErrorAction(Exception('WebSocket disconnected or closed.'));
+        },
+      );
+
+      socket.errors.listen((error) {
+        runWssErrorAction(error);
+      });
+
+      socket
+          .connect(url)
+          .then((_) {
+            if (!mounted) return;
+
+            debugPrint('[NeneUI] WebSocket connected: $url');
+
+            setState(() {
+              idDatabase['variables']['_wssLoading_'] = false;
+            });
+          })
+          .catchError((error) {
+            runWssErrorAction(error);
+          });
+    }
+
     if (event == Events.RELOAD) {
       setState(() {
         idDatabase['variables']['_stateLoading_'] = true;
       });
       softReloadUI();
+    }
+
+    if (event == Events.MULTI_ACTION) {
+      for (var act in List.from(data)) {
+        ActionsPerf.perform(context, eventExec, act['action'], act['data']);
+      }
     }
 
     if (event == Events.UPDATE_INDEX) {
@@ -752,6 +903,26 @@ class _NeneUIState extends State<NeneUIMain> {
           idDatabase[data['id']]['override'] = true;
           idDatabase[data['id']]['props'] = data['props'];
         });
+      }
+    }
+
+    if (event == Events.SEND_SOCKET) {
+      if (socket.isConnected) {
+        Map<String, dynamic> buildRequest = {
+          'shared_pref_body': await getAllPrefsAsBody(),
+        };
+
+        List<String> variables = List.from(data['variables']);
+        List<String> varNames = List.from(data['varNames']);
+
+        for (var vb in variables) {
+          buildRequest[varNames[variables.indexOf(vb)]] =
+              CoreParser.parseKVariable(idDatabase['variables'][vb]).toString();
+        }
+
+        socket.send({"event": "recv_form", "data": buildRequest});
+      } else {
+        eventExec(Events.INVOKE_TOAST, "wss socket connection failed");
       }
     }
 

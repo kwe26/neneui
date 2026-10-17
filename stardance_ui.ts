@@ -1,5 +1,5 @@
 import { Brightness, ColorScheme, Density, Theme } from "./lib/http/theme";
-import { NeneServer } from "./lib/widgets";
+import { NeneServer, ReqType } from "./lib/widgets";
 
 const theme = Theme({
     colorScheme: ColorScheme({
@@ -61,6 +61,7 @@ NeneServer({
     port: 3700,
     uiPath: "./stardance_exampleui",
     verbose: true,
+    reqType: ReqType.POST,
     //themeDark: theme,
     captureErrors: true,
     //themeLight: theme,
