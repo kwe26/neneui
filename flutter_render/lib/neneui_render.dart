@@ -343,7 +343,7 @@ class _NeneUIState extends State<NeneUIMain> {
 
     try {
       var reqs = await http.post(
-        Uri.parse(widget.path),
+        Uri.parse(widget.baseUrl + url),
         body: {'shared_pref_body': await getAllPrefsAsBody()},
         headers: {"User-Agent": "NeneUI/1.0"},
       );
