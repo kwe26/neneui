@@ -1,0 +1,160 @@
+---
+sidebar_position: 3
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# WebSockets
+> Live Render Widgets on-time, send and recieve widget or information as well
+
+# Setting Up Backend
+> Using NeneServer We can Setup a WS Backend for @neneys/ui as well
+
+```ts
+NeneServer({
+    port: 3500,
+    uiPath: "./example_ui",
+    verbose: true,
+    themeDark: theme,
+    reqType: ReqType.POST,
+    wss: {
+        path: "/ws",
+        onConnection(socket, req, pass) {
+            console.log("A NeneUI client connected");
+        },
+    },
+    captureErrors: true,
+    themeLight: theme,
+    callbackPath: "./example_callback"
+})
+```
+
+# Setting up a Sample WS Reciever / Sender
+<Tabs>
+  <TabItem value="ws_wstest.ts" label="ws/demo.ts" default>
+    ```ts
+    import type { WebSocket } from "ws";
+    import type { IncomingMessage } from "node:http";
+    import { GetPrefs, SendWidget, Text } from "../lib/widgets";
+
+    export const path = "/home";
+
+    export function run(
+        socket: WebSocket,
+        req: IncomingMessage,
+        pass: any,
+        params: Record<string, string>
+    ) {
+        const startedAt = Date.now();
+        let messagesReceived = 0;
+
+        const sendStatus = (status: string) => {
+            SendWidget(
+                socket,
+                Text("#wsStatus", {
+                    text: `>>> NeneUI WebSocket: ${status}`,
+                })
+            );
+        };
+
+
+        sendStatus("Connected successfully!");
+
+        SendWidget(
+            socket,
+            Text("#wsInfo", {
+                text: [
+                    `Server date: ${new Date().toLocaleString()}`,
+                    `Endpoint: ${path}`,
+                    "Connection: ACTIVE"
+                ].join("\n"),
+            })
+        );
+
+        // 2. Receive messages from the Flutter client
+        socket.on("message", (message) => {
+            messagesReceived++;
+
+            const pass = JSON.parse(message.toString())['data'];
+
+            console.log(GetPrefs(pass, "hello"))
+
+            // Pass Contains what was recived via Form as well
+        });
+
+        SendWidget(
+            socket,
+            Text("#wsHeartbeat", {
+                text: `Heartbeat: ${new Date().toLocaleTimeString()}`,
+            })
+        );
+
+        // 4. Clean up when the client disconnects
+        socket.on("close", () => {
+            console.log("[NeneUI WS] Client disconnected.");
+        });
+
+        socket.on("error", (error) => {
+            console.error("[NeneUI WS] Socket error:", error);
+        });
+
+        console.log(`[NeneUI WS] Client connected at ${new Date().toISOString()}`);
+    }
+
+    ```
+  </TabItem> 
+</Tabs>
+
+# Setting up Widget
+> In a Blank Widget for NeneUI, Import the WebSocket from @neneys/ui
+```ts
+import type { Request, Response } from "express";
+import { WebSocket, DoAction, Action, Scaffold } from "../lib/widgets";
+import { readFileSync } from "node:fs"
+
+export const path = "/ui/jstest"
+export async function run(req: Request, res: Response, pass: any) {
+    let scaffold = Scaffold('#mainScaffold', {
+        preActions:[
+            DoAction(Action.SHOW_TOAST, "HELLO WOLRD")
+        ],
+        body: WebSocket({
+            url: "ws://localhost:3500/ws/home",
+        }),
+        
+    })
+
+    res.json(scaffold);
+}
+```
+
+# Sending Information from Button Clicks
+- Action.SEND_SOCKET
+> To Make an Rendered Button Send an Information via FormSubmitAction
+
+```ts
+DoAction(Action.SEND_SOCKET, FormSubmitAction({
+    callbackPath: ":socket:",
+    variables: ["#txtField.controller"],
+    varNames: ["txt"]
+}))
+```
+
+## Recive
+In the demo_ws.ts We Created there is an Reciever `socket.on("message", (message) => {...}`
+There do like this `const pass = JSON.parse(message.toString())['data'];` to get an Pass Variable to Get SharedPreferences
+
+## Send from Server
+- SendWidget(socket, Widget)
+```ts
+SendWidget(socket, Text("#wsStatus", {text: `Hallo!`,}))
+```
+
+- SendAction(socket, DoAction)
+
+# Important
+- It is not stable
+- There is no fallback on disconnect or re-connection setup
+
+

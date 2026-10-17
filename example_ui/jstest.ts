@@ -37,7 +37,8 @@ export async function run(req: Request, res: Response, pass: any) {
                                     variables: ["#txtField.controller"],
                                     varNames: ["txt"]
                                 })),
-                                DoAction(Action.SHOW_TOAST, "Woo, it works ;!>")
+                                DoAction(Action.SHOW_TOAST, "Woo, it works ;!>"),
+                                DoAction(Action.CLEAR, "#txtField.controller")
                             ])
                         })
                     ]
