@@ -49,6 +49,11 @@ export function run(req: Request, res: Response, pass: any) {
                             child:Text("#txtPageBtn", {text: "PageBtn"}),
                             onPressed: DoAction(Action.NAVIGATE, '/ui/jstest')
                         }),
+                        Button('#pageBtn2', {
+                            type: ButtonType.Primary,
+                            child:Text("#txtPageBtn2", {text: "Layout Test"}),
+                            onPressed: DoAction(Action.NAVIGATE, '/ui/layout-test')
+                        }),
                         Center(Text("#textAb", { text: `Welcome to ${GetPrefs(pass, "hello")}`, style: TextStyle({}) })),
                         SizedBox("#sz", { width: 10, height: 10 }),
                         Avatar('#avatarNene', {

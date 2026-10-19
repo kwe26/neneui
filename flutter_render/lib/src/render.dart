@@ -47,6 +47,7 @@ import 'package:neneui_render/src/navigation/NeneBottomnavbar.dart';
 import 'package:neneui_render/src/overlay/HoverCard.dart';
 import 'package:neneui_render/src/rowscol/Column.dart';
 import 'package:neneui_render/src/rowscol/Flex.dart';
+import 'package:neneui_render/src/rowscol/Layouts.dart';
 import 'package:neneui_render/src/rowscol/Row.dart';
 import 'package:neneui_render/src/rowscol/SingleChildScrollView.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
@@ -711,7 +712,7 @@ class Daikon {
         );
 
       case 'Skeleton':
-        return reRender(ui['props']['child']).asSkeleton();
+        return reRender(ui['props']['child']);
       // ***********************DISPALY************************************
 
       // ***********************Overlay************************************
@@ -781,6 +782,15 @@ class Daikon {
           context: context,
           data: ui,
           reRender: reRender,
+          event: event,
+        );
+
+      case 'Layouts':
+        return DLayouts.run(
+          context: context,
+          data: ui,
+          reRender: reRender,
+          reRenderList: reRenderList,
           event: event,
         );
 

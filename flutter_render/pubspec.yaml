@@ -22,9 +22,9 @@ dependencies:
     sdk: flutter
   flutter_svg: ^2.3.0
   http: ^1.6.0
-  shadcn_flutter: ^0.0.54
-  quickjs_engine: ^0.1.5
-  url_launcher: ^6.3.2
+  shadcn_flutter: ^0.0.55
+  quickjs_engine: ^0.1.6
+  url_launcher: ^6.3.3
   shared_preferences: ^2.5.6
   web_socket_channel: ^3.0.3
 

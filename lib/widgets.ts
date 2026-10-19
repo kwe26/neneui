@@ -19,6 +19,7 @@ export * from "./childrens/Column";
 export * from "./childrens/Row";
 export * from "./childrens/Flex";
 export * from "./childrens/SingleChildScrollView";
+export * from "./childrens/Layouts";
 
 // Content
 export * from "./content/Text"

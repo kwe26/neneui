@@ -61,7 +61,7 @@ NeneServer({
     port: 3700,
     uiPath: "./stardance_exampleui",
     verbose: true,
-    reqType: ReqType.POST,
+    reqType: ReqType.GET,
     //themeDark: theme,
     captureErrors: true,
     //themeLight: theme,

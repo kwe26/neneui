@@ -427,18 +427,20 @@ class _NeneUIState extends State<NeneUIMain> {
     });
 
     if (event == Events.CLEAR) {
-      if (idDatabase['variables'][data] is TextEditingController) {
-        setState(() {
-          (idDatabase['variables'][data] as TextEditingController).clear();
-        });
-      } else if (idDatabase['variables'][data] is CheckboxState) {
-        setState(() {
-          idDatabase['variables'][data] =
-              idDatabase['variables'][data] == CheckboxState.checked
-              ? CheckboxState.unchecked
-              : CheckboxState.checked;
-        });
-      }
+      Future.delayed(const Duration(milliseconds: 600), () {
+        if (idDatabase['variables'][data] is TextEditingController) {
+          setState(() {
+            (idDatabase['variables'][data] as TextEditingController).clear();
+          });
+        } else if (idDatabase['variables'][data] is CheckboxState) {
+          setState(() {
+            idDatabase['variables'][data] =
+                idDatabase['variables'][data] == CheckboxState.checked
+                ? CheckboxState.unchecked
+                : CheckboxState.checked;
+          });
+        }
+      });
     }
 
     if (event == Events.INIT_WSS_ONCE) {
@@ -784,11 +786,7 @@ class _NeneUIState extends State<NeneUIMain> {
     }
 
     if (event == Events.INVOKE_JS) {
-      var jData = runtime.evaluate(data.toString());
-      // ignore: avoid_print
-      print("INVOKE_JS CALLED!");
-      // ignore: avoid_print
-      print(jData);
+      runtime.evaluate(data.toString());
     }
 
     if (event == Events.INVOKE_POP) {
@@ -921,6 +919,7 @@ class _NeneUIState extends State<NeneUIMain> {
         }
 
         socket.send({"event": "recv_form", "data": buildRequest});
+        debugPrint("Socket Sent: recv_form");
       } else {
         eventExec(Events.INVOKE_TOAST, "wss socket connection failed");
       }
