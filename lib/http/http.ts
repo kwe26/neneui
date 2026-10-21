@@ -54,6 +54,7 @@ export interface NeneServerProps {
     captureErrors?: boolean;
     wss?: boolean | WssOptions;
     callbackPath: string;
+    cb?: any,
 }
 
 export async function NeneServer({
@@ -69,6 +70,7 @@ export async function NeneServer({
     captureErrors = false,
     jsEngine = JavaScriptEngine({ enabled: true }),
     callbackPath = "callbacks",
+    cb,
 }: NeneServerProps) {
     const app = express();
 
@@ -316,6 +318,7 @@ ${report ?? "No report supplied"}
 
     await new Promise<void>((resolve, reject) => {
         server.once("listening", resolve);
+        server.once("listening", cb);
         server.once("error", reject);
     });
 

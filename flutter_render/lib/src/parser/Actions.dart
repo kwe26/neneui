@@ -51,6 +51,10 @@ class ActionsPerf {
       event(Events.MULTI_ACTION, mainData);
     } else if (action == "clear") {
       event(Events.CLEAR, mainData);
+    } else if (action == "set_display_index") {
+      event(Events.UPDATE_INDEX, mainData);
+    } else if (action == "close_overlay") {
+      event(Events.CLOSE_OVERLAY, mainData);
     }
 
     debugPrint(action);

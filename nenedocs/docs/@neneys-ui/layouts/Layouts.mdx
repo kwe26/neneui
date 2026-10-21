@@ -1,0 +1,47 @@
+---
+sidebar_position: 4
+---
+# Layouts
+> Draggable Layout and Fixed Layout System
+
+```ts
+import { Layouts } from "@neneys/ui"
+
+Layouts('#id', {....})
+```
+
+# Layout
+> Layout inside the Layouts
+```ts
+Layout('#id', {
+    widget: any,
+    width?: number
+})
+```
+*Leaving the width blank auto-arranges the Layout Width*
+
+## Parameters
+| Param | Value |
+|:---------|:------:|
+| layouts | Array of Layout |
+| fixed | bool |
+
+## Example
+```ts
+Layouts('#layouts', {
+    fixed: true,
+    layouts: [
+        Layout('#lyt1', {
+            widget: Text('#txtWidget', {
+                text: "Hello World"
+            }),
+            width: 350
+        }),
+        Layout('#lyt2', {
+            widget: Text('#txtWidget2', {
+                text: "Hello World 2nd Time"
+            })
+        })
+    ]
+})
+```

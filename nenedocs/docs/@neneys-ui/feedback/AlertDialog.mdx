@@ -1,0 +1,38 @@
+# AlertDialog
+> Alert Dialog
+
+```ts
+import { AlertDialog } from "@neneys/ui"
+
+AlertDialog({...})
+```
+
+## Parameters
+| Param | Value |
+|:---------|:------:|
+| leading | Widget |
+| title | Text Widget |
+| content | Widget |
+| actions | Button Widgets |
+| barrierDismissible | boolean |
+
+## Example
+
+```ts
+import { DoAction, Action, Text, Iconify, Button } from "@neneys/ui"
+
+DoAction(Action.DIALOG, AlertDialog(
+    {
+        title: Text("#diagTitle", { text: "Dialog #1" }),
+        leading: Iconify("home", {}),
+        content: Text('#di', { text: "Dialog Contet" }),
+        actions: [
+            Button('#btnCancel', {
+                type: ButtonType.Danger,
+                child: Text('#txt', { text: "Close" }),
+                onPressed: DoAction(Action.CLOSE_OVERLAY, "")
+            })
+        ]
+    }
+))
+```

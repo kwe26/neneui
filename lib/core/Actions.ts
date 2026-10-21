@@ -20,6 +20,8 @@ export enum Action {
     PREF_EXISTS = "exist_prefs",
     SEND_SOCKET = "send_socket",
     MULTI_ACTION = "multi_action",
+    SET_DISPLAY_INDEX= "set_display_index",
+    CLOSE_OVERLAY = "close_overlay",
     CLEAR = "clear"
 }
 

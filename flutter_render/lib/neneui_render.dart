@@ -873,6 +873,10 @@ class _NeneUIState extends State<NeneUIMain> {
       openDebugSlide();
     }
 
+    if (event == Events.CLOSE_OVERLAY) {
+      closeOverlay(context);
+    }
+
     if (event == Events.DIALOG) {
       showOverlay(
         context,

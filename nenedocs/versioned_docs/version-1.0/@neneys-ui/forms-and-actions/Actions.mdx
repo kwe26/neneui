@@ -131,6 +131,18 @@ DoAction(Action.PREF_EXISTS, PrefExists("[var_name]", "exist_action", "not_exist
 
 ```
 
+## Action.SET_DISPLAY_INDEX
+> SETS THE NeneDisplay Index
+SET_DISPLAY_INDEX, No (In Integer)
+
+## Action.CLOSE_OVERLAY
+> Close the Overlay of the Dialog
+```ts
+import { Action, DoAction } from "@neneys/ui";
+
+DoAction(Action.CLOSE_OVERLAY, "")
+```
+
 ## Action.MULTI_ACTION
 > Perform Multiple Actions
 ```ts
