@@ -1,6 +1,4 @@
 import 'dart:io';
-
-import 'package:neneui_payments_plugin/neneui_video_plugin.dart';
 import 'package:neneui_video_plugin/neneui_video_plugin.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 import 'package:neneui_render/neneui_render.dart';
@@ -246,34 +244,34 @@ class _UrlScreenState extends State<UrlScreen> {
                         ),
                       ),
                       const SizedBox(height: 10),
-                      SizedBox(
-                        width: 1000,
-                        height: 40,
-                        child: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              if (plugins.containsKey("pay")) {
-                                plugins.remove("pay");
-                              } else {
-                                plugins.addAll({
-                                  "pay": NeneuiPaymentsPlugin.manifest(),
-                                });
-                              }
-                            });
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.white),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Center(
-                              child: Text(
-                                "Payments Plugin [${plugins.containsKey("pay") ? "ENABLED" : "DISABLED"}]",
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
+                      // SizedBox(
+                      //   width: 1000,
+                      //   height: 40,
+                      //   child: GestureDetector(
+                      //     onTap: () {
+                      //       setState(() {
+                      //         if (plugins.containsKey("pay")) {
+                      //           plugins.remove("pay");
+                      //         } else {
+                      //           plugins.addAll({
+                      //             "pay": NeneuiPaymentsPlugin.manifest(),
+                      //           });
+                      //         }
+                      //       });
+                      //     },
+                      //     child: Container(
+                      //       decoration: BoxDecoration(
+                      //         border: Border.all(color: Colors.white),
+                      //         borderRadius: BorderRadius.circular(10),
+                      //       ),
+                      //       child: Center(
+                      //         child: Text(
+                      //           "Payments Plugin [${plugins.containsKey("pay") ? "ENABLED" : "DISABLED"}]",
+                      //         ),
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),
