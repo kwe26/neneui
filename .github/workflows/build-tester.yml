@@ -202,6 +202,11 @@ jobs:
       - name: Get dependencies
         run: flutter pub get
 
+      - name: Fix quickjs_engine missing FLUTTER_PLUGIN_EXPORT on Linux
+        run: |
+          find "$HOME/.pub-cache" -name "quickjs_engine_plugin.h" -exec sed -i \
+            's/#include <flutter_linux\/flutter_linux.h>/#include <flutter_linux\/flutter_linux.h>\n\n#ifndef FLUTTER_PLUGIN_EXPORT\n#ifdef FLUTTER_PLUGIN_IMPL\n#define FLUTTER_PLUGIN_EXPORT __attribute__((visibility("default")))\n#else\n#define FLUTTER_PLUGIN_EXPORT\n#endif\n#endif/' {} +
+
       - name: Build Linux
         run: flutter build linux --release
 
