@@ -318,7 +318,7 @@ ${report ?? "No report supplied"}
 
     await new Promise<void>((resolve, reject) => {
         server.once("listening", resolve);
-        server.once("listening", cb);
+        //server.once("listening", cb);
         server.once("error", reject);
     });
 
