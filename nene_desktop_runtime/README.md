@@ -1,4 +1,4 @@
-# nene_desktop_runtime
+# Nene Desktop Runtime
 
 A new Flutter project.
 
