@@ -29,6 +29,7 @@ dependencies:
   web_socket_channel: ^3.0.3
   flutter_web_plugins:
     sdk: flutter
+  web: ^1.1.1
 
 dev_dependencies:
   flutter_test:
