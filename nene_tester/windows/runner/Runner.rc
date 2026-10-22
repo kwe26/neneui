@@ -89,10 +89,10 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "nene_tester" "\0"
+            VALUE "CompanyName", "com.neneui.kwe26" "\0"
+            VALUE "FileDescription", "NeneUI Testing Kit" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "nene_tester" "\0"
+            VALUE "InternalName", "NeneUIKit" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2026 com.example. All rights reserved." "\0"
             VALUE "OriginalFilename", "nene_tester.exe" "\0"
             VALUE "ProductName", "nene_tester" "\0"

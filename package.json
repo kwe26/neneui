@@ -20,6 +20,7 @@
     "typescript": "^5"
   },
   "dependencies": {
+    "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/multer": "^2.2.0",
     "@types/ws": "^8.18.2",

@@ -1,8 +1,13 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/services.dart';
 import 'package:neneui_render/src/base/WebSocket.dart';
-import 'package:quickjs_engine/quickjs_engine.dart';
+import 'package:neneui_render/src/navigation/url_navigation.dart';
+import 'package:neneui_render/src/url_strategy.dart';
+
+import 'src/js_runtime/js_runtime.dart';
+
 import 'package:neneui_render/src/base/customMultipart.dart';
 import 'package:neneui_render/src/enum.dart';
 import 'package:neneui_render/src/parser/Actions.dart';
@@ -16,6 +21,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class InitUI {
+  static void initWeb() {
+    initializeNeneUIUrlStrategy();
+  }
+
   static Widget init({
     required String baseUrl,
     required String title,
@@ -206,6 +215,26 @@ class _NeneUIInitializerState extends State<_NeneUIInitializer> {
           title: widget.title,
           theme: lightTheme,
           darkTheme: darkTheme,
+          onGenerateRoute: (settings) {
+            final routeName = settings.name ?? '/';
+
+            if (routeName.startsWith('/ui/')) {
+              return ShadcnPageRoute(
+                builder: (context) => DrawerOverlay(
+                  child: NeneUIMain(
+                    plugins: widget.plugins,
+                    path: '${widget.baseUrl}$routeName',
+                    baseUrl: widget.baseUrl,
+                    debugOrb: widget.debugOrb,
+                    captureErrors: captureErrors,
+                    showScaffold: true,
+                  ),
+                ),
+              );
+            }
+
+            return null;
+          },
           debugShowCheckedModeBanner: widget.debugShowCheckedModeBanner,
           home: DrawerOverlay(
             child: NeneUIMain(
@@ -251,6 +280,8 @@ class _NeneUIState extends State<NeneUIMain> {
 
   String errorText = "";
 
+  StreamSubscription? _browserNavigationSubscription;
+
   Map<String, dynamic> ui = {};
   Map<String, dynamic> idDatabase = {
     "variables": <String, dynamic>{
@@ -273,7 +304,11 @@ class _NeneUIState extends State<NeneUIMain> {
   @override
   void initState() {
     super.initState();
+    listenForBrowserBack((path) {
+      if (!mounted) return;
 
+      print(path);
+    });
     fetchUIRender();
   }
 
@@ -417,7 +452,7 @@ class _NeneUIState extends State<NeneUIMain> {
   bool ioteDone = false;
   bool eventWssFired = false;
   late NeneWebSocket socket;
-  final runtime = getJavascriptRuntime(xhr: true);
+  final runtime = NeneJsRuntime();
 
   void eventExec(dynamic event, dynamic data) async {
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -746,10 +781,14 @@ class _NeneUIState extends State<NeneUIMain> {
     }
 
     if (event == Events.INVOKE_NAVIGATE) {
+      final targetPath = data.toString();
+
+      pushNeneUIUrl(targetPath);
+
       Navigator.of(context).push(
         ShadcnPageRoute(
           builder: (ctx) => NeneUIMain(
-            path: "${widget.baseUrl}$data",
+            path: "${widget.baseUrl}$targetPath",
             baseUrl: widget.baseUrl,
             captureErrors: widget.captureErrors,
             showScaffold: true,
@@ -761,10 +800,14 @@ class _NeneUIState extends State<NeneUIMain> {
     }
 
     if (event == Events.INVOKE_NAVIGATE_REPLACE) {
+      final targetPath = data.toString();
+
+      replaceNeneUIUrl(targetPath);
+
       Navigator.of(context).pushReplacement(
         ShadcnPageRoute(
           builder: (ctx) => NeneUIMain(
-            path: "${widget.baseUrl}$data",
+            path: "${widget.baseUrl}$targetPath",
             baseUrl: widget.baseUrl,
             captureErrors: widget.captureErrors,
             plugins: widget.plugins,
@@ -1087,7 +1130,7 @@ class _NeneUIState extends State<NeneUIMain> {
   }
 
   void initJs() {
-    print(widget.path.toString().replaceAll(widget.baseUrl, ""));
+    replaceNeneUIUrl(widget.path.toString().replaceAll(widget.baseUrl, ""));
     runtime.evaluate("""
       function action(name, mainData) {
         sendMessage('Action', JSON.stringify({ name, mainData }))

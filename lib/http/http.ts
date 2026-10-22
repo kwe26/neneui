@@ -5,6 +5,7 @@ import { join } from "node:path";
 import path from "node:path";
 import type { IncomingMessage } from "node:http";
 import multer from "multer";
+import cors from "cors"
 import { WebSocketServer, type WebSocket } from "ws";
 
 import { Action } from "../widgets";
@@ -73,6 +74,10 @@ export async function NeneServer({
     cb,
 }: NeneServerProps) {
     const app = express();
+
+    app.use(cors({
+        origin: "*"
+    }))
 
     const uploadDir = path.join(process.cwd(), "uploads");
     const logsDir = path.join(process.cwd(), "logs");
