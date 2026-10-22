@@ -280,8 +280,6 @@ class _NeneUIState extends State<NeneUIMain> {
 
   String errorText = "";
 
-  StreamSubscription? _browserNavigationSubscription;
-
   Map<String, dynamic> ui = {};
   Map<String, dynamic> idDatabase = {
     "variables": <String, dynamic>{
