@@ -9,9 +9,6 @@ external JSObject get globalThis;
 @JS('eval')
 external JSAny? _jsEval(JSString code);
 
-@JS()
-external JSAny? _createNeneBridge(JSFunction sendMessage);
-
 class NeneJsRuntime {
   final Map<String, FutureOr<dynamic> Function(dynamic args)> _handlers = {};
 
