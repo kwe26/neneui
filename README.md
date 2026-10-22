@@ -4,7 +4,7 @@
 
 # Nene UI Runtime
 
-Build Flutter interfaces dynamically from a JavaScript server.
+Build Flutter interfaces dynamically from a JavaScript server with WebSocekt and Dynamic Widgets Support!
 
 # Docs
 Don't know what to do Or how to use NeneUI? Access the Documentation of NeneUI Below!

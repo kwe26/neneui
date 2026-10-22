@@ -33,3 +33,10 @@
 * NeneDispaly and Custom BottomNavBar Widgets
 * Bug Fixes
 * Shared Preferences
+
+## 0.0.8
+* Major Changes
+* Critical Issues of NeneDisplay fixed
+* Upgrade shadcn_flutter
+* Layouts, Layout Widget
+* Update Documentation
