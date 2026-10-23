@@ -337,14 +337,12 @@ class Daikon {
     }
 
     if (idMap.containsKey(ui['id']) && idMap[ui['id']]['override'] == true) {
-      setState(() {
-        try {
-          ui['props'] = idMap[ui['id']]['props'];
-          debugPrint('Daikon! ${ui['id']}: Props have been overwritten');
-        } catch (error) {
-          debugPrint('Daikon! ${ui['id']}: Props failed to be overwritten');
-        }
-      });
+      try {
+        ui['props'] = idMap[ui['id']]['props'];
+        debugPrint('Daikon! ${ui['id']}: Props have been overwritten');
+      } catch (error) {
+        debugPrint('Daikon! ${ui['id']}: Props failed to be overwritten');
+      }
     }
 
     switch (wName) {
@@ -425,7 +423,7 @@ class Daikon {
         );
 
       case 'TextEditingController':
-        event(Events.SET_VAR, {
+        return event(Events.SET_VAR, {
           'var': ui['id'] + ".controller",
           'val': TextEditingController(text: ui['props']['value']),
         });

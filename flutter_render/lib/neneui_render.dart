@@ -453,11 +453,11 @@ class _NeneUIState extends State<NeneUIMain> {
   final runtime = NeneJsRuntime();
 
   void eventExec(dynamic event, dynamic data) async {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      setState(() {
-        eventsFired.add(event);
-      });
-    });
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   setState(() {
+    //     eventsFired.add(event);
+    //   });
+    // });
 
     if (event == Events.CLEAR) {
       Future.delayed(const Duration(milliseconds: 600), () {
@@ -622,17 +622,11 @@ class _NeneUIState extends State<NeneUIMain> {
     }
 
     if (event == Events.REGISTER_ID) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        setState(() {
-          idDatabase.addAll({
-            '${data['id']}': {
-              'visible': true,
-              'override': false,
-              'props': data['props'],
-            },
-          });
-        });
-      });
+      // Registration doesn't change what's on screen, so no setState is needed.
+      idDatabase.putIfAbsent(
+        '${data['id']}',
+        () => {'visible': true, 'override': false, 'props': data['props']},
+      );
     }
 
     if (event == Events.TOGGL_MOUSEHOVER) {
@@ -687,9 +681,11 @@ class _NeneUIState extends State<NeneUIMain> {
     }
 
     if (event == Events.SET_DISPLAY_URLS) {
-      setState(() {
-        neneDisplay = data;
-      });
+      if (neneDisplay.isEmpty) {
+        setState(() {
+          neneDisplay = data;
+        });
+      }
     }
 
     if (event == Events.RELOAD_DISPLAY_ONCE) {
