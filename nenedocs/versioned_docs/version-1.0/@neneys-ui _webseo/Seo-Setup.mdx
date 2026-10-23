@@ -1,0 +1,32 @@
+---
+sidebar_position: 2
+---
+
+# SEO - Setup
+> Search Engine Optimization (SEO) helps you rank your website. NeneUI allows you to mix Flutter + SEO as well with the help of running PHP as Backend to Render for the Crawlers
+
+## Setup SEO
+
+:::info
+
+PHP Verison Below theese are not allowed due to the recent PHP2Shell CVE.
+- PHP 8.5.12
+- PHP 8.4.27
+- PHP 8.3.36
+
+:::
+
+Specify `phpPath` Argument into `NeneServer` for ex. `phpPath: "D:\\Software\\php-8.5.12-nts-Win32-vs17-x64\\php.exe"`
+
+## SEO in Scaffold
+> Setup SEO for Scaffold (Required)
+
+```ts
+import { Scaffold, Seo } from "@neneys/ui"
+
+Scaffold('#mainScaffold', {
+    appBar: ...,
+    seo: Seo({...})
+})
+```
+

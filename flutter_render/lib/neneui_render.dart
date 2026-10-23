@@ -85,13 +85,18 @@ class _NeneUIInitializerState extends State<_NeneUIInitializer> {
     _themeFuture = _loadThemes();
   }
 
-  late Future<(ThemeData, ThemeData, bool)> _themeFuture;
+  late Future<(ThemeData, ThemeData, bool, Map<String, dynamic>)> _themeFuture;
 
-  Future<(ThemeData, ThemeData, bool)> _loadThemes() async {
+  Map<String, dynamic> jsEngine = {};
+
+  Future<(ThemeData, ThemeData, bool, Map<String, dynamic>)>
+  _loadThemes() async {
     final response = await http.get(Uri.parse("${widget.baseUrl}/__neneui__"));
 
     final data = jsonDecode(response.body);
     final appTheme = data["appTheme"];
+
+    jsEngine = data["jsEngine"];
 
     final light = appTheme["light"];
     final dark = appTheme["dark"];
@@ -102,12 +107,13 @@ class _NeneUIInitializerState extends State<_NeneUIInitializer> {
       ThemeParser.parseTheme(light),
       ThemeParser.parseThemeDark(dark),
       errorReporting!,
+      jsEngine,
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<(ThemeData, ThemeData, bool)>(
+    return FutureBuilder<(ThemeData, ThemeData, bool, Map<String, dynamic>)>(
       future: _themeFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -209,7 +215,7 @@ class _NeneUIInitializerState extends State<_NeneUIInitializer> {
           );
         }
 
-        final (lightTheme, darkTheme, captureErrors) = snapshot.data!;
+        final (lightTheme, darkTheme, captureErrors, jsEngine) = snapshot.data!;
 
         return ShadcnApp(
           title: widget.title,
@@ -225,6 +231,7 @@ class _NeneUIInitializerState extends State<_NeneUIInitializer> {
                     plugins: widget.plugins,
                     path: '${widget.baseUrl}$routeName',
                     baseUrl: widget.baseUrl,
+                    jsEngine: jsEngine,
                     debugOrb: widget.debugOrb,
                     captureErrors: captureErrors,
                     showScaffold: true,
@@ -242,6 +249,7 @@ class _NeneUIInitializerState extends State<_NeneUIInitializer> {
               path: "${widget.baseUrl}${widget.defaultPage}",
               baseUrl: widget.baseUrl,
               debugOrb: widget.debugOrb,
+              jsEngine: jsEngine,
               captureErrors: captureErrors,
               showScaffold: true,
             ),
@@ -256,6 +264,7 @@ class NeneUIMain extends StatefulWidget {
   final String path;
   final String baseUrl;
   final bool captureErrors;
+  final Map<String, dynamic> jsEngine;
   final bool debugOrb;
   final Map<String, dynamic> plugins;
   final bool showScaffold;
@@ -266,6 +275,7 @@ class NeneUIMain extends StatefulWidget {
     required this.plugins,
     required this.path,
     required this.debugOrb,
+    required this.jsEngine,
     required this.showScaffold,
     required this.captureErrors,
   });
@@ -302,8 +312,6 @@ class _NeneUIState extends State<NeneUIMain> {
     super.initState();
     listenForBrowserBack((path) {
       if (!mounted) return;
-
-      print(path);
     });
     fetchUIRender();
   }
@@ -450,7 +458,7 @@ class _NeneUIState extends State<NeneUIMain> {
   NeneWebSocket? socket;
   Timer? _wssRetryTimer;
   Duration _wssRetryDelay = const Duration(seconds: 1);
-  final runtime = NeneJsRuntime();
+  late NeneJsRuntime runtime;
 
   @override
   void dispose() {
@@ -804,6 +812,7 @@ class _NeneUIState extends State<NeneUIMain> {
             baseUrl: widget.baseUrl,
             captureErrors: widget.captureErrors,
             showScaffold: true,
+            jsEngine: widget.jsEngine,
             debugOrb: widget.debugOrb,
             plugins: widget.plugins,
           ),
@@ -823,6 +832,7 @@ class _NeneUIState extends State<NeneUIMain> {
             baseUrl: widget.baseUrl,
             captureErrors: widget.captureErrors,
             plugins: widget.plugins,
+            jsEngine: widget.jsEngine,
             debugOrb: widget.debugOrb,
             showScaffold: true,
           ),
@@ -841,7 +851,14 @@ class _NeneUIState extends State<NeneUIMain> {
     }
 
     if (event == Events.INVOKE_JS) {
-      runtime.evaluate(data.toString());
+      if (widget.jsEngine['enabled'] == true) {
+        runtime.evaluate(data.toString());
+      } else {
+        eventExec(
+          Events.INVOKE_TOAST,
+          "JavaScript Execution is blocked by Server",
+        );
+      }
     }
 
     if (event == Events.INVOKE_POP) {
@@ -1144,8 +1161,13 @@ class _NeneUIState extends State<NeneUIMain> {
   }
 
   void initJs() {
+    if (widget.jsEngine['enabled'] == true) {
+      runtime = NeneJsRuntime();
+    }
+
     replaceNeneUIUrl(widget.path.toString().replaceAll(widget.baseUrl, ""));
-    runtime.evaluate("""
+    if (widget.jsEngine['enabled'] == true) {
+      runtime.evaluate("""
       function action(name, mainData) {
         sendMessage('Action', JSON.stringify({ name, mainData }))
       }
@@ -1173,18 +1195,19 @@ class _NeneUIState extends State<NeneUIMain> {
       }
     """);
 
-    runtime.onMessage("Action", (dynamic args) {
-      print(args);
-      ActionsPerf.perform(context, eventExec, args['name'], args['mainData']);
-      return true;
-    });
+      runtime.onMessage("Action", (dynamic args) {
+        print(args);
+        ActionsPerf.perform(context, eventExec, args['name'], args['mainData']);
+        return true;
+      });
 
-    runtime.onMessage("getVariable", (dynamic args) {
-      return CoreParser.parseVariable({
-        'template': "%1",
-        'variable': "${args['var']}",
-      }, idDatabase);
-    });
+      runtime.onMessage("getVariable", (dynamic args) {
+        return CoreParser.parseVariable({
+          'template': "%1",
+          'variable': "${args['var']}",
+        }, idDatabase);
+      });
+    }
   }
 
   void openDebugSlide() {

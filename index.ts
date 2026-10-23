@@ -1,6 +1,7 @@
 import { Brightness, ColorScheme, Density, Theme } from "./lib/http/theme";
 import { NeneServer, ReqType, Text } from "./lib/widgets";
 import { NenePayments, RazorpayGateway } from "./@neneys/payments/lib/index"
+import { JavaScriptEngine } from "./lib/http/javascript";
 
 const theme = Theme({
     colorScheme: ColorScheme({
@@ -62,6 +63,9 @@ NeneServer({
             console.log("A NeneUI client connected");
         },
     },
+    jsEngine: JavaScriptEngine({
+        enabled: false
+    }),
     captureErrors: true,
     themeLight: theme,
     callbackPath: "./example_callback"
