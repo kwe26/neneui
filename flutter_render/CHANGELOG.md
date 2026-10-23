@@ -40,3 +40,10 @@
 * Upgrade shadcn_flutter
 * Layouts, Layout Widget
 * Update Documentation
+
+## 0.0.9
+* Fix Many Memory Leak and GPU Leak issues
+* JavaScript ability can be controlled
+* Stack Size of JS can be customized
+* Remove Unnessary Frame Widget
+* Web Support!
