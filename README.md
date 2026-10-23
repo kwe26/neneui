@@ -7,7 +7,7 @@
 Build Flutter interfaces dynamically from a JavaScript server with WebSocekt and Dynamic Widgets Support!
 
 # Docs
-Don't know what to do Or how to use NeneUI? Access the Documentation of NeneUI Below!
+Don't know what to do Or how to use NeneUI? Access the Documentation of NeneUI Below! (Click on the Image)
 
 <a href="https://kwe26.github.io/neneui/">
   <img src="./assets/docs_banner.png?" width="1024">
@@ -16,6 +16,8 @@ Don't know what to do Or how to use NeneUI? Access the Documentation of NeneUI B
 # Video Demo
 
 [Watch the Video on YouTube](https://www.youtube.com/watch?v=ts1DRFQp28c)
+
+*! Dont worry this is not dQw*******Q Link*
 
 ## Features
 
@@ -43,7 +45,13 @@ Don't know what to do Or how to use NeneUI? Access the Documentation of NeneUI B
   <img src="./assets/testing_kit.png?" width="1024">
 </a>
 
-[NeneUI Testing Kit (In Case You cannot find!)](https://github.com/kwe26/neneui/releases/tag/nene-tester-1.0.1)
+[NeneUI Testing Kit (In Case You cannot find) **](https://github.com/kwe26/neneui/releases/tag/nene-tester-1.0.1)
+
+[Latest NeneUI Testing Kit (WEB) *](https://kwe26.github.io/neneui/tester)
+
+(*) This Version of NeneUI Testing Kit is hosted on Web so expect HTTPS, and other CORS related issues when opening any app + it is updated everytime so don't expect Stable NeneUI Too!
+
+(**) nothing, you need to search in release for the Testing Kit for your Platform.
 
 
 ## Getting Started With an Sample
@@ -107,5 +115,7 @@ find "$HOME/.pub-cache" -name "quickjs_engine_plugin.h" -exec sed -i \
 
 # Links & Credits
 - [Documented Widgets](https://kwe26.github.io/neneui/)
+- [Web Tester](https://kwe26.github.io/neneui)
+- [neneui_render on pub.dev](https://pub.dev/packages/neneui_render)
 - [Sample App](https://github.com/kwe26/neneui-sample)
-- [shadcn_ui Flutter used for UI Components](https://github.com/sunarya-thito/shadcn_flutter)
+- [shadcn_ui Flutter Lib used for UI Components](https://github.com/sunarya-thito/shadcn_flutter)
