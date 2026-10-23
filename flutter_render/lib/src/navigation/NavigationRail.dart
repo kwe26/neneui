@@ -15,7 +15,7 @@ class dNavigationRail {
       final controllerKey = "${data['id']}";
 
       if (!idDatabase['variables'].containsKey(controllerKey)) {
-        event(Events.SET_VAR, {'var': controllerKey, 'val': const ValueKey(0)});
+        idDatabase['variables'][controllerKey] = const ValueKey(0);
       }
 
       return NavigationRail(

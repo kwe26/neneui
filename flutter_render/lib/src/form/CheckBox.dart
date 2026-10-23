@@ -15,12 +15,10 @@ class dCheckBox {
       final controllerKey = "${data['id']}.controller";
 
       if (!idDatabase['variables'].containsKey(controllerKey)) {
-        event(Events.SET_VAR, {
-          'var': controllerKey,
-          'val': bool.parse(data['props']['value'].toString())
-              ? CheckboxState.checked
-              : CheckboxState.unchecked,
-        });
+        idDatabase['variables'][controllerKey] =
+            bool.parse(data['props']['value'].toString())
+            ? CheckboxState.checked
+            : CheckboxState.unchecked;
       }
 
       return Checkbox(

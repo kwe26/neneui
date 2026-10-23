@@ -11,9 +11,7 @@ class DWebSocket {
   }) {
     event(Events.REGISTER_ID, {'id': data['id'], 'props': data['props']});
     event(Events.INIT_WSS_ONCE, data['props']);
-    if (idDatabase['variables'].containsKey("_wsScroll_") == false) {
-      event(Events.SET_VAR, {'var': "_wsScroll_", 'val': ScrollController()});
-    }
+    idDatabase['variables'].putIfAbsent('_wsScroll_', () => ScrollController());
 
     final dataScroll = data['props']?['dataScroll']?.toString().toLowerCase();
 

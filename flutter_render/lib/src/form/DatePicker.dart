@@ -43,12 +43,8 @@ class dDatePicker {
           int.parse(data['props']['defaultDate'].toString()),
         );
 
-        event(Events.SET_VAR, {'var': controllerKey, 'val': time});
-
-        event(Events.SET_VAR, {
-          'var': parseControllerKey,
-          'val': parseDateTime(time),
-        });
+        idDatabase['variables'][controllerKey] = time;
+        idDatabase['variables'][parseControllerKey] = parseDateTime(time);
       }
 
       return DatePicker(

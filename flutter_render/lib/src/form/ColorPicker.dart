@@ -17,12 +17,9 @@ class DColorPicker {
       final controllerKey = "${data['id']}";
 
       if (!idDatabase['variables'].containsKey(controllerKey)) {
-        event(Events.SET_VAR, {
-          'var': controllerKey,
-          'val': ColorDerivative.fromColor(
-            ColorParse.parseColor(data['props']['value']),
-          ),
-        });
+        idDatabase['variables'][controllerKey] = ColorDerivative.fromColor(
+          ColorParse.parseColor(data['props']['value']),
+        );
       }
 
       return ColorInput(

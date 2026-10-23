@@ -16,7 +16,7 @@ class DInputOTP {
       final controllerKey = "${data['id']}.controller";
 
       if (!idDatabase['variables'].containsKey(controllerKey)) {
-        event(Events.SET_VAR, {'var': controllerKey, 'val': ''});
+        idDatabase['variables'][controllerKey] = '';
       }
 
       InputOTPChild reRenderI(ui) {

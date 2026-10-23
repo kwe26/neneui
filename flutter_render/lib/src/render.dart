@@ -28,7 +28,6 @@ import 'package:neneui_render/src/dispaly/Table.dart';
 import 'package:neneui_render/src/dispaly/TableCell.dart';
 import 'package:neneui_render/src/dispaly/TableRow.dart';
 import 'package:neneui_render/src/dispaly/WebSocket.dart';
-import 'package:neneui_render/src/enum.dart';
 import 'package:neneui_render/src/feedback/Button.dart';
 import 'package:neneui_render/src/feedback/ButtonGroup.dart';
 import 'package:neneui_render/src/feedback/Progress.dart';
@@ -82,6 +81,9 @@ class Daikon {
       Map<String, dynamic> infectForeach = const {},
       useList = false,
     }) {
+      // Optional child props (loadingWidget, errorWidget, ...) may be absent.
+      if (nene == null) return const SizedBox.shrink();
+
       try {
         final widget = Daikon.Nene(
           context: context,
@@ -339,7 +341,6 @@ class Daikon {
     if (idMap.containsKey(ui['id']) && idMap[ui['id']]['override'] == true) {
       try {
         ui['props'] = idMap[ui['id']]['props'];
-        debugPrint('Daikon! ${ui['id']}: Props have been overwritten');
       } catch (error) {
         debugPrint('Daikon! ${ui['id']}: Props failed to be overwritten');
       }
@@ -423,10 +424,11 @@ class Daikon {
         );
 
       case 'TextEditingController':
-        return event(Events.SET_VAR, {
-          'var': ui['id'] + ".controller",
-          'val': TextEditingController(text: ui['props']['value']),
-        });
+        idMap['variables'].putIfAbsent(
+          '${ui['id']}.controller',
+          () => TextEditingController(text: ui['props']['value']),
+        );
+        return const SizedBox.shrink();
 
       case 'Compare':
         return dCompare.run(

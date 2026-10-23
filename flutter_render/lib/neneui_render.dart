@@ -291,8 +291,6 @@ class _NeneUIState extends State<NeneUIMain> {
       "_wssLoading_": false,
     },
   };
-  List<String> eventsFired = [];
-
   int fired = 0;
 
   Map<String, dynamic> neneDisplay = {};
@@ -449,16 +447,25 @@ class _NeneUIState extends State<NeneUIMain> {
 
   bool ioteDone = false;
   bool eventWssFired = false;
-  late NeneWebSocket socket;
+  NeneWebSocket? socket;
+  Timer? _wssRetryTimer;
+  Duration _wssRetryDelay = const Duration(seconds: 1);
   final runtime = NeneJsRuntime();
 
-  void eventExec(dynamic event, dynamic data) async {
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   setState(() {
-    //     eventsFired.add(event);
-    //   });
-    // });
+  @override
+  void dispose() {
+    _wssRetryTimer?.cancel();
+    socket?.dispose();
 
+    for (final value in (idDatabase['variables'] as Map).values) {
+      if (value is TextEditingController) value.dispose();
+      if (value is ScrollController) value.dispose();
+    }
+
+    super.dispose();
+  }
+
+  void eventExec(dynamic event, dynamic data) async {
     if (event == Events.CLEAR) {
       Future.delayed(const Duration(milliseconds: 600), () {
         if (idDatabase['variables'][data] is TextEditingController) {
@@ -478,11 +485,9 @@ class _NeneUIState extends State<NeneUIMain> {
 
     if (event == Events.INIT_WSS_ONCE) {
       if (eventWssFired) return;
-
-      setState(() {
-        idDatabase['variables']['wss'] = List.from([]);
-        idDatabase['variables']['_wssLoading_'] = true;
-      });
+      // Set before any early return: this event is fired from build, so
+      // leaving it unset would retry on every rebuild.
+      eventWssFired = true;
 
       final props = Map<String, dynamic>.from(data);
       final url = props['url']?.toString() ?? '';
@@ -494,9 +499,9 @@ class _NeneUIState extends State<NeneUIMain> {
         return;
       }
 
-      eventWssFired = true;
-
-      idDatabase['variables'].putIfAbsent('wss', () => <dynamic>[]);
+      // No setState: called during build, which reads these right after.
+      idDatabase['variables']['wss'] = <dynamic>[];
+      idDatabase['variables']['_wssLoading_'] = true;
 
       bool errorActionFired = false;
 
@@ -505,13 +510,26 @@ class _NeneUIState extends State<NeneUIMain> {
 
         if (errorActionFired) return;
         errorActionFired = true;
-        eventWssFired = false;
 
         if (mounted) {
           setState(() {
             idDatabase['variables']['_wssLoading_'] = false;
           });
         }
+
+        // Retry with backoff; the rebuild re-fires INIT_WSS_ONCE.
+        final delay = _wssRetryDelay;
+        _wssRetryDelay = delay * 2 > const Duration(seconds: 30)
+            ? const Duration(seconds: 30)
+            : delay * 2;
+
+        _wssRetryTimer?.cancel();
+        _wssRetryTimer = Timer(delay, () {
+          if (!mounted) return;
+          setState(() {
+            eventWssFired = false;
+          });
+        });
 
         final errorAction = props['errorAction'];
 
@@ -526,7 +544,9 @@ class _NeneUIState extends State<NeneUIMain> {
         }
       }
 
-      socket = NeneWebSocket();
+      this.socket?.dispose();
+      final socket = NeneWebSocket();
+      this.socket = socket;
 
       socket.messages.listen(
         (message) {
@@ -592,6 +612,7 @@ class _NeneUIState extends State<NeneUIMain> {
             if (!mounted) return;
 
             debugPrint('[NeneUI] WebSocket connected: $url');
+            _wssRetryDelay = const Duration(seconds: 1);
 
             setState(() {
               idDatabase['variables']['_wssLoading_'] = false;
@@ -681,11 +702,8 @@ class _NeneUIState extends State<NeneUIMain> {
     }
 
     if (event == Events.SET_DISPLAY_URLS) {
-      if (neneDisplay.isEmpty) {
-        setState(() {
-          neneDisplay = data;
-        });
-      }
+      // Not read during build, so no setState needed.
+      neneDisplay = data;
     }
 
     if (event == Events.RELOAD_DISPLAY_ONCE) {
@@ -946,7 +964,9 @@ class _NeneUIState extends State<NeneUIMain> {
     }
 
     if (event == Events.SEND_SOCKET) {
-      if (socket.isConnected) {
+      final socket = this.socket;
+
+      if (socket != null && socket.isConnected) {
         Map<String, dynamic> buildRequest = {
           'shared_pref_body': await getAllPrefsAsBody(),
         };

@@ -16,12 +16,9 @@ class dTextField {
       final controllerKey = "${data['id']}.controller";
 
       if (!idDatabase['variables'].containsKey(controllerKey)) {
-        event(Events.SET_VAR, {
-          'var': controllerKey,
-          'val': TextEditingController(
-            text: data['props']['controller']?['props']?['value'] ?? "",
-          ),
-        });
+        idDatabase['variables'][controllerKey] = TextEditingController(
+          text: data['props']['controller']?['props']?['value'] ?? "",
+        );
       }
 
       return TextField(
