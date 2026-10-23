@@ -1,4 +1,4 @@
-name: Build Nene Desktop Runtime (live)
+name: Build Nene Desktop Runtime
 
 on:
   push:
@@ -10,16 +10,18 @@ permissions:
 
 jobs:
   build-windows:
-    name: Windows
+    name: Build Windows
     runs-on: windows-latest
     defaults:
       run:
         working-directory: nene_desktop_runtime
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - uses: subosito/flutter-action@v2
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
         with:
           channel: stable
           cache: true
@@ -33,7 +35,14 @@ jobs:
       - name: Build Windows
         run: flutter build windows --release
 
-      - name: Compress directly in build folder
+      - name: Verify Windows build
+        shell: pwsh
+        run: |
+          if (!(Test-Path "build/windows/x64/runner/Release")) {
+            throw "Windows release directory not found."
+          }
+
+      - name: Compress Windows bundle
         shell: pwsh
         run: |
           Compress-Archive `
@@ -42,7 +51,7 @@ jobs:
             -CompressionLevel Optimal `
             -Force
 
-      - name: Upload artifact
+      - name: Upload Windows artifact
         uses: actions/upload-artifact@v4
         with:
           name: windows
@@ -50,16 +59,18 @@ jobs:
           if-no-files-found: error
 
   build-macos:
-    name: macOS
+    name: Build macOS
     runs-on: macos-latest
     defaults:
       run:
         working-directory: nene_desktop_runtime
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - uses: subosito/flutter-action@v2
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
         with:
           channel: stable
           cache: true
@@ -78,7 +89,7 @@ jobs:
           cd build/macos/Build/Products/Release
           zip -y -r -9 macos.zip *.app
 
-      - name: Upload artifact
+      - name: Upload macOS artifact
         uses: actions/upload-artifact@v4
         with:
           name: macos
@@ -86,16 +97,18 @@ jobs:
           if-no-files-found: error
 
   build-linux:
-    name: Linux
+    name: Build Linux
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: nene_desktop_runtime
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - uses: subosito/flutter-action@v2
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
         with:
           channel: stable
           cache: true
@@ -115,13 +128,6 @@ jobs:
             libmpv-dev \
             mpv
 
-          # Alias webkit2gtk-4.1 to 4.0 so plugins looking for either version pass pkg-config
-          PC_DIR=$(pkg-config --variable pc_path pkg-config | cut -d ':' -f 1)
-          if [ ! -f "$PC_DIR/webkit2gtk-4.0.pc" ] && [ -f "/usr/lib/x86_64-linux-gnu/pkgconfig/webkit2gtk-4.1.pc" ]; then
-            sudo ln -s /usr/lib/x86_64-linux-gnu/pkgconfig/webkit2gtk-4.1.pc /usr/lib/x86_64-linux-gnu/pkgconfig/webkit2gtk-4.0.pc
-            sudo ln -s /usr/lib/x86_64-linux-gnu/pkgconfig/javascriptcoregtk-4.1.pc /usr/lib/x86_64-linux-gnu/pkgconfig/javascriptcoregtk-4.0.pc
-          fi
-
       - name: Enable Linux Desktop
         run: flutter config --enable-linux-desktop
 
@@ -138,40 +144,4 @@ jobs:
 
       - name: Compress Linux bundle
         run: |
-          tar -czf build/linux/linux.tar.gz -C build/linux/x64/release/bundle .
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: linux
-          path: nene_desktop_runtime/build/linux/linux.tar.gz
-          if-no-files-found: error
-
-  release:
-    name: Create Release
-    if: startsWith(github.ref, 'refs/tags/')
-    needs:
-      - build-windows
-      - build-android
-      - build-ios
-      - build-macos
-      - build-linux
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Download all artifacts
-        uses: actions/download-artifact@v4
-        with:
-          path: release
-          merge-multiple: true
-
-      - name: Create Release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ github.ref_name }}
-          files: |
-            release/windows.zip
-            release/android-apk.zip
-            release/ios.ipa
-            release/macos.zip
-            release/linux.tar.gz
+          tar -czf build/linux/linux.tar.gz \
