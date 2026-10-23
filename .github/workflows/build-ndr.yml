@@ -2,8 +2,8 @@ name: Build Nene Desktop Runtime (live)
 
 on:
   push:
-    tags:
-      - "tester-v*"
+    branches:
+      - main
 
 permissions:
   contents: write
