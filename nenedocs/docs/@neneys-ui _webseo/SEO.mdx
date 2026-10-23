@@ -1,0 +1,40 @@
+---
+sidebar_position: 3
+---
+
+# SEO (Component)
+> SEO Component used in Scaffold and interpreted by the PHP Backend for Web Crawlers
+
+```ts
+import { Seo } from "@neneys/ui"
+
+Seo({ ... })
+```
+
+## Parameters
+| Param | Value |
+|:---------|:------:|
+| title | string |
+| desc | string |
+| image | string/url |
+| canonical | string |
+| keywords | List of string |
+| robots | string | 
+| noindex | bool |
+| nofollow | bool |
+| type | website, article, profile, product |
+| siteName | string |
+| locale | string |
+| imageAlt | string |
+| imageWidth | number |
+| imageHeight | number |
+| twitterCard | summary, summary_large_image |
+| twitterSite | string |
+| twitterCreator | string |
+| author | string |
+| themeColor | string |
+| publishedTime | string |
+| modifiedTime | string |
+| jsonLd | Record of string, unknown |
+
+*Note: All of the parameters are optional and are not required to be put!*

@@ -26,3 +26,5 @@ In Callbacks, GetPrefs also works and GetFile(pass, "name") also works to find t
 **JS Package Name :- @neneys/ui**
 
 Both Must be in Latest Version for the Feature Parity.
+
+When Writing UI Code, You must not seperate the UI faction to like lib/ui.ts and Create Combination of UI there instead write the UI with imports in the same file only largest combination that will be used everywhere shall be used.

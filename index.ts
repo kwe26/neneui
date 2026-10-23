@@ -53,6 +53,8 @@ NeneServer({
     uiPath: "./example_ui",
     verbose: true,
     themeDark: theme,
+    flutterWebPath: "D:\\ProjectAB\\neneui\\nene_tester\\build\\web",
+    phpPath: "D:\\Software\\php-8.5.12-nts-Win32-vs17-x64\\php.exe",
     reqType: ReqType.POST,
     wss: {
         path: "/ws",

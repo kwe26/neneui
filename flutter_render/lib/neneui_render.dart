@@ -339,7 +339,7 @@ class _NeneUIState extends State<NeneUIMain> {
       var reqs = await http.post(
         Uri.parse(widget.path),
         body: {'shared_pref_body': await getAllPrefsAsBody()},
-        headers: {"User-Agent": "NeneUI/1.0"},
+        headers: {"User-Agent": "NeneUI/1.0", 'X-NeneUI-Client': 'NeneUI/1.0'},
       );
 
       if (reqs.statusCode == 200) {
@@ -376,7 +376,7 @@ class _NeneUIState extends State<NeneUIMain> {
       var reqs = await http.post(
         Uri.parse(widget.baseUrl + url),
         body: {'shared_pref_body': await getAllPrefsAsBody()},
-        headers: {"User-Agent": "NeneUI/1.0"},
+        headers: {"User-Agent": "NeneUI/1.0", 'X-NeneUI-Client': 'NeneUI/1.0'},
       );
 
       if (reqs.statusCode == 200) {
@@ -417,7 +417,7 @@ class _NeneUIState extends State<NeneUIMain> {
       var reqs = await http.post(
         Uri.parse(widget.path),
         body: {'shared_pref_body': await getAllPrefsAsBody()},
-        headers: {"User-Agent": "NeneUI/1.0"},
+        headers: {"User-Agent": "NeneUI/1.0", 'X-NeneUI-Client': 'NeneUI/1.0'},
       );
 
       if (reqs.statusCode == 200) {
@@ -1092,7 +1092,7 @@ class _NeneUIState extends State<NeneUIMain> {
           body: buildRequest,
           headers: (data['headers'] is Map)
               ? Map.from(data['headers'])
-              : {'User-agent': 'NeneUI/1.0'},
+              : {'User-agent': 'NeneUI/1.0', 'X-NeneUI-Client': 'NeneUI/1.0'},
         );
 
         setState(() {

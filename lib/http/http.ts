@@ -14,6 +14,8 @@ import {
     JavaScriptEngine,
     type JavascriptEngine,
 } from "./javascript";
+import { exec, execSync, spawn } from "node:child_process";
+import { stderr } from "node:process";
 
 export enum ReqType {
     GET = "get",
@@ -49,6 +51,8 @@ export interface NeneServerProps {
     reqType?: ReqType;
     pass?: any;
     payments?: any;
+    phpPath?: string,
+    flutterWebPath?: string,
     jsEngine?: JavascriptEngine;
     themeLight?: ThemeProps;
     themeDark?: ThemeProps;
@@ -65,7 +69,9 @@ export async function NeneServer({
     pass = {},
     themeLight = Theme({}),
     themeDark = Theme({}),
+    flutterWebPath = "",
     reqType = ReqType.GET,
+    phpPath = "disabled",
     payments = null,
     wss = false,
     captureErrors = false,
@@ -79,6 +85,23 @@ export async function NeneServer({
         origin: "*"
     }))
 
+    function isNeneUIRequest(req: Request): boolean {
+        return (
+            req.get("user-agent") === "NeneUI/1.0" ||
+            req.get("x-neneui-client") === "NeneUI/1.0"
+        );
+    }
+
+    function isCrawlerRequest(req: Request): boolean {
+        const userAgent = req.get("user-agent") ?? "";
+
+        return /Googlebot|Bingbot|Slurp|DuckDuckBot|Baiduspider|YandexBot|facebookexternalhit|Twitterbot|LinkedInBot|Discordbot|WhatsApp/i.test(
+            userAgent,
+        );
+    }
+
+    app.use(express.static(flutterWebPath));
+
     const uploadDir = path.join(process.cwd(), "uploads");
     const logsDir = path.join(process.cwd(), "logs");
 
@@ -88,6 +111,40 @@ export async function NeneServer({
 
     if (captureErrors) {
         fs.mkdirSync(logsDir, { recursive: true });
+    }
+
+    if (phpPath !== "disabled") {
+        const output = (await execSync(`"${phpPath}" -v`)).toString();
+        const match = output.match(/PHP\s+(\d+)\.(\d+)\.(\d+)/);
+
+        if (!match) throw new Error("Unable to detect PHP version");
+
+        const [, major, minor, patch] = match.map(Number);
+
+        const minimumVersions: Record<string, number> = {
+            "8.5": 12,
+            "8.4": 27,
+            "8.3": 36,
+        };
+
+        const minimumPatch = minimumVersions[`${major}.${minor}`];
+
+        if (minimumPatch !== undefined && patch! < minimumPatch) {
+            console.error(`PHP ${major}.${minor}.${patch} is unsupported due to security reasons (PHP Shell Vulnerbernity). Minimum required: ${major}.${minor}.${minimumPatch}`)
+            process.exit(-1);
+        }
+
+        const server = spawn(
+            phpPath,
+            ["-S", `0.0.0.0:${port + 1}`, "-t", path.join(__dirname, "webphp")],
+            { stdio: ["ignore", "pipe", "pipe"] }
+        );
+
+        server.stdout.on("data", (data) => console.log("[PHP]", data.toString()));
+        server.stderr.on("data", (data) => console.log("[PHP]", data.toString()));
+
+        server.on("error", (error) => console.error("[PHP] Failed to start:", error));
+        server.on("close", (code) => console.log("[PHP] Server exited with code:", code));
     }
 
     pass = {
@@ -119,8 +176,8 @@ export async function NeneServer({
         const files: Express.Multer.File[] = Array.isArray(req.files)
             ? req.files
             : req.file
-              ? [req.file]
-              : [];
+                ? [req.file]
+                : [];
 
         if (files.length === 0) return;
 
@@ -192,26 +249,63 @@ export async function NeneServer({
                 console.log(`[#NENE] : UI : ${importFile.path}`);
             }
 
-            if (reqType === ReqType.GET) {
-                app.all(importFile.path, (req, res) => {
+            app.all(importFile.path, async (req, res, next) => {
+                if (isNeneUIRequest(req)) {
                     if (verbose) {
-                        console.log(
-                            `[#NENE] : UI : ${importFile.path} accessed`
-                        );
+                        console.log(`[#NENE] : UI : ${importFile.path} accessed`);
                     }
 
-                    importFile.run(req, res, pass);
+                    return importFile.run(req, res, pass);
+                }
+
+
+                if (isCrawlerRequest(req) && phpPath !== "disabled") {
+                    const url = new URL(`http://localhost:${port + 1}/http.php`);
+
+                    url.searchParams.set("path", req.path);
+                    url.searchParams.set("port", String(port));
+
+                    return res.redirect(307, url.toString());
+                }
+
+                if (req.accepts("html") && flutterWebPath) {
+                    return res.sendFile(path.resolve(flutterWebPath, "index.html"));
+                }
+            });
+
+            if (reqType === ReqType.GET) {
+                app.all(importFile.path, async (req, res, next) => {
+                    if (isNeneUIRequest(req)) {
+                        if (verbose) {
+                            console.log(`[#NENE] : UI : ${importFile.path} accessed`);
+                        }
+
+                        return importFile.run(req, res, pass);
+                    }
+
+                    if (isCrawlerRequest(req) && phpPath !== "disabled") {
+                        const url = new URL(`http://localhost:${port + 1}/http.php`);
+
+                        url.searchParams.set("path", req.path);
+                        url.searchParams.set("port", String(port));
+
+                        return res.redirect(307, url.toString());
+                    }
+
+                    if (req.accepts("html") && flutterWebPath) {
+                        return res.sendFile(path.resolve(flutterWebPath, "index.html"));
+                    }
+
+                    return next();
                 });
             } else {
                 app.post(importFile.path, (req, res) => {
                     if (verbose) {
-                        console.log(
-                            `[#NENE] : UI : ${importFile.path} accessed`
-                        );
+                        console.log(`[#NENE] : UI : ${importFile.path} accessed`);
                     }
 
                     pass.shared_pref_body = req.body?.shared_pref_body;
-                    importFile.run(req, res, pass);
+                    return importFile.run(req, res, pass);
                 });
             }
         }
@@ -610,14 +704,14 @@ export function GetPrefs(
     return decode[name] as string;
 }
 
-export function SendWidget(socket: WebSocket, widget: any){
+export function SendWidget(socket: WebSocket, widget: any) {
     socket.send(JSON.stringify({
         event: "widget_recv",
         data: widget
     }));
 }
 
-export function SendAction(socket: WebSocket, action: any){
+export function SendAction(socket: WebSocket, action: any) {
     socket.send(JSON.stringify({
         event: "action_recv",
         data: action

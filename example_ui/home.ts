@@ -2,6 +2,7 @@ import type { Request, Response } from "express";
 import { Action, AppBar, Avatar, AvatarBadge, BoxFit, Breadcrumb, BreadcrumbSeparator, Button, ButtonType, Center, Colors, Column, CrossAxis, DatePicker, DoAction, Empty, FormSubmitAction, Frame, GetPrefs, Iconify, Image, InputOTP, InputOTPChild, InputType, LaunchURL, MainAxis, MemoryImage, NetworkImage, PromptMode, Row, Scaffold, SelectFile, setVar, SingleChildScrollView, SizedBox, Text, TextEditingController, TextField, TextStyle, Var, VideoPlugin } from "../lib/widgets";
 import { DateTime } from "../lib/core/DateTime";
 import { ForEach } from "../lib/core/ForEach";
+import { Seo } from "../lib/base/seo";
 
 export const path = "/ui/main"
 export function run(req: Request, res: Response, pass: any) {
@@ -11,6 +12,9 @@ export function run(req: Request, res: Response, pass: any) {
             title: Text('#appBarText', { text: "NeneUI Example", style: TextStyle({
                 color: Colors.white
             }) })
+        }),
+        seo: Seo({
+
         }),
         preActions: [
             DoAction(Action.SHOW_TOAST, "NYA-NYA"),
