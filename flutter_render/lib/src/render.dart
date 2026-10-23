@@ -8,7 +8,6 @@ import 'package:neneui_render/src/base/Center.dart';
 import 'package:neneui_render/src/base/Compare.dart';
 import 'package:neneui_render/src/base/Container.dart';
 import 'package:neneui_render/src/base/Expanded.dart';
-import 'package:neneui_render/src/base/Frame.dart';
 import 'package:neneui_render/src/base/Iconify.dart';
 import 'package:neneui_render/src/base/Padding.dart';
 import 'package:neneui_render/src/base/Scaffold.dart';
@@ -411,15 +410,6 @@ class Daikon {
           context: context,
           data: ui,
           reRender: reRender,
-          event: event,
-        );
-
-      case 'Frame':
-        return dFrame.run(
-          context: context,
-          data: ui,
-          reRender: reRender,
-          baseUrl: baseUrl,
           event: event,
         );
 
