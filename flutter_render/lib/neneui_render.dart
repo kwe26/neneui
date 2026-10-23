@@ -1162,7 +1162,12 @@ class _NeneUIState extends State<NeneUIMain> {
 
   void initJs() {
     if (widget.jsEngine['enabled'] == true) {
-      runtime = NeneJsRuntime();
+      runtime = NeneJsRuntime(
+        xhr: widget.jsEngine['xhr'],
+        forceJavascriptCoreOnAndroid:
+            widget.jsEngine['forceJavascriptCoreOnAndroid'],
+        extraArgs: {'stackSize': widget.jsEngine['stackSize']},
+      );
     }
 
     replaceNeneUIUrl(widget.path.toString().replaceAll(widget.baseUrl, ""));
@@ -1171,24 +1176,6 @@ class _NeneUIState extends State<NeneUIMain> {
       function action(name, mainData) {
         sendMessage('Action', JSON.stringify({ name, mainData }))
       }
-
-      function setIntervalPolyfill(fn, ms) {
-        let active = true;
-
-        function tick() {
-            if (!active) return;
-            fn();
-            setTimeout(tick, ms);
-        }
-
-        setTimeout(tick, ms);
-
-        return {
-            clear() {
-                active = false;
-            }
-        };
-    }
 
       function getVariable(variable){
         return sendMessage('getVariable', JSON.stringify({var: variable}))

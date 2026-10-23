@@ -14,7 +14,11 @@ class NeneJsRuntime {
 
   bool _disposed = false;
 
-  NeneJsRuntime() {
+  NeneJsRuntime({
+    bool forceJavascriptCoreOnAndroid = false,
+    bool xhr = true,
+    Map<String, dynamic>? extraArgs = const {},
+  }) {
     _installBridge();
   }
 
@@ -25,7 +29,7 @@ class NeneJsRuntime {
 
     final bridge = <String, dynamic>{'sendMessage': sendMessage}.jsify();
 
-    // Keep compatibility with code using neneBridge.sendMessage().
+    // Keep compatibility with neneBridge.sendMessage().
     globalThis['neneBridge'] = bridge;
 
     // Expose sendMessage globally for existing NeneUI helpers.
@@ -74,5 +78,6 @@ class NeneJsRuntime {
     _disposed = true;
     _handlers.clear();
     globalThis['neneBridge'] = null;
+    globalThis['sendMessage'] = null;
   }
 }

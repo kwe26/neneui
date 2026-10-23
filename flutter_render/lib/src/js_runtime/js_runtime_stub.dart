@@ -1,4 +1,10 @@
 class NeneJsRuntime {
+  NeneJsRuntime({
+    bool forceJavascriptCoreOnAndroid = false,
+    bool xhr = true,
+    Map<String, dynamic>? extraArgs = const {},
+  });
+
   void evaluate(String code) {
     throw UnsupportedError(
       'JavaScript execution is not supported on this platform.',

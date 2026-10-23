@@ -1,0 +1,64 @@
+---
+sidebar_position: 11
+---
+# JavaScript Execution
+> NeneUI allows you to execute JavaScript inside App with the help of quickjs Engine to keep it lightweight and functionable as well
+
+:::info
+
+JavaScript execution is quite limited with limited or no network APIs exposed. Or Away/Async Differences on Platforms due to using Host JS or Web and TS Differences due to QuickJS.
+
+:::
+
+## Setup Javascript Execution
+> Tho it is Enabled by Default, You can configure it in Server-Side whether you want to disable it or keep it enabled.
+
+### JavaScriptEngine
+```ts
+import { JavaScriptEngine } from "@neneys/ui";
+
+JavaScriptEngine({
+    enabled: true
+})
+```
+
+#### Parameters
+| Param | Value | Default |
+|:---------|:------:|:------:|
+| enabled | bool | true 
+| forceJavascriptCoreOnAndroid | bool | false
+| xhr | bool | true
+| stackSize | number | 1024*1024
+
+**Pass it to jsEngine Argument in NeneServer**
+```ts
+import { NeneServer, JavaScriptEngine } from "@neneys/ui"
+
+NeneServer({
+    ....
+    jsEngine: JavaScriptEngine({
+        enabled: false
+    }),
+    ....
+})
+```
+
+## JavaScript Functions
+
+- action(name, mainData)
+
+name - Name of the Action (Value of enum Actions.*)
+mainData - JSON/String
+
+Sends over to Actions listener in Daikon
+
+- getVariable(variable)
+
+variable - The Variable Name you want to fetch
+*may require to be awaited depending on platform*
+
+## Invoking JavaScript
+Using DoAction, You can Invoke JS Code by
+```ts
+DoAction(Action.JAVASCRIPT, `console.log("Hello World")`)
+```

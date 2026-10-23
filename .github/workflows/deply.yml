@@ -5,30 +5,58 @@ on:
     branches:
       - main
 
+permissions:
+  contents: read
+
 jobs:
   build:
-    name: Build Docusaurus
+    name: Build Docusaurus and Flutter Tester
     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        working-directory: nenedocs
-
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
+      # Build the Flutter web tester
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Enable Flutter web
+        working-directory: nene_tester
+        run: flutter config --enable-web
+
+      - name: Install Flutter dependencies
+        working-directory: nene_tester
+        run: flutter pub get
+
+      - name: Build Flutter web
+        working-directory: nene_tester
+        run: flutter build web --release --base-href /neneui/tester/
+
+      # Install and build Docusaurus
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
 
-      - name: Install dependencies
+      - name: Install Docusaurus dependencies
+        working-directory: nenedocs
         run: bun install --frozen-lockfile
 
-      - name: Build website
+      - name: Build Docusaurus
+        working-directory: nenedocs
         run: bun run build
+
+      # Embed Flutter inside the Docusaurus deployment
+      - name: Add Flutter tester to website
+        run: |
+          mkdir -p nenedocs/build/tester
+          cp -a nene_tester/build/web/. nenedocs/build/tester/
 
       - name: Upload Build Artifact
         uses: actions/upload-pages-artifact@v3

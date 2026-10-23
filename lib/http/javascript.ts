@@ -22,7 +22,7 @@ export function JavaScriptEngine({
     scripts = [],
     forceJavascriptCoreOnAndroid = false,
     xhr = true,
-    stackSize = 5*1024*1024
+    stackSize = 1024*1024
 }: JavascriptEngine){
     return {
         enabled,
