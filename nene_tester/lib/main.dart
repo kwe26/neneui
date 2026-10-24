@@ -44,9 +44,9 @@ class _UrlScreenState extends State<UrlScreen> {
   );
 
   // NeneUI examples only.
-  // Add your actual example URLs here.
   final List<Map<String, String>> examples = [
-    {"name": "AI Chat with Sarvam", "url": "https://aichat.kwee26.tech"},
+    {"name": "SarvamChat", "url": "https://aichat.kwee26.tech"},
+    {"name": "NeneWorld", "url": "https://neneworld.kwee26.tech"},
   ];
 
   // Recent launch history.

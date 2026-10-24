@@ -56,6 +56,12 @@ Don't know what to do Or how to use NeneUI? Access the Documentation of NeneUI B
 (**) nothing, you need to search in release for the Testing Kit for your Platform.
 
 
+## URLs to try with NeneUI Testing Kit
+- https://aichat.kwee26.tech
+- https://neneworld.kwee26.tech
+
+Quick Note: AiChat may not work sometime if my credits had expired for Sarvam.AI, So please forgive for it.
+
 ## Getting Started With an Sample
 
 Clone the Sample Repo
