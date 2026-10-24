@@ -1,6 +1,6 @@
 name: neneui_render
 description: "Render NeneUI interface definitions as native Flutter widgets."
-version: 0.0.9
+version: 1.0.0
 homepage: https://github.com/kwe26/neneui
 repository: https://github.com/kwe26/neneui
 
