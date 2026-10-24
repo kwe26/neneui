@@ -45,8 +45,8 @@ class InitUI {
       debugOrb: debugOrb,
       debugShowCheckedModeBanner: debugShowCheckedModeBanner,
       fallbackTheme: const ThemeData(
-        colorScheme: ColorSchemes.darkNeutral,
-        scaling: 2,
+        colorScheme: ColorSchemes.darkSlate,
+        scaling: 1.08,
         surfaceOpacity: 0.8,
         surfaceBlur: 4.0,
       ),
@@ -147,19 +147,6 @@ class _NeneUIInitializerState extends State<_NeneUIInitializer> {
                         leading: Icon(RadixIcons.reset),
                         child: Text("Try Again"),
                         onPressed: () {
-                          // Navigator.of(context).pushReplacement(
-                          //   ShadcnPageRoute(
-                          //     builder: (context) => _NeneUIInitializer(
-                          //       title: widget.title,
-                          //       baseUrl: widget.baseUrl,
-                          //       fallbackTheme: widget.fallbackTheme,
-                          //       plugins: widget.plugins,
-                          //       defaultPage: widget.defaultPage,
-                          //       debugShowCheckedModeBanner:
-                          //           widget.debugShowCheckedModeBanner,
-                          //     ),
-                          //   ),
-                          // );
                           setState(() {
                             _themeFuture = _loadThemes();
                           });

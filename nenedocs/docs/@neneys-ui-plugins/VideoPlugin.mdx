@@ -1,0 +1,71 @@
+---
+sidebar_position: 1
+---
+
+# Video Plugin
+> Allows you to Play Video in @neneys/ui
+
+:::info
+
+May not Work Properly with some Platforms due to missing MediaKit Imports.
+
+Important! Always make sure Plugins but also NeneUI in Flutter & NPM are up-to-date.
+
+:::
+
+## Enable in InitUI (Flutter)
+
+```dart
+import "package:neneui_video_plugin/neneui_video_plugin.dart";
+import 'package:neneui_render/neneui_render.dart';
+
+void main() {
+  NeneuiVideoPlugin.initPlugin();
+  
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return InitUI.init(
+      baseUrl: "http://localhost:3500",
+      title: "Nene",
+      plugins: {
+        'video': NeneuiVideoPlugin.manifest(),
+      },
+      debugShowCheckedModeBanner: false,
+    );
+  }
+}
+```
+
+```ts
+import { VideoPlugin } from "@neneys/ui"
+
+VideoFrame("#Id", {
+  src: "",
+  width: ..,
+  height: ..,
+})
+```
+
+## Parameters
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `src` | `string` | The URL of the video to play. |
+| `width` | `number` | The width of the video frame. |
+| `height` | `number` | The height of the video frame. |
+
+## Example
+
+```ts
+VideoFrame("#Id", {
+  src: "https://example.com/video.mp4",
+  width: 800,
+  height: 600,
+})
+```

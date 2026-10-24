@@ -5,6 +5,7 @@
 # Nene UI Runtime
 
 Build Flutter interfaces dynamically from a JavaScript server with WebSocekt and Dynamic Widgets Support!
+<img src="./assets/visual_expl.png" width="1024">
 
 # Docs
 Don't know what to do Or how to use NeneUI? Access the Documentation of NeneUI Below! (Click on the Image)

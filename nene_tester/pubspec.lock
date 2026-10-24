@@ -358,7 +358,7 @@ packages:
       path: "../flutter_render"
       relative: true
     source: path
-    version: "0.0.8"
+    version: "0.0.9"
   neneui_video_plugin:
     dependency: "direct main"
     description:
