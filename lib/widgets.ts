@@ -2,6 +2,7 @@ export * from "./empty_shell";
 export * from "./core/EdgeInsets";
 export * from "./core/core"
 export * from "./http/http"
+export * from "./http/desktop"
 export * from "./core/DateTime"
 
 // Base Widgets
