@@ -144,4 +144,4 @@ jobs:
 
       - name: Compress Linux bundle
         run: |
-          tar -czf build/linux/linux.tar.gz \
+          tar -czf build/linux/linux.tar.gz -C build/linux/x64/release/bundle .
