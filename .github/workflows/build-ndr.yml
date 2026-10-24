@@ -145,3 +145,10 @@ jobs:
       - name: Compress Linux bundle
         run: |
           tar -czf build/linux/linux.tar.gz -C build/linux/x64/release/bundle .
+
+      - name: Upload Linux artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux
+          path: nene_desktop_runtime/build/linux/linux.tar.gz
+          if-no-files-found: error
