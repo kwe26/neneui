@@ -1,0 +1,85 @@
+---
+sidebar_position: 2
+---
+# Payments Plugin
+> @neneys/payments allows you to accept payments Inside NeneUI (Currently only Razorpay Via WebView - Sadly WebView for payments only) is supported.
+
+# Future Plans
+- Add More Payment Methods
+- Remove the need of WebView in Payments Entirely.
+
+# Installation
+## Package
+```bash
+bun add @neneys/payments
+```
+## NeneServer Hookup
+As You know NeneServer has a argument called payments.
+```ts
+import { NeneServer } from "@neneys/ui";
+import { NenePayments, RazorpayGateway } from "@neneys/payments";
+
+NeneServer({
+  payments: NenePayments({
+    NeneUI: true,
+    SecretKey: "1234",
+    DatabasePath: "uploads/db.db",
+    DomainUrl: "http://192.168.29.21:3500",
+    PaymentGateways: [
+      RazorpayGateway(process.env['RZP_KEY']!, process.env['SECRET']!)
+    ]
+  })
+})
+
+```
+
+## Flutter Render Hook-up
+```dart
+import "package:neneui_video_plugin/neneui_video_plugin.dart";
+import 'package:neneui_payments/neneui_payments.dart';
+
+void main() {
+  NeneuiVideoPlugin.initPlugin();
+  
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return InitUI.init(
+      baseUrl: "http://localhost:3500",
+      title: "Nene",
+      plugins: {
+        'pay': NeneuiPaymentsPlugin.manifest(),
+      },
+      debugShowCheckedModeBanner: false,
+    );
+  }
+}
+```
+
+## Initiate a Payment
+> Execute the DoAction on Callback or Button Action
+
+```ts
+import { DoAction, Action } from "@neneys/ui";
+import { CreateNenePayments, PGList } from "@neneys/payments";
+
+DoAction(Action.PAY, await CreateNenePayments(
+  Secret: "1234",
+  CustomerName: "John Doe",
+  CustomerPhone: "+914653958302",
+  CustomerEmail: "main@mail.com",
+  Amount: 1500,
+  Notes: "",
+  PaymentGateway: PGList.Razorpay,
+  onSuccess: DoAction(Action.SHOW_TOAST, "WOHOOO!!"),
+  onFailure: DoAction(Action.SHOW_TOAST, "You suck!")
+));
+```
+
+## Note:
+Since Payments Plugin is not yet ready, It is not recommended to use it in Stable, Instead use the LAUNCH URL to complete payments on your website for now.
