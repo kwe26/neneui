@@ -46,7 +46,7 @@ class _UrlScreenState extends State<UrlScreen> {
   // NeneUI examples only.
   // Add your actual example URLs here.
   final List<Map<String, String>> examples = [
-    {"name": "Local NeneUI Example", "url": "http://localhost:3500"},
+    {"name": "AI Chat with Sarvam", "url": "https://aichat.kwee26.tech"},
   ];
 
   // Recent launch history.

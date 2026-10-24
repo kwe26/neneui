@@ -69,7 +69,7 @@ export async function NeneServer({
     pass = {},
     themeLight = Theme({}),
     themeDark = Theme({}),
-    flutterWebPath = "",
+    flutterWebPath = "none",
     reqType = ReqType.GET,
     phpPath = "disabled",
     payments = null,
@@ -100,7 +100,7 @@ export async function NeneServer({
         );
     }
 
-    app.use(express.static(flutterWebPath));
+    if(flutterWebPath !== "none") app.use(express.static(flutterWebPath));
 
     const uploadDir = path.join(process.cwd(), "uploads");
     const logsDir = path.join(process.cwd(), "logs");

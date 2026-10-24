@@ -4,8 +4,9 @@
 
 # Nene UI Runtime
 
-Build Flutter interfaces dynamically from a JavaScript server with WebSocekt and Dynamic Widgets Support!
 <img src="./assets/visual_expl.png" width="1024">
+
+(Build Flutter interfaces dynamically from a JavaScript server with WebSocekt and Dynamic Widgets Support!)
 
 # Docs
 Don't know what to do Or how to use NeneUI? Access the Documentation of NeneUI Below! (Click on the Image)
@@ -120,3 +121,4 @@ find "$HOME/.pub-cache" -name "quickjs_engine_plugin.h" -exec sed -i \
 - [neneui_render on pub.dev](https://pub.dev/packages/neneui_render)
 - [Sample App](https://github.com/kwe26/neneui-sample)
 - [shadcn_ui Flutter Lib used for UI Components](https://github.com/sunarya-thito/shadcn_flutter)
+- [Figma Assets File](https://www.figma.com/design/miO4jFqApyS584xeCUJisI/-neneys-ui---Cool-Image-to-Visualize-and-Buttons)
