@@ -1,0 +1,28 @@
+---
+sidebar_position: 4
+---
+
+<a href="https://kwe26.github.io/neneui/docs/faq">
+  <img src="https://raw.githubusercontent.com/kwe26/neneui/main/assets/faw.png" width="1024">
+</a>
+
+# FAQ - Frequently Asked Questions
+
+**1. Linux Build won't compile and error out**
+> It is caused due to the quickjs_engine missing a critical header for Linux The fix is below
+```bash
+find "$HOME/.pub-cache" -name "quickjs_engine_plugin.h" -exec sed -i \
+            's/#include <flutter_linux\/flutter_linux.h>/#include <flutter_linux\/flutter_linux.h>\n\n#ifndef FLUTTER_PLUGIN_EXPORT\n#ifdef FLUTTER_PLUGIN_IMPL\n#define FLUTTER_PLUGIN_EXPORT __attribute__((visibility("default")))\n#else\n#define FLUTTER_PLUGIN_EXPORT\n#endif\n#endif/' {} +
+```
+
+**2. I Cannot Insepect Element in Web version of NeneUI**
+> As of now, NeneUI uses Flutter to render in Web as well, So not only you can not do Inspect Element but some SEO features will be missing too (unless, *Q4*)
+
+**3. I added a Widget in my Code, But it won't show up even if i have restarted?**
+> You must check whether your `neneui_render` Package is up-to-date with `@neneys/ui`. If you are trying on NeneUI Testing Kit, Make sure it's up-to-date as well. 
+
+**4. How to get SEO Features on NeneUI Web?**
+> You can get SEO features on NeneUI Web by using the NeneServer's PHP Renderer which renders the NeneUI content as HTML for Web Crawlers. For more information, Check out [SEO Setup Docs](https://kwe26.github.io/neneui/docs/@neneys-ui%20_webseo/Seo-Setup)
+
+**5. NeneUI Testing Kit wont run on my Linux machine!!?**
+> You may need to install some dependencies like libmpv-dev for it to work properly.

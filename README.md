@@ -19,14 +19,16 @@ Don't know what to do Or how to use NeneUI? Access the Documentation of NeneUI B
 
 [Watch the Video on YouTube](https://www.youtube.com/watch?v=ts1DRFQp28c)
 
-*! Dont worry this is not dQw*******Q Link*
+*Dont worry! this is not dQw*******Q Link*
 
 ## Features
 
 - Server-driven UI
-- JavaScript backend
-- Flutter rendering
-- Dynamic widgets
+- JavaScript backend (TypeScript)
+- Natively Rendered Flutter Widgets (No WebView)
+- Widgets Manipulation with Callbacks
+- Embedded JavaScript Runtime
+- Update Apps without Recompilation
 
 | Server-Side Code | Rendered UI |
 |:---:|:---:|
@@ -38,9 +40,13 @@ Don't know what to do Or how to use NeneUI? Access the Documentation of NeneUI B
 # Requirements
 - Flutter SDK (3.38.6 or above)
 - Bun.sh 1.3.x
-- JavaScript & Dart Knowledge obv
+- C++, GCC Compiler : Desktop C++ Development (For Windows)
+- Android SDK/Android Studio (For Android)
+- Dart & Flutter Knowledge
+- internet
+- pc...
 
-### Psst!
+### Psst! (Can't Compile?)
 *In case you don't have Flutter SDK Installed or don't wannta compile things, you can try out the modications you made in example_ui in NeneUI Testing Kit*
 
 <a href="https://github.com/kwe26/neneui/releases/">
@@ -55,6 +61,7 @@ Don't know what to do Or how to use NeneUI? Access the Documentation of NeneUI B
 
 (**) nothing, you need to search in release for the Testing Kit for your Platform.
 
+*Note: The Testing Kit also has Debug Bar to Debug Variables or Change Stuff and Refresh UI Interface*
 
 ## URLs to try with NeneUI Testing Kit
 - https://aichat.kwee26.tech
@@ -104,7 +111,7 @@ cd ./flutter_render/example && flutter run -d
 ```
 
 # FAQ
-<a href="https://kwe26.github.io/neneui/">
+<a href="https://kwe26.github.io/neneui/docs/faq">
   <img src="./assets/faw.png?" width="1024">
 </a>
 
@@ -116,10 +123,16 @@ find "$HOME/.pub-cache" -name "quickjs_engine_plugin.h" -exec sed -i \
 ```
 
 **2. I Cannot Insepect Element in Web version of NeneUI**
-> As of now, NeneUI uses Flutter to render in Web as well, So not only you can not do Inspect Element but some SEO features will be missing too
+> As of now, NeneUI uses Flutter to render in Web as well, So not only you can not do Inspect Element but some SEO features will be missing too (unless, *Q4*)
 
 **3. I added a Widget in my Code, But it won't show up even if i have restarted?**
 > You must check whether your `neneui_render` Package is up-to-date with `@neneys/ui`. If you are trying on NeneUI Testing Kit, Make sure it's up-to-date as well. 
+
+**4. How to get SEO Features on NeneUI Web?**
+> You can get SEO features on NeneUI Web by using the NeneServer's PHP Renderer which renders the NeneUI content as HTML for Web Crawlers. For more information, Check out [SEO Setup Docs](https://kwe26.github.io/neneui/docs/@neneys-ui%20_webseo/Seo-Setup)
+
+**5. NeneUI Testing Kit wont run on my Linux machine!!?**
+> You may need to install some dependencies like libmpv-dev for it to work properly.
 
 # Links & Credits
 - [Documented Widgets](https://kwe26.github.io/neneui/)
@@ -128,3 +141,4 @@ find "$HOME/.pub-cache" -name "quickjs_engine_plugin.h" -exec sed -i \
 - [Sample App](https://github.com/kwe26/neneui-sample)
 - [shadcn_ui Flutter Lib used for UI Components](https://github.com/sunarya-thito/shadcn_flutter)
 - [Figma Assets File](https://www.figma.com/design/miO4jFqApyS584xeCUJisI/-neneys-ui---Cool-Image-to-Visualize-and-Buttons)
+- [TBHK for Nene Yashiro and Hananene Arts](https://hanakokun.com/)
