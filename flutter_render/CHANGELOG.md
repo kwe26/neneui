@@ -47,3 +47,7 @@
 * Stack Size of JS can be customized
 * Remove Unnessary Frame Widget
 * Web Support!
+
+## 1.0.0
+* Fix Bugs
+* Prepare for Initial Release
