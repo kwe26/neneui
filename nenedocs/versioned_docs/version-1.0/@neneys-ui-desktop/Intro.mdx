@@ -1,0 +1,38 @@
+---
+sidebar_position: 1
+---
+# Desktop Runtime
+> It is very much like Electron (but without WebView or anything). It uses @neneys/ui to run and render the widgets natively
+
+# WIP
+> The Nene Desktop Runtime is Still in Development and is not completely ready to work Or be packaged.
+
+# Get Nene Desktop Runtime
+> You need to checkout the Workflow [Github Workflow](https://github.com/kwe26/neneui/actions/workflows/build-ndr.yml) and download the Latest ZIP and Extract it
+
+# Usage
+1. First, Get the Nene Desktop Runtime Path to executable as like
+   D:/ndr/nene_desktop_runtime.exe
+
+2. Setup Codes
+
+```ts
+import { NeneDesktop } from "@neneys/ui"
+
+NeneDesktop({
+  runtimeDir: "D:/ndr/nene_desktop_runtime.exe",
+  interfaces: "./example_ui",
+  callbacks: "./example_callback",
+  appId: "com.neneui.example",
+  appIcon: "",
+  appTitle: "Desktop Runtime Test",
+})
+```
+
+You know how to create `example_ui` and `example_callback` from the [Tutorial](../@neneys-ui/setup-server-side.mdx)
+
+Now Run
+
+```bash
+bun index.ts
+```
