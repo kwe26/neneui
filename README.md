@@ -134,6 +134,23 @@ find "$HOME/.pub-cache" -name "quickjs_engine_plugin.h" -exec sed -i \
 **5. NeneUI Testing Kit wont run on my Linux machine!!?**
 > You may need to install some dependencies like libmpv-dev for it to work properly.
 
+**6. Nene Tester wont run or debug? Why?**
+> If you are facing issues like this
+```txt
+(com.example.nene_tester:67955): GLib-GIO-ERROR **: 23:29:22.499: Settings schema 'org.gnome.settings-daemon.plugins.xsettings' does not contain a key named 'antialiasing'
+Trace/breakpoint trap
+```
+Then Run With this as Environment
+```bash
+GDK_BACKEND=x11 flutter run -d linux
+```
+
+Or 
+
+```bash
+GDK_BACKEND=x11 ./nene_tester
+```
+
 # Links & Credits
 - [Documented Widgets](https://kwe26.github.io/neneui/)
 - [Web Tester](https://kwe26.github.io/neneui)

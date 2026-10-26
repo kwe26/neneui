@@ -1187,21 +1187,24 @@ class _NeneUIState extends State<NeneUIMain> {
   void openDebugSlide() {
     showOverlay(
       context,
-      SheetConfiguration(position: OverlayPosition.end),
+      SheetConfiguration(
+        position: OverlayPosition.end,
+        barrierDismissible: false,
+        transformBackdrop: false,
+      ),
       builder: (context) {
         return Container(
           padding: const EdgeInsets.all(24),
-          constraints: const BoxConstraints(maxWidth: 400),
+          constraints: const BoxConstraints(maxWidth: 500),
           child: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
-                  mainAxisSize: MainAxisSize.min,
                   children: [
                     Expanded(
-                      child: const Text('Daikon Debugger').large().medium(),
+                      child: const Text('@neneys/ui Debugger').large().medium(),
                     ),
                     TextButton(
                       density: ButtonDensity.icon,
@@ -1214,22 +1217,12 @@ class _NeneUIState extends State<NeneUIMain> {
                   ],
                 ),
                 const Gap(8),
-                SizedBox(
-                  width: 1000,
-                  child: PrimaryButton(
-                    child: Text("Refresh User Interface"),
-                    onPressed: () {
-                      fetchUIRender();
-                    },
-                  ),
-                ),
-                const Gap(8),
                 Collapsible(
                   children: [
-                    const CollapsibleTrigger(child: Text("Daikon ID Database")),
+                    const CollapsibleTrigger(child: Text("Widget ID Database")),
                     OutlinedContainer(
                       child: Text(
-                        "Id Database for Widgets Rendered by Daikon via NeneUI JSON",
+                        "Id Database for Widgets Rendered by Daikon via @neneys/ui JSON",
                       ).small().mono().withPadding(horizontal: 16, vertical: 8),
                     ).withPadding(top: 8),
                     CollapsibleContent(
@@ -1316,7 +1309,7 @@ class _NeneUIState extends State<NeneUIMain> {
                     const CollapsibleTrigger(child: Text("Variables")),
                     OutlinedContainer(
                       child: Text(
-                        "Id Database for Widgets Rendered by Daikon via NeneUI JSON",
+                        "Variables Set using SET_VAR or Included by Daikon.",
                       ).small().mono().withPadding(horizontal: 16, vertical: 8),
                     ).withPadding(top: 8),
                     CollapsibleContent(
@@ -1325,20 +1318,22 @@ class _NeneUIState extends State<NeneUIMain> {
                           for (var variab in Map.from(
                             idDatabase['variables'],
                           ).keys)
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Card(
-                                child: Column(
-                                  mainAxisAlignment: .start,
-                                  crossAxisAlignment: .start,
-                                  children: [
-                                    Text(variab),
-                                    Text(
-                                      idDatabase['variables'][variab]
-                                          .toString(),
-                                      style: TextStyle(fontSize: 8),
-                                    ),
-                                  ],
+                            SizedBox(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Card(
+                                  child: Column(
+                                    mainAxisAlignment: .start,
+                                    crossAxisAlignment: .start,
+                                    children: [
+                                      Text(variab),
+                                      Text(
+                                        idDatabase['variables'][variab]
+                                            .toString(),
+                                        style: TextStyle(fontSize: 8),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
