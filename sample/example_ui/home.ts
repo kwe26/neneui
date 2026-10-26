@@ -6,7 +6,7 @@ export function run(req: Request, res: Response, pass: any) {
     let scaffold = Scaffold('#mainScaffold', {
         appBar: AppBar('#appBar', {
             leading: Iconify("home", { color: Colors.white }),
-            title: Text('#appBarText', { text: "NeneUI Example", style: TextStyle({
+            title: Text('#appBarText', { text: "NeneUI IS GREAT!!!", style: TextStyle({
                 color: Colors.white
             }) })
         }),
@@ -19,7 +19,7 @@ export function run(req: Request, res: Response, pass: any) {
                     crossAxisAlignment: CrossAxis.center,
                     children: [
                         Text('#textNene', {
-                            text: "Welcome to NeneUI!",
+                            text: "Welcome to @neneys/ui!!!!!",
                             align: TextAlign.center,
                             style: TextStyle(
                                 {

@@ -1,0 +1,59 @@
+---
+slug: memory-leak-fix
+title: How was the Memory Leak Fixed?
+authors: [kwee26]
+tags: [neneui]
+---
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# Memory Leak was a really really big issue in @neneys/ui
+Basically, With Memory Leak there was really no difference between WebView apps or @neneys/ui Apps.
+
+# Where was the Cause?
+So, every widgets in `flutter_render/lib/src/*` called one specific event `Events.REGISTER_ID`. Now Guess What it Did??
+It Called **`setState`**
+
+{/* truncate */}
+
+Here's a Before v. After of `Events.REGISTER_ID`
+<Tabs>
+    <TabItem value="before" label="Before" default>
+        ```dart
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          setState(() {
+            idDatabase.addAll({
+              '${data['id']}': {
+                'visible': true,
+                'override': false,
+                'props': data['props'],
+                },
+            });
+          });
+        });
+        ```
+    </TabItem>
+
+    <TabItem value="after" label="After">
+      ```dart
+        idDatabase.putIfAbsent(
+         '${data['id']}',
+         () => {'visible': true, 'override': false, 'props': data['props']},
+        );
+      ```
+    </TabItem>
+</Tabs>
+
+And you know what? `setState(() {})` was not even required to update the #IDs...
+And a Single Change Reduced the UI Redraws Drastically.
+
+There were other places where `setState` was repeateadily called such as in `Events.SET_DISPLAY_URLS` which kept setting Display Urls for NeneDisplay.
+
+Some Form Input-like Widgets such as TextInput, Checkbox, ColorPicker, etc. called `SET_VAR` to setup their Controllers which caused more redraws..
+
+# The Fix?
+Just replace them to not use `setState` since many (or almost everyone) did not require setState since the variable and data should not cause any Interface Re-draws no matter what!.
+
+Crazy right? some mere setState caused Huge Redraws and Memory usage even with really no widgets and when minimized/idle.
+
+One more thing, there was an continous strings being appended into a List which was not even USED!!! removed it otherwise the collected strings would already hike up the memory by a ton!!
