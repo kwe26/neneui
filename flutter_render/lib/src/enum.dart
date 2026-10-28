@@ -34,3 +34,9 @@ class Events {
   static const String SET_DISPLAY_INDEX = "set_display_index";
   static const String CLOSE_OVERLAY = "close_overlay";
 }
+
+
+enum NeneAppType {
+  shadcn,
+  material
+}

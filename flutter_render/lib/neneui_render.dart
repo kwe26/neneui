@@ -6,6 +6,8 @@ import 'package:neneui_render/src/base/WebSocket.dart';
 import 'package:neneui_render/src/navigation/url_navigation.dart';
 import 'package:neneui_render/src/url_strategy.dart';
 
+import 'package:neneui_render/src/enum.dart';
+
 import 'src/js_runtime/js_runtime.dart';
 
 import 'package:neneui_render/src/base/customMultipart.dart';
@@ -28,6 +30,7 @@ class InitUI {
   static Widget init({
     required String baseUrl,
     required String title,
+    required NeneAppType type,
     Map<String, dynamic> plugins = const {},
     bool debugShowCheckedModeBanner = true,
     bool debugOrb = false,
