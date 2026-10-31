@@ -35,8 +35,5 @@ class Events {
   static const String CLOSE_OVERLAY = "close_overlay";
 }
 
-
-enum NeneAppType {
-  shadcn,
-  material
-}
+// @neneAppType
+enum NeneAppType { shadcn, material }

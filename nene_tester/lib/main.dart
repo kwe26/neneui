@@ -320,7 +320,7 @@ class _UrlScreenState extends State<UrlScreen> {
                             _state = value;
                           });
                         },
-                        trailing: const Text('Enable Debug Bar/Orb'),
+                        trailing: const Text('Enable Debug Bar'),
                       ),
 
                       const SizedBox(height: 10),
