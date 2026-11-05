@@ -155,6 +155,7 @@ GDK_BACKEND=x11 ./nene_tester
 
 # Links & Credits
 - [Documented Widgets](https://kwe26.github.io/neneui/)
+- [Hack Club](https://hackclub.com) | [Stardance](https://stardance.hackclub.com/)
 - [Web Tester](https://kwe26.github.io/neneui)
 - [neneui_render on pub.dev](https://pub.dev/packages/neneui_render)
 - [Sample App](https://github.com/kwe26/neneui-sample)
