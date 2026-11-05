@@ -2,6 +2,8 @@
   <img src="./assets/banner.png?" width="1024">
 </p>
 
+Thanks to [Hack Club](http://hackclub.com/) & [Stardance](https://stardance.hackclub.com/) to encourage me to make this Project.
+
 # Nene UI Runtime
 
 <img src="./assets/visual_expl.png" width="1024">
